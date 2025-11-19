@@ -12,11 +12,13 @@ ENGINE="${COMME_CA_ENGINE:-goose}"  # Default: goose; override: claude
 usage() {
     cat <<EOF
 Usage: cc <prompt-name> [input]
+       cc init
        echo "input" | cc <prompt-name>
 
 Examples:
-  cc git "create branch foo"
-  cc shell "list processes"
+  cc init                      # Initialize agent orchestration in current dir
+  cc git "create branch foo"   # Translate to git command
+  cc shell "list processes"    # Translate to shell command
   echo "SELECT * FROM users" | cc sql-check
 
 Environment:
@@ -24,6 +26,37 @@ Environment:
   COMME_CA_ENGINE - AI engine: goose (default) or claude
 EOF
     exit 1
+}
+
+# Init: Bootstrap agent orchestration in current directory
+init() {
+    # Check if files already exist
+    if [[ -f "AGENTS.md" ]] || [[ -f "CLAUDE.md" ]]; then
+        echo "Error: AGENTS.md or CLAUDE.md already exists in $(pwd)" >&2
+        exit 1
+    fi
+
+    # Get source files from scaffolds
+    local scaffold_dir="${COMME_CA_HOME:-$HOME/dev/comme-ca}/scaffolds/high-low"
+
+    if [[ ! -d "$scaffold_dir" ]]; then
+        echo "Error: Scaffold directory not found at ${scaffold_dir}" >&2
+        echo "Ensure comme-ca is installed at ~/dev/comme-ca" >&2
+        exit 1
+    fi
+
+    # Copy scaffold files
+    cp "${scaffold_dir}/AGENTS.md" . || {
+        echo "Error: Failed to copy AGENTS.md" >&2
+        exit 1
+    }
+
+    cp "${scaffold_dir}/CLAUDE.md" . || {
+        echo "Error: Failed to copy CLAUDE.md" >&2
+        exit 1
+    }
+
+    echo "Initialized agent orchestration in $(pwd)."
 }
 
 # Main
@@ -35,6 +68,12 @@ main() {
 
     local prompt_name="$1"
     shift
+
+    # Handle init subcommand
+    if [[ "$prompt_name" == "init" ]]; then
+        init
+        exit 0
+    fi
 
     local prompt_file="${PROMPTS_DIR}/${prompt_name}.md"
 

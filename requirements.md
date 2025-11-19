@@ -33,8 +33,10 @@ The repository `~/dev/comme-ca` must adhere to this strict structure:
 ```text
 comme-ca/
 ├── README.md           # Documentation and alias definitions
+├── requirements.md     # This PRD
 ├── bin/
-│   └── cc              # The executable wrapper script (Bash)
+│   ├── cc              # The executable wrapper script (Bash)
+│   └── install         # Bootstrap installer script
 ├── prompts/
 │   ├── pipe/           # LOW-LIFT: Single-shot, fast prompts
 │   │   ├── _template.md   # Master template (Raycast compatible)
@@ -61,7 +63,11 @@ A Bash script serving as the bridge between the user's terminal and the Markdown
 **Requirements:**
 1.  **Engine Agnostic:** Must default to `goose` but support `claude` (headless) via configuration.
 2.  **Input Handling:** Must accept input via Argument (`cc git "undo"`) OR Stdin (`cat file | cc data-clean`).
-3.  **The Raycast Shim:** The script must parse the Markdown prompt *before* sending it to the AI model to ensure compatibility with Raycast's placeholder syntax.
+3.  **Init Subcommand:** Must support `cc init` to bootstrap agent orchestration in the current directory:
+    *   Check if `AGENTS.md` or `CLAUDE.md` already exist
+    *   Copy scaffold files from `~/dev/comme-ca/scaffolds/high-low/`
+    *   Print success message: "Initialized agent orchestration in $(pwd)."
+4.  **The Raycast Shim:** The script must parse the Markdown prompt *before* sending it to the AI model to ensure compatibility with Raycast's placeholder syntax.
     *   Replace `{argument ...}` with user input.
     *   Replace `{selection ...}` with user input.
     *   Replace `{clipboard ...}` with user input.
@@ -116,6 +122,17 @@ Artifacts that allow *other* repositories to inherit intelligence from `comme-ca
     *   "For quick CLI tasks, use the `cc` tool."
 2.  **`CLAUDE.md`**: A symlink/pointer file directing Claude Code to read `AGENTS.md`.
 
+### E. Bootstrap Installer (`bin/install`)
+A Bash script that automates the installation and configuration of comme-ca.
+
+**Requirements:**
+1.  **Repository Check:** Verify if `~/dev/comme-ca` exists
+2.  **Interactive Clone:** If not present, prompt user: "Clone comme-ca to ~/dev/comme-ca? [y/N]"
+3.  **Clone Repository:** If confirmed, execute `git clone git@github.com:popscallion/comme-ca ~/dev/comme-ca`
+4.  **Shell Detection:** Automatically detect Fish, Zsh, or Bash
+5.  **Config Append:** Add PATH export and aliases (`prep`, `plan`, `audit`) to appropriate config file if not already present
+6.  **Completion Notice:** Instruct user to restart shell or source config file
+
 ---
 
 ## 5. Implementation Roadmap
@@ -137,3 +154,5 @@ The implementing agent must perform the following steps:
 *   **Test 2 (Compatibility):** The content of `prompts/pipe/git.md` can be pasted into Raycast "Create AI Command" and works without modification.
 *   **Test 3 (High-Lift):** A user can launch an agent session using the `taste` persona to audit the `comme-ca` repo itself.
 *   **Test 4 (Independence):** The repository does not contain dotfiles (configurations), only intelligence (prompts/scripts).
+*   **Test 5 (Bootstrap):** Running `bin/install` successfully clones the repo, detects the shell, and configures PATH and aliases.
+*   **Test 6 (Init):** Running `cc init` in a new directory successfully copies `AGENTS.md` and `CLAUDE.md` from scaffolds.
