@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+# cc - The Pipe: CLI wrapper for comme-ca prompts
+# Bridges terminal and Markdown prompts with Raycast compatibility
+
+set -euo pipefail
+
+# Configuration
+PROMPTS_DIR="${COMME_CA_HOME:-$HOME/dev/comme-ca}/prompts/pipe"
+ENGINE="${COMME_CA_ENGINE:-goose}"  # Default: goose; override: claude
+
+# Usage
+usage() {
+    cat <<EOF
+Usage: cc <prompt-name> [input]
+       echo "input" | cc <prompt-name>
+
+Examples:
+  cc git "create branch foo"
+  cc shell "list processes"
+  echo "SELECT * FROM users" | cc sql-check
+
+Environment:
+  COMME_CA_HOME   - Path to comme-ca repo (default: ~/dev/comme-ca)
+  COMME_CA_ENGINE - AI engine: goose (default) or claude
+EOF
+    exit 1
+}
+
+# Main
+main() {
+    # Validate arguments
+    if [[ $# -eq 0 ]]; then
+        usage
+    fi
+
+    local prompt_name="$1"
+    shift
+
+    local prompt_file="${PROMPTS_DIR}/${prompt_name}.md"
+
+    # Check if prompt exists
+    if [[ ! -f "$prompt_file" ]]; then
+        echo "Error: Prompt '${prompt_name}' not found at ${prompt_file}" >&2
+        exit 1
+    fi
+
+    # Get user input (from args or stdin)
+    local user_input=""
+    if [[ $# -gt 0 ]]; then
+        user_input="$*"
+    elif [[ ! -t 0 ]]; then  # Check if stdin is available
+        user_input=$(cat)
+    else
+        echo "Error: No input provided. Use argument or pipe stdin." >&2
+        exit 1
+    fi
+
+    # Read the prompt template
+    local prompt_template
+    prompt_template=$(cat "$prompt_file")
+
+    # Apply Raycast Shim: Replace placeholders
+    local processed_prompt
+    processed_prompt=$(apply_raycast_shim "$prompt_template" "$user_input")
+
+    # Execute via configured engine
+    execute_engine "$processed_prompt"
+}
+
+# Raycast Shim: Parse and replace placeholders
+apply_raycast_shim() {
+    local template="$1"
+    local user_input="$2"
+
+    # Get system context
+    local shell_name
+    shell_name=$(basename "$SHELL")
+    local os_name
+    os_name=$(uname -s)
+
+    # Replace placeholders (order matters)
+    # {argument name="..." default="..."}  → user input
+    # {selection ...}                       → user input
+    # {clipboard ...}                       → user input (future: pbpaste)
+    # {shell_name}                          → active shell
+    # {os_name}                             → OS name
+
+    local result="$template"
+
+    # Replace {argument ...} with user input
+    result=$(echo "$result" | sed -E 's/\{argument[^}]*\}/'"$(escape_sed "$user_input")"'/g')
+
+    # Replace {selection ...} with user input
+    result=$(echo "$result" | sed -E 's/\{selection[^}]*\}/'"$(escape_sed "$user_input")"'/g')
+
+    # Replace {clipboard ...} with user input (for now; could use pbpaste/xclip)
+    result=$(echo "$result" | sed -E 's/\{clipboard[^}]*\}/'"$(escape_sed "$user_input")"'/g')
+
+    # Replace {shell_name} with actual shell
+    result=$(echo "$result" | sed 's/{shell_name}/'"$shell_name"'/g')
+
+    # Replace {os_name} with OS
+    result=$(echo "$result" | sed 's/{os_name}/'"$os_name"'/g')
+
+    echo "$result"
+}
+
+# Escape special characters for sed replacement
+escape_sed() {
+    echo "$1" | sed 's/[&/\]/\\&/g'
+}
+
+# Execute processed prompt via AI engine
+execute_engine() {
+    local prompt="$1"
+
+    case "$ENGINE" in
+        goose)
+            # Goose: Use run mode with inline prompt
+            echo "$prompt" | goose run
+            ;;
+        claude)
+            # Claude Code: Headless mode
+            echo "$prompt" | claude
+            ;;
+        *)
+            echo "Error: Unknown engine '$ENGINE'. Use 'goose' or 'claude'." >&2
+            exit 1
+            ;;
+    esac
+}
+
+# Entry point
+main "$@"
