@@ -22,9 +22,9 @@ export PATH="$HOME/dev/comme-ca/bin:$PATH"
 
 # Add aliases (Fish example; use ~/.zshrc or ~/.bashrc for Zsh/Bash)
 cat >> ~/.config/fish/config.fish <<'EOF'
-alias prep="goose run --instruction-file ~/dev/comme-ca/prompts/roles/mise.md"
-alias plan="goose run --instruction-file ~/dev/comme-ca/prompts/roles/menu.md"
-alias audit="goose run --instruction-file ~/dev/comme-ca/prompts/roles/taste.md"
+alias prep="goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md"
+alias plan="goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md"
+alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
 export PATH="$HOME/dev/comme-ca/bin:$PATH"
 EOF
 ```

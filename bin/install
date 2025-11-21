@@ -119,9 +119,9 @@ add_fish_config() {
 
 # comme-ca intelligence system
 set -gx PATH $HOME/dev/comme-ca/bin $PATH
-alias prep="goose run --instruction-file ~/dev/comme-ca/prompts/roles/mise.md"
-alias plan="goose run --instruction-file ~/dev/comme-ca/prompts/roles/menu.md"
-alias audit="goose run --instruction-file ~/dev/comme-ca/prompts/roles/taste.md"
+alias prep="goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md"
+alias plan="goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md"
+alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
 EOF
 }
 
@@ -133,9 +133,9 @@ add_posix_config() {
 
 # comme-ca intelligence system
 export PATH="$HOME/dev/comme-ca/bin:$PATH"
-alias prep="goose run --instruction-file ~/dev/comme-ca/prompts/roles/mise.md"
-alias plan="goose run --instruction-file ~/dev/comme-ca/prompts/roles/menu.md"
-alias audit="goose run --instruction-file ~/dev/comme-ca/prompts/roles/taste.md"
+alias prep="goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md"
+alias plan="goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md"
+alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
 EOF
 }
 

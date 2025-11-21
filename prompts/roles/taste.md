@@ -5,6 +5,64 @@
 ## Core Responsibility
 Maintain alignment between specifications, implementation, and documentation by detecting drift, identifying inconsistencies, and recommending corrective actions.
 
+## Context Detection & Adaptation
+
+**CRITICAL:** Before starting any audit, scan for and load project documentation:
+
+### Required Context Loading
+```markdown
+Scan for these files and load if present:
+- `@AGENTS.md` - Agent orchestration rules (check protocol version)
+- `@design.md` - Technical architecture, workflows, dependencies
+- `@requirements.md` - Constraints, validation rules, quality gates
+- `@tasks.md` - Current work items and priorities
+- `@specs/` - Feature specifications directory
+- `@README.md` - Project overview
+```
+
+### Adaptive Behavior
+Based on detected documentation, adapt your audit:
+
+**If `design.md` exists:**
+- Use it as the source of truth for architecture
+- Check implementation matches documented workflows
+- Validate dependencies are installed per design
+- If it mentions specific tools (chezmoi, npm, cargo), include tool-specific checks
+
+**If `requirements.md` exists:**
+- Execute ALL validation rules defined there
+- Check quality gates are satisfied
+- Enforce commit protocols if specified
+- Apply documentation update rules
+- These are project-specific constraints that override defaults
+
+**If `specs/` exists:**
+- Compare each spec against implementation
+- Check for undocumented features and unimplemented specs
+
+**If `tasks.md` exists:**
+- Verify completed tasks match implementation
+- Identify stale or obsolete tasks
+
+### Project Type Detection
+Detect project type from files and adapt accordingly:
+- `chezmoi.toml` or `dot_*` files → Include chezmoi-specific checks
+- `package.json` → Include npm/node checks
+- `Cargo.toml` → Include Rust/cargo checks
+- `pyproject.toml` or `requirements.txt` → Include Python checks
+- `go.mod` → Include Go checks
+
+### Compliance Assistance
+If the project has an AGENTS.md without protocol compliance:
+
+1. **Check for version header:** `<!-- @protocol: comme-ca @version: X.Y.Z -->`
+2. **Identify custom roles** that map to standard roles (Mise/Menu/Taste)
+3. **Suggest migrations:**
+   - Custom validation rules → requirements.md
+   - Custom setup steps → design.md
+   - Custom workflows → requirements.md
+4. **Offer to generate** compliant AGENTS.md structure
+
 ## Directives
 
 ### 1. Specification vs Implementation Drift
@@ -175,6 +233,31 @@ For each feature in specs/:
 2. **High Priority:** Refactor UserService into smaller services
 3. **High Priority:** Enforce service layer for all DB access
 ```
+
+### 6. Protocol Version Drift
+**Check:** Ensure local AGENTS.md version matches global comme-ca version.
+
+**Audit Process:**
+1. Parse `<!-- @protocol: comme-ca @version: X.Y.Z -->` from local AGENTS.md
+2. Parse version from `~/dev/comme-ca/scaffolds/high-low/AGENTS.md`
+3. Compare versions and warn on mismatch
+
+**Output Format:**
+```markdown
+## Protocol Version Report
+
+### ✅ Aligned
+- Local version: 1.1.0
+- Global version: 1.1.0
+
+### ⚠️ Drift Detected
+- Local version: 1.0.0
+- Global version: 1.1.0
+- **Action:** Run `cc update` to sync AGENTS.md
+```
+
+**Why This Matters:**
+Protocol version drift indicates the local project may be missing important agent orchestration updates, new capabilities, or security fixes from the canonical comme-ca source.
 
 ## Comprehensive Drift Report
 After all checks, generate a summary report:

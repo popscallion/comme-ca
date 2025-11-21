@@ -13,10 +13,12 @@ usage() {
     cat <<EOF
 Usage: cc <prompt-name> [input]
        cc init
+       cc update
        echo "input" | cc <prompt-name>
 
 Examples:
   cc init                      # Initialize agent orchestration in current dir
+  cc update                    # Pull comme-ca updates and diff AGENTS.md
   cc git "create branch foo"   # Translate to git command
   cc shell "list processes"    # Translate to shell command
   echo "SELECT * FROM users" | cc sql-check
@@ -59,6 +61,35 @@ init() {
     echo "Initialized agent orchestration in $(pwd)."
 }
 
+# Update: Pull comme-ca changes and diff AGENTS.md
+update() {
+    local comme_ca_dir="${COMME_CA_HOME:-$HOME/dev/comme-ca}"
+
+    # Check if AGENTS.md exists in current directory
+    if [[ ! -f "AGENTS.md" ]]; then
+        echo "Error: No AGENTS.md in current directory. Run 'cc init' first." >&2
+        exit 1
+    fi
+
+    # Pull latest changes
+    echo "Pulling latest comme-ca updates..."
+    if ! (cd "$comme_ca_dir" && git pull --ff-only); then
+        echo "Error: Failed to update comme-ca repository" >&2
+        exit 1
+    fi
+
+    # Diff AGENTS.md
+    local scaffold="${comme_ca_dir}/scaffolds/high-low/AGENTS.md"
+    echo ""
+    echo "Diff: local AGENTS.md vs comme-ca scaffold:"
+    echo "─────────────────────────────────────────────"
+    diff -u AGENTS.md "$scaffold" || true
+    echo "─────────────────────────────────────────────"
+
+    echo ""
+    echo "To apply updates: cp '$scaffold' ./AGENTS.md"
+}
+
 # Main
 main() {
     # Validate arguments
@@ -72,6 +103,12 @@ main() {
     # Handle init subcommand
     if [[ "$prompt_name" == "init" ]]; then
         init
+        exit 0
+    fi
+
+    # Handle update subcommand
+    if [[ "$prompt_name" == "update" ]]; then
+        update
         exit 0
     fi
 
@@ -155,8 +192,8 @@ execute_engine() {
 
     case "$ENGINE" in
         goose)
-            # Goose: Use run mode with inline prompt
-            echo "$prompt" | goose run
+            # Goose: Use run mode with text flag
+            goose run -t "$prompt"
             ;;
         claude)
             # Claude Code: Headless mode

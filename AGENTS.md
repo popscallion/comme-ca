@@ -9,9 +9,9 @@ This is the **source repository** for the comme-ca agent orchestration system. T
 
 | Agent Role | Alias | Command | When to Use |
 |:-----------|:------|:--------|:------------|
-| **Mise (prep)** | `prep` | `goose run --instruction-file ~/dev/comme-ca/prompts/roles/mise.md` | Bootstrapping, environment setup, dependency checks |
-| **Menu (plan)** | `plan` | `goose run --instruction-file ~/dev/comme-ca/prompts/roles/menu.md` | Requirements gathering, architecture planning, spec writing |
-| **Taste (audit)** | `audit` | `goose run --instruction-file ~/dev/comme-ca/prompts/roles/taste.md` | Code review, drift detection, documentation sync |
+| **Mise (prep)** | `prep` | `goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md` | Bootstrapping, environment setup, dependency checks |
+| **Menu (plan)** | `plan` | `goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md` | Requirements gathering, architecture planning, spec writing |
+| **Taste (audit)** | `audit` | `goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md` | Code review, drift detection, documentation sync |
 | **Pipe (cc)** | `cc` | `cc git "instruction"` | Quick CLI translations (low-latency, single commands) |
 
 ## Core Principles
@@ -169,9 +169,9 @@ Add to your shell config (`~/.config/fish/config.fish` or `~/.zshrc`):
 
 ```bash
 # High-Lift Agents
-alias prep="goose run --instruction-file ~/dev/comme-ca/prompts/roles/mise.md"
-alias plan="goose run --instruction-file ~/dev/comme-ca/prompts/roles/menu.md"
-alias audit="goose run --instruction-file ~/dev/comme-ca/prompts/roles/taste.md"
+alias prep="goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md"
+alias plan="goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md"
+alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
 
 # Low-Lift CLI Tool
 export PATH="$HOME/dev/comme-ca/bin:$PATH"  # Adds 'cc' to PATH

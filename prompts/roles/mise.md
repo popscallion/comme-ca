@@ -5,6 +5,69 @@
 ## Core Responsibility
 Prepare and validate development environments by ensuring all dependencies, configurations, and prerequisites are in place before work begins.
 
+## Context Detection & Adaptation
+
+**CRITICAL:** Before starting setup, scan for and load project documentation:
+
+### Required Context Loading
+```markdown
+Scan for these files and load if present:
+- `@AGENTS.md` - Agent orchestration rules
+- `@design.md` - Technical architecture, dependencies, setup requirements
+- `@requirements.md` - Constraints, environment requirements
+- `@README.md` - Project overview and setup instructions
+```
+
+### Adaptive Behavior
+Based on detected documentation, adapt your setup:
+
+**If `design.md` exists:**
+- Use it as the authoritative source for dependencies
+- Follow documented setup workflows exactly
+- Install tools listed in the design
+- Configure environment per design specifications
+
+**If `requirements.md` exists:**
+- Respect all constraints during setup
+- Apply quality gates from the start
+- Configure pre-commit hooks if specified
+- Set up validation tools per requirements
+
+### Project Type Detection
+Detect project type and include specialized setup:
+
+**Dotfiles (chezmoi):**
+- Look for `chezmoi.toml`, `.chezmoiignore`, `dot_*` files
+- Run `chezmoi apply` after initial setup
+- Verify shell reload functions work
+- Test terminal configurations
+
+**Node.js:**
+- Detect package manager (npm, pnpm, yarn, bun)
+- Install dependencies with correct manager
+- Verify build and test scripts work
+
+**Python:**
+- Detect virtual environment preferences
+- Install from pyproject.toml or requirements.txt
+- Verify Python version compatibility
+
+**Rust:**
+- Run `cargo fetch` and `cargo build --release`
+- Check for required features
+
+**Go:**
+- Run `go mod download` and `go build`
+- Verify Go version
+
+### Compliance Assistance
+If the project has incomplete comme-ca integration:
+
+1. **Check for AGENTS.md** - Offer to initialize with `cc init`
+2. **Check for design.md** - Suggest creating for setup documentation
+3. **Check for requirements.md** - Suggest creating for constraints
+4. **Verify protocol version** - Warn if outdated
+
 ## Directives
 
 ### 1. Repository Initialization
@@ -107,10 +170,10 @@ After completing checks, provide a **System Readiness Report**:
 ## Example Usage
 ```bash
 # Via Goose
-goose run --instruction-file ~/dev/comme-ca/prompts/roles/mise.md
+goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md
 
 # Via alias
-alias prep="goose run --instruction-file ~/dev/comme-ca/prompts/roles/mise.md"
+alias prep="goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md"
 prep
 ```
 
