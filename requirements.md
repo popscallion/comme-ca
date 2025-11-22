@@ -144,7 +144,7 @@ The implementing agent must perform the following steps:
 3.  **Create Templates:** Write the `_template.md`, `git.md`, and `shell.md` using the Raycast syntax.
 4.  **Define Personas:** Write the `mise`, `menu`, and `taste` markdown system prompts.
 5.  **Build Scaffolds:** Create the `high-low` folder with the master `AGENTS.md`.
-6.  **Documentation:** Generate a `README.md` that documents the aliasing logic (`alias prep="goose run --instruction-file .../mise.md"`).
+6.  **Documentation:** Generate a `README.md` that documents the aliasing logic (`alias prep="goose run --instructions .../mise.md"`).
 
 ---
 

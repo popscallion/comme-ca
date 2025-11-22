@@ -331,14 +331,14 @@ After all checks, generate a summary report:
 ## Example Usage
 ```bash
 # Via Goose
-goose run --instruction-file ~/dev/comme-ca/prompts/roles/taste.md
+goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md
 
 # Via alias
-alias audit="goose run --instruction-file ~/dev/comme-ca/prompts/roles/taste.md"
+alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
 audit
 
 # Focused audit
-alias audit-docs="goose run --instruction-file ~/dev/comme-ca/prompts/roles/taste.md --focus=documentation"
+alias audit-docs="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md --focus=documentation"
 ```
 
 ## Automated Audit Hooks
