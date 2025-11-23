@@ -185,6 +185,56 @@ audit   # Check for drift
 ca git "command"  # Quick translations
 ```
 
+## Multi-Tool Integration
+
+Comme-ca prompts can be used with multiple AI CLI tools. Goose is the primary runtime, while others are optional.
+
+### Tool Status
+
+| Tool | Status | Setup Command | Config Location |
+|:-----|:-------|:--------------|:----------------|
+| **Goose** | Primary | None needed | Reads prompts directly |
+| **Auggie** | Optional | `ca setup:auggie` | `~/.augment/commands/` |
+| **Claude Code** | Optional | `ca setup:claude` | `~/.claude/commands/` |
+| **Crush** | Optional | `ca setup:crush` | `~/.config/crush/commands/` |
+
+### Managing Tools
+
+```bash
+# Check which tools are configured
+ca setup:list
+
+# Configure a tool
+ca setup:auggie
+ca setup:claude
+ca setup:crush
+
+# Remove a tool's configuration
+ca setup:remove auggie
+
+# Check for drift (prompt changes not yet synced)
+ca drift
+```
+
+### When to Use Each Tool
+
+- **Goose**: Primary runtime for all roles. Best for automation, CI/CD, and direct prompt execution.
+- **Auggie**: Has cloud-based codebase indexing. Good for deep codebase queries.
+- **Claude Code**: IDE integration. Good for development workflows.
+- **Crush**: Charm's terminal AI. Good for interactive terminal use.
+
+### Drift Detection
+
+When you modify prompts in `~/dev/comme-ca/prompts/roles/`, configured tools may become out of sync. The `ca drift` command detects this by comparing MD5 hashes.
+
+```bash
+# Check all tools for drift
+ca drift
+
+# If drift detected, re-run setup for affected tools
+ca setup:auggie  # Regenerates from current prompts
+```
+
 ## Repository Structure (comme-ca)
 
 This **is** the comme-ca Intelligence System source repository:
@@ -235,9 +285,9 @@ This is the **canonical AGENTS.md** for comme-ca. It is copied to target project
 
 ---
 
-**Version:** 1.0.1
+**Version:** 1.1.0
 **Repository:** github.com/popscallion/comme-ca
-**Last Updated:** 2025-11-21
+**Last Updated:** 2025-11-23
 
 For questions or issues with agent orchestration, see:
 - `README.md` - Project documentation

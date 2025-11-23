@@ -28,6 +28,8 @@ Commands:
   setup:auggie              Configure Auggie CLI with comme-ca prompts
   setup:claude              Configure Claude Code with comme-ca prompts
   setup:crush               Configure Crush CLI with comme-ca prompts
+  setup:all                 Configure all tools at once
+  setup:sync                Update tools with drifted prompts
   setup:remove <tool>       Remove tool configuration
   drift                     Check for prompt drift across configured tools
 
@@ -261,6 +263,73 @@ FRONTMATTER
     echo "  Commands: /prep, /plan, /audit"
 }
 
+# Setup all tools at once
+setup_all() {
+    echo "Configuring all tools with comme-ca prompts..."
+    echo "─────────────────────────────────────────────"
+    echo ""
+
+    setup_auggie
+    echo ""
+    setup_claude
+    echo ""
+    setup_crush
+
+    echo ""
+    echo "─────────────────────────────────────────────"
+    echo "✓ All tools configured"
+}
+
+# Sync all configured tools (re-run setup for tools with drift)
+setup_sync() {
+    echo "Syncing configured tools..."
+    echo "─────────────────────────────────────────────"
+    echo ""
+
+    local synced=0
+
+    # Sync Auggie if configured and has drift
+    if [[ -f "${HOME}/.augment/.comme-ca-setup" ]]; then
+        if ! check_tool_drift "auggie"; then
+            setup_auggie
+            echo ""
+            ((synced++))
+        else
+            echo "Auggie CLI: Already up to date"
+        fi
+    fi
+
+    # Sync Claude Code if configured and has drift
+    if [[ -f "${HOME}/.claude/.comme-ca-setup" ]]; then
+        if ! check_tool_drift "claude"; then
+            setup_claude
+            echo ""
+            ((synced++))
+        else
+            echo "Claude Code: Already up to date"
+        fi
+    fi
+
+    # Sync Crush if configured and has drift
+    if [[ -f "${HOME}/.config/crush/.comme-ca-setup" ]]; then
+        if ! check_tool_drift "crush"; then
+            setup_crush
+            echo ""
+            ((synced++))
+        else
+            echo "Crush CLI: Already up to date"
+        fi
+    fi
+
+    echo ""
+    echo "─────────────────────────────────────────────"
+    if [[ $synced -eq 0 ]]; then
+        echo "✓ All configured tools already in sync"
+    else
+        echo "✓ Synced $synced tool(s)"
+    fi
+}
+
 # Remove tool configuration
 setup_remove() {
     local tool="$1"
@@ -474,7 +543,8 @@ execute_engine() {
 
     case "$ENGINE" in
         goose)
-            goose run -t "$prompt"
+            # --quiet suppresses session info, showing only the model response
+            goose run --quiet -t "$prompt"
             ;;
         claude)
             echo "$prompt" | claude
@@ -516,6 +586,12 @@ main() {
             ;;
         setup:crush)
             setup_crush
+            ;;
+        setup:all)
+            setup_all
+            ;;
+        setup:sync)
+            setup_sync
             ;;
         setup:remove)
             if [[ $# -eq 0 ]]; then
