@@ -1,7 +1,7 @@
 # Tasks: Auggie Integration & Multi-Tool Setup
 
 **Feature:** Multi-tool setup system with drift detection
-**Status:** Core testing complete
+**Status:** Crush integration complete
 
 ---
 
@@ -48,7 +48,7 @@
 
 ### Immediate Next Steps
 
-- [ ] **Implement setup:crush** - Add to bin/ca following setup:auggie pattern
+- [x] **Implement setup:crush** - Added to bin/ca following setup:auggie pattern ✓
   - Target: `~/.config/crush/commands/{prep,plan,audit}.md`
   - Format: Markdown with YAML frontmatter (like Auggie)
 - [ ] **Test remaining Phase 2 items:**
@@ -65,10 +65,10 @@
   - Commands: `~/.config/crush/commands/` (Markdown files)
   - Data: `~/.local/share/crush/`
   - Pattern: Same as Auggie (Markdown with frontmatter likely)
-- [ ] Add setup:crush command to bin/ca
-- [ ] Test Crush with comme-ca prompts
+- [x] Add setup:crush command to bin/ca ✓
+- [x] Test Crush with comme-ca prompts ✓
 - [ ] Document Crush in AGENTS.md
-- [ ] Update setup:list to show Crush as configurable
+- [x] Update setup:list to show Crush as configurable ✓
 
 ### Enhancements
 

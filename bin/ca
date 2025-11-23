@@ -27,6 +27,7 @@ Commands:
   setup:list                List available/configured tools
   setup:auggie              Configure Auggie CLI with comme-ca prompts
   setup:claude              Configure Claude Code with comme-ca prompts
+  setup:crush               Configure Crush CLI with comme-ca prompts
   setup:remove <tool>       Remove tool configuration
   drift                     Check for prompt drift across configured tools
 
@@ -113,8 +114,12 @@ setup_list() {
         echo "  ○ claude   - Not configured (run: ca setup:claude)"
     fi
 
-    # Check Crush (placeholder for future)
-    echo "  ○ crush    - Not yet supported (coming soon)"
+    # Check Crush
+    if [[ -d "${HOME}/.config/crush/commands" ]] && [[ -f "${HOME}/.config/crush/commands/prep.md" ]]; then
+        echo "  ✓ crush    - Configured at ~/.config/crush/"
+    else
+        echo "  ○ crush    - Not configured (run: ca setup:crush)"
+    fi
 
     echo ""
     echo "Prompt source: ${ROLES_DIR}"
@@ -211,6 +216,51 @@ setup_claude() {
     echo "  Commands: /prep, /plan, /audit"
 }
 
+# Setup Crush CLI
+setup_crush() {
+    echo "Setting up Crush CLI with comme-ca prompts..."
+
+    local dest="${HOME}/.config/crush"
+    mkdir -p "${dest}/commands"
+
+    # Generate prep command (mise)
+    cat > "${dest}/commands/prep.md" <<'FRONTMATTER'
+---
+description: System bootstrapper - validates environment and dependencies
+---
+
+FRONTMATTER
+    cat "${ROLES_DIR}/mise.md" >> "${dest}/commands/prep.md"
+    echo "  ✓ prep.md (mise)"
+
+    # Generate plan command (menu)
+    cat > "${dest}/commands/plan.md" <<'FRONTMATTER'
+---
+description: Requirements gathering and architecture planning
+---
+
+FRONTMATTER
+    cat "${ROLES_DIR}/menu.md" >> "${dest}/commands/plan.md"
+    echo "  ✓ plan.md (menu)"
+
+    # Generate audit command (taste)
+    cat > "${dest}/commands/audit.md" <<'FRONTMATTER'
+---
+description: Quality assurance and drift detection
+---
+
+FRONTMATTER
+    cat "${ROLES_DIR}/taste.md" >> "${dest}/commands/audit.md"
+    echo "  ✓ audit.md (taste)"
+
+    # Store metadata for drift detection
+    store_setup_metadata "crush"
+
+    echo ""
+    echo "✓ Crush CLI configured at ${dest}"
+    echo "  Commands: /prep, /plan, /audit"
+}
+
 # Remove tool configuration
 setup_remove() {
     local tool="$1"
@@ -239,9 +289,20 @@ setup_remove() {
                 echo "Claude Code not configured"
             fi
             ;;
+        crush)
+            if [[ -d "${HOME}/.config/crush/commands" ]]; then
+                rm -f "${HOME}/.config/crush/commands/prep.md"
+                rm -f "${HOME}/.config/crush/commands/plan.md"
+                rm -f "${HOME}/.config/crush/commands/audit.md"
+                rm -f "${HOME}/.config/crush/.comme-ca-setup"
+                echo "✓ Removed Crush CLI comme-ca configuration"
+            else
+                echo "Crush CLI not configured"
+            fi
+            ;;
         *)
             echo "Unknown tool: $tool" >&2
-            echo "Available: auggie, claude" >&2
+            echo "Available: auggie, claude, crush" >&2
             exit 1
             ;;
     esac
@@ -255,6 +316,7 @@ store_setup_metadata() {
     case "$tool" in
         auggie) metadata_file="${HOME}/.augment/.comme-ca-setup" ;;
         claude) metadata_file="${HOME}/.claude/.comme-ca-setup" ;;
+        crush) metadata_file="${HOME}/.config/crush/.comme-ca-setup" ;;
         *) return ;;
     esac
 
@@ -303,6 +365,17 @@ drift() {
         fi
     fi
 
+    # Check Crush
+    if [[ -f "${HOME}/.config/crush/.comme-ca-setup" ]]; then
+        echo "Crush CLI:"
+        if check_tool_drift "crush"; then
+            echo "  ✓ Up to date"
+        else
+            echo "  ⚠ Drift detected - run: ca setup:crush"
+            has_drift=true
+        fi
+    fi
+
     echo ""
 
     # Check comme-ca repo for updates
@@ -338,6 +411,7 @@ check_tool_drift() {
     case "$tool" in
         auggie) metadata_file="${HOME}/.augment/.comme-ca-setup" ;;
         claude) metadata_file="${HOME}/.claude/.comme-ca-setup" ;;
+        crush) metadata_file="${HOME}/.config/crush/.comme-ca-setup" ;;
         *) return 1 ;;
     esac
 
@@ -439,6 +513,9 @@ main() {
             ;;
         setup:claude)
             setup_claude
+            ;;
+        setup:crush)
+            setup_crush
             ;;
         setup:remove)
             if [[ $# -eq 0 ]]; then
