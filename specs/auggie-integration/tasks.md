@@ -46,6 +46,18 @@
 
 ## Future Tasks
 
+### Immediate Next Steps
+
+- [ ] **Implement setup:crush** - Add to bin/ca following setup:auggie pattern
+  - Target: `~/.config/crush/commands/{prep,plan,audit}.md`
+  - Format: Markdown with YAML frontmatter (like Auggie)
+- [ ] **Test remaining Phase 2 items:**
+  - [ ] `ca setup:remove auggie` - Verify removes generated files
+  - [ ] Drift detection - Modify a prompt and verify drift is detected
+- [ ] **Test Phase 3 integration:**
+  - [ ] `ca init` in a fresh project
+  - [ ] `prep` alias with Goose
+
 ### Crush CLI Integration
 
 - [x] Research Crush CLI configuration format
@@ -56,12 +68,14 @@
 - [ ] Add setup:crush command to bin/ca
 - [ ] Test Crush with comme-ca prompts
 - [ ] Document Crush in AGENTS.md
+- [ ] Update setup:list to show Crush as configurable
 
 ### Enhancements
 
 - [ ] Add ca setup:all command (configure all tools at once)
 - [ ] Add ca setup:sync command (update all tools when prompts change)
 - [ ] Consider prompt versioning for better drift tracking
+- [ ] Clean up Goose session output in pipe prompts (currently shows session info)
 
 ---
 
