@@ -1,0 +1,481 @@
+#!/usr/bin/env bash
+# ca - The Pipe: CLI wrapper for comme-ca prompts
+# Bridges terminal and Markdown prompts with Raycast compatibility
+# Renamed from 'cc' to avoid shadowing C compiler
+
+set -euo pipefail
+
+# Configuration
+COMME_CA_HOME="${COMME_CA_HOME:-$HOME/dev/comme-ca}"
+PROMPTS_DIR="${COMME_CA_HOME}/prompts/pipe"
+ROLES_DIR="${COMME_CA_HOME}/prompts/roles"
+ENGINE="${COMME_CA_ENGINE:-goose}"  # Default: goose; override: claude
+
+# Usage
+usage() {
+    cat <<EOF
+Usage: ca <prompt-name> [input]
+       ca init
+       ca update
+       ca setup:<tool>
+       ca drift
+       echo "input" | ca <prompt-name>
+
+Commands:
+  init                      Initialize agent orchestration in current dir
+  update                    Pull comme-ca updates and diff AGENTS.md
+  setup:list                List available/configured tools
+  setup:auggie              Configure Auggie CLI with comme-ca prompts
+  setup:claude              Configure Claude Code with comme-ca prompts
+  setup:remove <tool>       Remove tool configuration
+  drift                     Check for prompt drift across configured tools
+
+Prompts:
+  ca git "create branch foo"   Translate to git command
+  ca shell "list processes"    Translate to shell command
+
+Environment:
+  COMME_CA_HOME   - Path to comme-ca repo (default: ~/dev/comme-ca)
+  COMME_CA_ENGINE - AI engine: goose (default) or claude
+EOF
+    exit 1
+}
+
+# Init: Bootstrap agent orchestration in current directory
+init() {
+    if [[ -f "AGENTS.md" ]] || [[ -f "CLAUDE.md" ]]; then
+        echo "Error: AGENTS.md or CLAUDE.md already exists in $(pwd)" >&2
+        exit 1
+    fi
+
+    local scaffold_dir="${COMME_CA_HOME}/scaffolds/high-low"
+
+    if [[ ! -d "$scaffold_dir" ]]; then
+        echo "Error: Scaffold directory not found at ${scaffold_dir}" >&2
+        echo "Ensure comme-ca is installed at ~/dev/comme-ca" >&2
+        exit 1
+    fi
+
+    cp "${scaffold_dir}/AGENTS.md" . || { echo "Error: Failed to copy AGENTS.md" >&2; exit 1; }
+    cp "${scaffold_dir}/CLAUDE.md" . || { echo "Error: Failed to copy CLAUDE.md" >&2; exit 1; }
+
+    echo "Initialized agent orchestration in $(pwd)."
+}
+
+# Update: Pull comme-ca changes and diff AGENTS.md
+update() {
+    if [[ ! -f "AGENTS.md" ]]; then
+        echo "Error: No AGENTS.md in current directory. Run 'ca init' first." >&2
+        exit 1
+    fi
+
+    echo "Pulling latest comme-ca updates..."
+    if ! (cd "$COMME_CA_HOME" && git pull --ff-only); then
+        echo "Error: Failed to update comme-ca repository" >&2
+        exit 1
+    fi
+
+    local scaffold="${COMME_CA_HOME}/scaffolds/high-low/AGENTS.md"
+    echo ""
+    echo "Diff: local AGENTS.md vs comme-ca scaffold:"
+    echo "─────────────────────────────────────────────"
+    diff -u AGENTS.md "$scaffold" || true
+    echo "─────────────────────────────────────────────"
+    echo ""
+    echo "To apply updates: cp '$scaffold' ./AGENTS.md"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Tool Setup System
+# ─────────────────────────────────────────────────────────────────────────────
+
+# List available and configured tools
+setup_list() {
+    echo "Tool Setup Status"
+    echo "─────────────────────────────────────────────"
+    echo ""
+    echo "Base (always available):"
+    echo "  ✓ goose    - Primary agent runtime (reads prompts directly)"
+    echo ""
+    echo "Optional tools:"
+
+    # Check Auggie
+    if [[ -d "${HOME}/.augment/commands" ]] && [[ -f "${HOME}/.augment/commands/prep.md" ]]; then
+        echo "  ✓ auggie   - Configured at ~/.augment/"
+    else
+        echo "  ○ auggie   - Not configured (run: ca setup:auggie)"
+    fi
+
+    # Check Claude Code
+    if [[ -d "${HOME}/.claude/commands" ]] && [[ -f "${HOME}/.claude/commands/prep.md" ]]; then
+        echo "  ✓ claude   - Configured at ~/.claude/"
+    else
+        echo "  ○ claude   - Not configured (run: ca setup:claude)"
+    fi
+
+    # Check Crush (placeholder for future)
+    echo "  ○ crush    - Not yet supported (coming soon)"
+
+    echo ""
+    echo "Prompt source: ${ROLES_DIR}"
+}
+
+# Setup Auggie CLI
+setup_auggie() {
+    echo "Setting up Auggie CLI with comme-ca prompts..."
+
+    local dest="${HOME}/.augment"
+    mkdir -p "${dest}/commands" "${dest}/rules"
+
+    # Generate prep command (mise)
+    cat > "${dest}/commands/prep.md" <<'FRONTMATTER'
+---
+description: System bootstrapper - validates environment and dependencies
+argument-hint: [focus-area]
+---
+
+FRONTMATTER
+    cat "${ROLES_DIR}/mise.md" >> "${dest}/commands/prep.md"
+    echo "  ✓ prep.md (mise)"
+
+    # Generate plan command (menu)
+    cat > "${dest}/commands/plan.md" <<'FRONTMATTER'
+---
+description: Requirements gathering and architecture planning
+argument-hint: [feature-name]
+---
+
+FRONTMATTER
+    cat "${ROLES_DIR}/menu.md" >> "${dest}/commands/plan.md"
+    echo "  ✓ plan.md (menu)"
+
+    # Generate audit command (taste)
+    cat > "${dest}/commands/audit.md" <<'FRONTMATTER'
+---
+description: Quality assurance and drift detection
+argument-hint: [scope]
+---
+
+FRONTMATTER
+    cat "${ROLES_DIR}/taste.md" >> "${dest}/commands/audit.md"
+    echo "  ✓ audit.md (taste)"
+
+    # Generate orchestration rules
+    cat > "${dest}/rules/orchestration.md" <<'EOF'
+---
+type: always_apply
+---
+
+# Comme-ca Agent Orchestration
+
+Before ANY task, load project context:
+- @AGENTS.md - Agent orchestration rules
+- @design.md - Technical architecture
+- @requirements.md - Constraints and quality gates
+
+Available roles: /prep (setup), /plan (architecture), /audit (QA)
+Primary runtime: Goose (reads prompts directly from ~/dev/comme-ca)
+EOF
+    echo "  ✓ rules/orchestration.md"
+
+    # Store metadata for drift detection
+    store_setup_metadata "auggie"
+
+    echo ""
+    echo "✓ Auggie configured at ${dest}"
+    echo "  Commands: /prep, /plan, /audit"
+}
+
+# Setup Claude Code
+setup_claude() {
+    echo "Setting up Claude Code with comme-ca prompts..."
+
+    local dest="${HOME}/.claude"
+    mkdir -p "${dest}/commands"
+
+    # Symlink role prompts (Claude Code uses plain markdown)
+    ln -sf "${ROLES_DIR}/mise.md" "${dest}/commands/prep.md"
+    echo "  ✓ prep.md → mise.md (symlink)"
+
+    ln -sf "${ROLES_DIR}/menu.md" "${dest}/commands/plan.md"
+    echo "  ✓ plan.md → menu.md (symlink)"
+
+    ln -sf "${ROLES_DIR}/taste.md" "${dest}/commands/audit.md"
+    echo "  ✓ audit.md → taste.md (symlink)"
+
+    # Store metadata for drift detection
+    store_setup_metadata "claude"
+
+    echo ""
+    echo "✓ Claude Code configured at ${dest}"
+    echo "  Commands: /prep, /plan, /audit"
+}
+
+# Remove tool configuration
+setup_remove() {
+    local tool="$1"
+
+    case "$tool" in
+        auggie)
+            if [[ -d "${HOME}/.augment/commands" ]]; then
+                rm -f "${HOME}/.augment/commands/prep.md"
+                rm -f "${HOME}/.augment/commands/plan.md"
+                rm -f "${HOME}/.augment/commands/audit.md"
+                rm -f "${HOME}/.augment/rules/orchestration.md"
+                rm -f "${HOME}/.augment/.comme-ca-setup"
+                echo "✓ Removed Auggie comme-ca configuration"
+            else
+                echo "Auggie not configured"
+            fi
+            ;;
+        claude)
+            if [[ -d "${HOME}/.claude/commands" ]]; then
+                rm -f "${HOME}/.claude/commands/prep.md"
+                rm -f "${HOME}/.claude/commands/plan.md"
+                rm -f "${HOME}/.claude/commands/audit.md"
+                rm -f "${HOME}/.claude/.comme-ca-setup"
+                echo "✓ Removed Claude Code comme-ca configuration"
+            else
+                echo "Claude Code not configured"
+            fi
+            ;;
+        *)
+            echo "Unknown tool: $tool" >&2
+            echo "Available: auggie, claude" >&2
+            exit 1
+            ;;
+    esac
+}
+
+# Store setup metadata for drift detection
+store_setup_metadata() {
+    local tool="$1"
+    local metadata_file
+
+    case "$tool" in
+        auggie) metadata_file="${HOME}/.augment/.comme-ca-setup" ;;
+        claude) metadata_file="${HOME}/.claude/.comme-ca-setup" ;;
+        *) return ;;
+    esac
+
+    mkdir -p "$(dirname "$metadata_file")"
+
+    cat > "$metadata_file" <<EOF
+# Comme-ca setup metadata
+setup_date=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+comme_ca_commit=$(cd "$COMME_CA_HOME" && git rev-parse HEAD)
+mise_hash=$(md5 -q "${ROLES_DIR}/mise.md" 2>/dev/null || md5sum "${ROLES_DIR}/mise.md" | cut -d' ' -f1)
+menu_hash=$(md5 -q "${ROLES_DIR}/menu.md" 2>/dev/null || md5sum "${ROLES_DIR}/menu.md" | cut -d' ' -f1)
+taste_hash=$(md5 -q "${ROLES_DIR}/taste.md" 2>/dev/null || md5sum "${ROLES_DIR}/taste.md" | cut -d' ' -f1)
+EOF
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Drift Detection
+# ─────────────────────────────────────────────────────────────────────────────
+
+drift() {
+    echo "Checking for prompt drift..."
+    echo "─────────────────────────────────────────────"
+    echo ""
+
+    local has_drift=false
+
+    # Check Auggie
+    if [[ -f "${HOME}/.augment/.comme-ca-setup" ]]; then
+        echo "Auggie CLI:"
+        if check_tool_drift "auggie"; then
+            echo "  ✓ Up to date"
+        else
+            echo "  ⚠ Drift detected - run: ca setup:auggie"
+            has_drift=true
+        fi
+    fi
+
+    # Check Claude Code
+    if [[ -f "${HOME}/.claude/.comme-ca-setup" ]]; then
+        echo "Claude Code:"
+        if check_tool_drift "claude"; then
+            echo "  ✓ Up to date"
+        else
+            echo "  ⚠ Drift detected - run: ca setup:claude"
+            has_drift=true
+        fi
+    fi
+
+    echo ""
+
+    # Check comme-ca repo for updates
+    echo "Comme-ca repository:"
+    local current_commit=$(cd "$COMME_CA_HOME" && git rev-parse HEAD)
+    local remote_commit=$(cd "$COMME_CA_HOME" && git ls-remote origin HEAD | cut -f1)
+
+    if [[ "$current_commit" == "$remote_commit" ]]; then
+        echo "  ✓ Up to date with origin"
+    else
+        echo "  ⚠ Updates available - run: cd $COMME_CA_HOME && git pull"
+        has_drift=true
+    fi
+
+    echo ""
+
+    if $has_drift; then
+        echo "─────────────────────────────────────────────"
+        echo "Action required: Update drifted configurations"
+        return 1
+    else
+        echo "─────────────────────────────────────────────"
+        echo "All configurations are in sync"
+        return 0
+    fi
+}
+
+# Check if a tool's configuration has drifted
+check_tool_drift() {
+    local tool="$1"
+    local metadata_file
+
+    case "$tool" in
+        auggie) metadata_file="${HOME}/.augment/.comme-ca-setup" ;;
+        claude) metadata_file="${HOME}/.claude/.comme-ca-setup" ;;
+        *) return 1 ;;
+    esac
+
+    if [[ ! -f "$metadata_file" ]]; then
+        return 1
+    fi
+
+    # Get stored hashes
+    local stored_mise=$(grep "^mise_hash=" "$metadata_file" | cut -d= -f2)
+    local stored_menu=$(grep "^menu_hash=" "$metadata_file" | cut -d= -f2)
+    local stored_taste=$(grep "^taste_hash=" "$metadata_file" | cut -d= -f2)
+
+    # Get current hashes
+    local current_mise=$(md5 -q "${ROLES_DIR}/mise.md" 2>/dev/null || md5sum "${ROLES_DIR}/mise.md" | cut -d' ' -f1)
+    local current_menu=$(md5 -q "${ROLES_DIR}/menu.md" 2>/dev/null || md5sum "${ROLES_DIR}/menu.md" | cut -d' ' -f1)
+    local current_taste=$(md5 -q "${ROLES_DIR}/taste.md" 2>/dev/null || md5sum "${ROLES_DIR}/taste.md" | cut -d' ' -f1)
+
+    # Compare
+    if [[ "$stored_mise" == "$current_mise" ]] && \
+       [[ "$stored_menu" == "$current_menu" ]] && \
+       [[ "$stored_taste" == "$current_taste" ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Prompt Execution
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Raycast Shim: Parse and replace placeholders
+apply_raycast_shim() {
+    local template="$1"
+    local user_input="$2"
+
+    local shell_name=$(basename "$SHELL")
+    local os_name=$(uname -s)
+
+    local result="$template"
+
+    # Replace placeholders
+    result=$(echo "$result" | sed -E 's/\{argument[^}]*\}/'"$(escape_sed "$user_input")"'/g')
+    result=$(echo "$result" | sed -E 's/\{selection[^}]*\}/'"$(escape_sed "$user_input")"'/g')
+    result=$(echo "$result" | sed -E 's/\{clipboard[^}]*\}/'"$(escape_sed "$user_input")"'/g')
+    result=$(echo "$result" | sed 's/{shell_name}/'"$shell_name"'/g')
+    result=$(echo "$result" | sed 's/{os_name}/'"$os_name"'/g')
+
+    echo "$result"
+}
+
+# Escape special characters for sed replacement
+escape_sed() {
+    echo "$1" | sed 's/[&/\]/\\&/g'
+}
+
+# Execute processed prompt via AI engine
+execute_engine() {
+    local prompt="$1"
+
+    case "$ENGINE" in
+        goose)
+            goose run -t "$prompt"
+            ;;
+        claude)
+            echo "$prompt" | claude
+            ;;
+        *)
+            echo "Error: Unknown engine '$ENGINE'. Use 'goose' or 'claude'." >&2
+            exit 1
+            ;;
+    esac
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Main
+# ─────────────────────────────────────────────────────────────────────────────
+
+main() {
+    if [[ $# -eq 0 ]]; then
+        usage
+    fi
+
+    local cmd="$1"
+    shift
+
+    case "$cmd" in
+        init)
+            init
+            ;;
+        update)
+            update
+            ;;
+        setup:list)
+            setup_list
+            ;;
+        setup:auggie)
+            setup_auggie
+            ;;
+        setup:claude)
+            setup_claude
+            ;;
+        setup:remove)
+            if [[ $# -eq 0 ]]; then
+                echo "Usage: ca setup:remove <tool>" >&2
+                exit 1
+            fi
+            setup_remove "$1"
+            ;;
+        drift)
+            drift
+            ;;
+        *)
+            # Treat as prompt name
+            local prompt_file="${PROMPTS_DIR}/${cmd}.md"
+
+            if [[ ! -f "$prompt_file" ]]; then
+                echo "Error: Unknown command or prompt '${cmd}'" >&2
+                echo "Run 'ca' without arguments for usage." >&2
+                exit 1
+            fi
+
+            # Get user input
+            local user_input=""
+            if [[ $# -gt 0 ]]; then
+                user_input="$*"
+            elif [[ ! -t 0 ]]; then
+                user_input=$(cat)
+            else
+                echo "Error: No input provided. Use argument or pipe stdin." >&2
+                exit 1
+            fi
+
+            local prompt_template=$(cat "$prompt_file")
+            local processed_prompt=$(apply_raycast_shim "$prompt_template" "$user_input")
+            execute_engine "$processed_prompt"
+            ;;
+    esac
+}
+
+main "$@"

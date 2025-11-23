@@ -11,7 +11,7 @@ This document defines how autonomous agents (Claude Code, Goose, or other AI ass
 | **Mise (prep)** | `prep` | `goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md` | Bootstrapping, environment setup, dependency checks |
 | **Menu (plan)** | `plan` | `goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md` | Requirements gathering, architecture planning, spec writing |
 | **Taste (audit)** | `audit` | `goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md` | Code review, drift detection, documentation sync |
-| **Pipe (cc)** | `cc` | `cc git "instruction"` | Quick CLI translations (low-latency, single commands) |
+| **Pipe (ca)** | `ca` | `ca git "instruction"` | Quick CLI translations (low-latency, single commands) |
 
 ## Context Detection
 
@@ -44,7 +44,7 @@ export PATH="$HOME/dev/comme-ca/bin:$PATH"
 prep    # Bootstrap environment, install dependencies
 plan    # Create specifications, gather requirements
 audit   # Check for drift, validate compliance
-cc git "command"  # Quick CLI translations
+ca git "command"  # Quick CLI translations
 ```
 
 ## Project Extensions
@@ -76,9 +76,9 @@ Most project-specific behavior should go in `requirements.md` (constraints/rules
 
 ## Troubleshooting
 
-**"cc command not found"**
+**"ca command not found"**
 - Add `~/dev/comme-ca/bin` to PATH
-- Verify executable: `chmod +x ~/dev/comme-ca/bin/cc`
+- Verify executable: `chmod +x ~/dev/comme-ca/bin/ca`
 
 **"Roles not finding project context"**
 - Create `design.md` for architecture documentation
@@ -86,13 +86,13 @@ Most project-specific behavior should go in `requirements.md` (constraints/rules
 - Roles automatically detect and use these files
 
 **"Need to update from comme-ca"**
-- Run `cc update` to pull latest and diff AGENTS.md
+- Run `ca update` to pull latest and diff AGENTS.md
 
 ## Integration with comme-ca
 
 - **Repository:** `~/dev/comme-ca`
 - **Prompts:** `~/dev/comme-ca/prompts/roles/`
-- **CLI Wrapper:** `~/dev/comme-ca/bin/cc`
+- **CLI Wrapper:** `~/dev/comme-ca/bin/ca`
 
 For full documentation: `~/dev/comme-ca/README.md`
 

@@ -3,7 +3,7 @@
 
 This is the **source repository** for the comme-ca agent orchestration system. This document defines how autonomous agents (Claude Code, Goose, or other AI assistants) should operate within this repository. All agents must read and follow these orchestration rules.
 
-> **Note:** This AGENTS.md serves dual purposes: (1) it governs agent behavior in this repo, and (2) it is the template that `cc init` copies to target projects. Changes here propagate to all new projects.
+> **Note:** This AGENTS.md serves dual purposes: (1) it governs agent behavior in this repo, and (2) it is the template that `ca init` copies to target projects. Changes here propagate to all new projects.
 
 ## Quick Reference
 
@@ -12,7 +12,7 @@ This is the **source repository** for the comme-ca agent orchestration system. T
 | **Mise (prep)** | `prep` | `goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md` | Bootstrapping, environment setup, dependency checks |
 | **Menu (plan)** | `plan` | `goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md` | Requirements gathering, architecture planning, spec writing |
 | **Taste (audit)** | `audit` | `goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md` | Code review, drift detection, documentation sync |
-| **Pipe (cc)** | `cc` | `cc git "instruction"` | Quick CLI translations (low-latency, single commands) |
+| **Pipe (ca)** | `ca` | `ca git "instruction"` | Quick CLI translations (low-latency, single commands) |
 
 ## Core Principles
 
@@ -73,7 +73,7 @@ This is the **source repository** for the comme-ca agent orchestration system. T
 
 **Output:** Drift Report with prioritized recommendations
 
-### Pipe (cc) - CLI Command Translator
+### Pipe (ca) - CLI Command Translator
 **Use when:**
 - You need a quick command but can't remember syntax
 - Translating natural language to Git commands
@@ -124,7 +124,7 @@ audit
 ### Example 2: Quick Git Command
 ```bash
 # Instead of googling "how to undo last commit"
-cc git "undo last commit"
+ca git "undo last commit"
 # Output: git reset --soft HEAD~1
 ```
 
@@ -158,7 +158,7 @@ audit
 - ❌ Auto-fix issues (only recommend)
 - ❌ Modify code or specs
 
-### Pipe (cc)
+### Pipe (ca)
 - ✅ Return commands based on natural language
 - ❌ Execute commands (user must run them)
 - ❌ Interactive multi-turn conversations
@@ -174,7 +174,7 @@ alias plan="goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md"
 alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
 
 # Low-Lift CLI Tool
-export PATH="$HOME/dev/comme-ca/bin:$PATH"  # Adds 'cc' to PATH
+export PATH="$HOME/dev/comme-ca/bin:$PATH"  # Adds 'ca' to PATH
 ```
 
 Then use simply:
@@ -182,7 +182,7 @@ Then use simply:
 prep    # Bootstrap environment
 plan    # Create specs
 audit   # Check for drift
-cc git "command"  # Quick translations
+ca git "command"  # Quick translations
 ```
 
 ## Repository Structure (comme-ca)
@@ -190,7 +190,7 @@ cc git "command"  # Quick translations
 This **is** the comme-ca Intelligence System source repository:
 - **Prompts:** `prompts/roles/` - Agent persona definitions
 - **Scaffolds:** `scaffolds/high-low/` - Templates for target projects
-- **CLI:** `bin/cc` - Command translator wrapper
+- **CLI:** `bin/ca` - Command translator wrapper
 - **Installer:** `bin/install` - Bootstrap script
 
 To use comme-ca in other projects:
@@ -200,16 +200,16 @@ git clone git@github.com:popscallion/comme-ca.git ~/dev/comme-ca
 
 # Initialize a target project
 cd /path/to/your/project
-cc init
+ca init
 ```
 
 For full documentation, see `README.md` in this repository.
 
 ## Troubleshooting
 
-**"cc command not found"**
+**"ca command not found"**
 - Ensure `~/dev/comme-ca/bin` is in your PATH
-- Verify `~/dev/comme-ca/bin/cc` is executable (`chmod +x`)
+- Verify `~/dev/comme-ca/bin/ca` is executable (`chmod +x`)
 
 **"Agent not following instructions"**
 - Ensure agent is loading the correct persona file
@@ -223,7 +223,7 @@ For full documentation, see `README.md` in this repository.
 
 ## Customization
 
-This is the **canonical AGENTS.md** for comme-ca. It is copied to target projects via `cc init`.
+This is the **canonical AGENTS.md** for comme-ca. It is copied to target projects via `ca init`.
 
 **For target projects:** Customize your copy by:
 - Adding project-specific agent roles

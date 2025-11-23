@@ -12,4 +12,4 @@ Before performing any task in this repository, read:
 
 **Note:** This is the source repository for comme-ca. This CLAUDE.md and AGENTS.md serve as both:
 1. The governing rules for agents working in this repo
-2. The templates copied to target projects via `cc init`
+2. The templates copied to target projects via `ca init`

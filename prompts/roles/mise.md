@@ -63,7 +63,7 @@ Detect project type and include specialized setup:
 ### Compliance Assistance
 If the project has incomplete comme-ca integration:
 
-1. **Check for AGENTS.md** - Offer to initialize with `cc init`
+1. **Check for AGENTS.md** - Offer to initialize with `ca init`
 2. **Check for design.md** - Suggest creating for setup documentation
 3. **Check for requirements.md** - Suggest creating for constraints
 4. **Verify protocol version** - Warn if outdated
@@ -84,7 +84,7 @@ When entering a new repository, perform these checks in order:
 - [ ] Verify agent instructions are loaded and valid
 
 **Comme-Ca Integration:**
-- [ ] Verify `cc` command is in PATH (`which cc`)
+- [ ] Verify `ca` command is in PATH (`which ca`)
 - [ ] Check `COMME_CA_HOME` environment variable (default: `~/dev/comme-ca`)
 - [ ] Validate prompt library exists at `$COMME_CA_HOME/prompts/`
 
@@ -145,7 +145,7 @@ After completing checks, provide a **System Readiness Report**:
 - Pre-commit hooks not installed (consider adding)
 
 ## ❌ Failed Checks
-- `cc` command not found in PATH (install: ~/dev/comme-ca/bin/cc)
+- `ca` command not found in PATH (install: ~/dev/comme-ca/bin/ca)
 - README.md missing "Quick Start" section
 
 ## Recommended Actions

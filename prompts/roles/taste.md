@@ -253,7 +253,7 @@ For each feature in specs/:
 ### ⚠️ Drift Detected
 - Local version: 1.0.0
 - Global version: 1.1.0
-- **Action:** Run `cc update` to sync AGENTS.md
+- **Action:** Run `ca update` to sync AGENTS.md
 ```
 
 **Why This Matters:**

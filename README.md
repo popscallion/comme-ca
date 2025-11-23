@@ -35,13 +35,13 @@ EOF
 
 ### CLI (Pipe)
 ```bash
-cc <tool> "<instruction>"
+ca <tool> "<instruction>"
 ```
 
 **Examples:**
 ```bash
-cc git "create branch feature/auth"
-cc shell "find all JSON files"
+ca git "create branch feature/auth"
+ca shell "find all JSON files"
 ```
 
 ### Agents (High-Lift)
@@ -54,7 +54,7 @@ audit  # QA & drift detection (taste)
 ### Project Setup
 ```bash
 cd <project>
-cc init
+ca init
 ```
 Copies `AGENTS.md` and `CLAUDE.md` to current directory.
 
@@ -69,7 +69,7 @@ comme-ca/
 ├── README.md
 ├── requirements.md
 ├── bin/
-│   ├── cc                 # CLI wrapper
+│   ├── ca                 # CLI wrapper (renamed from cc)
 │   └── install            # Bootstrap installer
 ├── prompts/
 │   ├── pipe/              # Single-shot prompts
@@ -90,20 +90,20 @@ comme-ca/
 
 ## Modes
 
-### Pipe Prompts (`cc`)
+### Pipe Prompts (`ca`)
 
 Translate natural language to executable commands instantly.
 
 **How it works:**
-1. Input: `cc git "undo last commit"`
+1. Input: `ca git "undo last commit"`
 2. Script reads `prompts/pipe/git.md`
 3. Applies Raycast Shim (replaces `{argument}`, `{shell_name}`, etc.)
 4. Forwards to `goose` (default) or `claude`
 5. Output: `git reset --soft HEAD~1`
 
 **Available prompts:**
-- `cc git "<instruction>"` - Git/GitHub commands
-- `cc shell "<instruction>"` - Shell commands
+- `ca git "<instruction>"` - Git/GitHub commands
+- `ca shell "<instruction>"` - Shell commands
 
 **Configuration:**
 ```bash
@@ -141,19 +141,19 @@ audit                                # Verify specs match implementation
 
 ### Example 2: Quick Git Translation
 ```bash
-cc git "create branch feature/auth"
+ca git "create branch feature/auth"
 # Output: git checkout -b feature/auth
 
-cc git "undo last 3 commits but keep changes"
+ca git "undo last 3 commits but keep changes"
 # Output: git reset --soft HEAD~3
 ```
 
 ### Example 3: Shell Command Translation
 ```bash
-cc shell "find all JSON files larger than 10MB"
+ca shell "find all JSON files larger than 10MB"
 # Output: find . -name "*.json" -size +10M
 
-cc shell "list processes using port 8080"
+ca shell "list processes using port 8080"
 # Output: lsof -i :8080
 ```
 
@@ -167,7 +167,7 @@ All `prompts/pipe/*.md` files work directly in Raycast:
 2. Create AI Command → Import from File
 3. Select `~/dev/comme-ca/prompts/pipe/git.md`
 
-The `cc` wrapper implements a "Raycast Shim" that parses placeholders (`{argument}`, `{shell_name}`, etc.), ensuring cross-platform compatibility.
+The `ca` wrapper implements a "Raycast Shim" that parses placeholders (`{argument}`, `{shell_name}`, etc.), ensuring cross-platform compatibility.
 
 ---
 
