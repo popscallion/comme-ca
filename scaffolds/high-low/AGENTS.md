@@ -1,4 +1,4 @@
-<!-- @protocol: comme-ca @version: 1.1.0 -->
+<!-- @protocol: comme-ca @version: 1.2.0 -->
 # Agent Orchestration
 **Powered by comme-ca Intelligence System**
 
@@ -36,6 +36,30 @@ alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
 
 # Low-Lift CLI Tool
 export PATH="$HOME/dev/comme-ca/bin:$PATH"
+```
+
+## Multi-Tool Integration
+
+Comme-ca prompts work with multiple AI CLI tools. Goose is primary; others are optional.
+
+| Tool | Setup Command | Config Location |
+|:-----|:--------------|:----------------|
+| **Goose** | None needed | Reads prompts directly |
+| **Auggie** | `ca setup:auggie` | `~/.augment/commands/` |
+| **Claude Code** | `ca setup:claude` | `~/.claude/commands/` |
+| **Crush** | `ca setup:crush` | `~/.config/crush/commands/` |
+
+```bash
+# Check tool status
+ca setup:list
+
+# Configure tools
+ca setup:all        # All tools at once
+ca setup:auggie     # Individual tool
+
+# Maintenance
+ca drift            # Check for prompt updates
+ca setup:sync       # Update drifted tools
 ```
 
 ## Usage
@@ -98,6 +122,6 @@ For full documentation: `~/dev/comme-ca/README.md`
 
 ---
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 **Source:** comme-ca Intelligence System
-**Last Updated:** 2025-11-21
+**Last Updated:** 2025-11-23
