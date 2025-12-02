@@ -1,4 +1,3 @@
-# Comparative Analysis
 **command: \compare
 
 **Role & Goal:**
