@@ -12,7 +12,8 @@
 
 ### 3. Key Resources & References
 *   **[Haiku 4.5 Optimized Prompt (v3)](path/to/prompt)** – "The Intelligent Triage" (Context-heavy, inference allowed).
-*   **[OSS-120b Hardened Prompt (v2)](path/to/prompt)** – "The Cerebras State Machine" (Rule-heavy, schema hardened).
+*   **[OSS-120b Hardened Prompt (v3)](research-cerebras120b.md)** – "The Cerebras State Machine" (Rule-heavy, schema hardened, quality gating).
+*   **[Test Harness Spec](test-harness-spec.md)** – Validation suite for v3 hardening fixes.
 *   **[Tavily API Docs](https://docs.tavily.com)** – Reference for `exclude_domains` and `include_raw_content` constraints.
 
 ### 4. Macro-Context (System Architecture)
@@ -29,11 +30,16 @@
 *   **Parameter Tuning:**
     *   **Creativity (Temperature):** **Medium (0.4–0.6)** is the global optimum. Low (0) causes logic loops and artifact leaks; High (0.8+) causes tool hallucinations.
     *   **Reasoning Effort:** **Medium** for OSS (stability); **Low (Native)** + **High (MCP)** for Haiku.
-*   **Critical Bug Fixes:**
+*   **Critical Bug Fixes (v2 → v3):**
     *   **Tavily Crash:** Enforced `include_raw_content: false` and `exclude_domains` to prevent context overflow on Cerebras.
     *   **Schema Crash:** Hardcoded `revisesThought: OMIT` rules to prevent OSS-120b from sending `0` (Integer) where `null` was expected.
     *   **"Zombie Consent":** Added specific output rule: `In Phase 2, do NOT ask for consent.`
     *   **Typos/Slang:** Added **"Intent Recognition"** block to allow models to fix "two blur" -> "tubular" without triggering heavy reasoning tools.
+    *   **v3 Additions (2025-12-07):**
+        *   **Domain Expansion:** Added `facebook.com`, `lg.com` to exclude list (prevents language contamination, spam).
+        *   **Quality Gating:** Hard threshold `score < 0.15` → discard; language filter auto-retry.
+        *   **Truncation Protocol:** `[Partial]` marking, no recursive fetch, explicit warnings.
+        *   **Source Validation:** Enforced in CRITICAL OUTPUT RULES (#6).
 
 ### 6. Rationale & Decision Record
 *   **Why Bifurcate?**
