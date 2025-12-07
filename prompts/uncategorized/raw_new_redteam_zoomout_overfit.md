@@ -1,0 +1,1 @@
+im worried we might be overfitting here. can we zoom out and red team this, compare the various iterations of stacks from right befpre i showed you the doomsday stuff up to present point, should be 3-5 iterations, and make a case for each. tabulate. remember that the main priority is to spin up a daily driver asap, while building in flexibility in case i want to develop doomsdayi
