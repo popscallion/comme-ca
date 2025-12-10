@@ -343,15 +343,16 @@ chmod +x "${COMME_CA_DIR}/bin/ca"
 - [x] Added `ca setup:remove` command
 - [x] Added `ca drift` command
 - [x] Drift detection via hash comparison
+- [x] Update README.md (cc → ca)
+- [x] Update AGENTS.md (cc → ca)
+- [x] Update scaffolds/high-low/AGENTS.md
+- [x] Update requirements.md
+- [x] Update chezmoi install script
+- [x] Add `ca setup:crush` (when Crush docs available)
 
 ### Pending
-- [ ] Update README.md (cc → ca)
-- [ ] Update AGENTS.md (cc → ca)
-- [ ] Update scaffolds/high-low/AGENTS.md
-- [ ] Update requirements.md
-- [ ] Update chezmoi install script
-- [ ] Add `ca setup:crush` (when Crush docs available)
 - [ ] Add shell completion for `ca` commands
+
 
 ---
 
