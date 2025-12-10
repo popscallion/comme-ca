@@ -210,4 +210,6 @@ COMME_CA_HOME     # Installation path (default: ~/dev/comme-ca)
 
 ## License
 
-MIT
+
+
+GNU General Public License v3.0

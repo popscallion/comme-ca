@@ -130,10 +130,14 @@ Collect information with smart defaults (press Enter to accept):
 **Required:**
 - `Project name/title:` (no default, user must provide)
 
-**Optional (with defaults):**
-- `Repository visibility [private]:` → private | public
-- `Create GitHub remote [yes]:` → yes | no
-- `License [GPL-3.0]:` → GPL-3.0 | MIT | Apache-2.0 | other SPDX identifier
+**Project Strategy:**
+- `Project Type:`
+  - **Utility/Library:** High reusability, goal is ubiquity (default for tools)
+  - **Application/Product:** Standalone app, goal is protection (default for apps)
+
+**License Selection (based on Project Type):**
+- *If Utility:* `License [MIT]:` → MIT | Apache-2.0
+- *If Application:* `License [AGPL-3.0]:` → AGPL-3.0 | GPL-3.0
 
 **Auto-Generated:**
 - Directory slug: Kebab-case transformation of project title
@@ -141,12 +145,14 @@ Collect information with smart defaults (press Enter to accept):
 - GitHub account: User's personal account (detect from `gh api user`)
 - Default branch: Always `main`
 - README: Always included
+- GOVERNANCE: Always included (Do-ocracy model)
 
 ### Template Processing
 
 Templates are stored in `~/dev/comme-ca/scaffolds/project-init/`:
 - `README.template.md`
-- `LICENSE.gpl.txt` / `LICENSE.mit.txt`
+- `LICENSE.mit.txt` / `LICENSE.apache.txt` / `LICENSE.agpl.txt` / `LICENSE.gpl.txt`
+- `GOVERNANCE.template.md`
 - `gitignore.template`
 - `requirements.template.md`
 - `design.template.md`
@@ -157,6 +163,7 @@ Placeholders are substituted during scaffolding:
 - `{{YEAR}}` → Current year (for license)
 - `{{GIT_USER_NAME}}` → From `git config user.name`
 - `{{GIT_USER_EMAIL}}` → From `git config user.email`
+- `{{LICENSE_TYPE}}` → The selected license name (e.g., "MIT License", "GNU AGPL v3")
 
 ### Scaffolding Actions
 
@@ -168,8 +175,10 @@ Perform these steps atomically (all-or-nothing):
    ├── .git/              # via git init
    ├── AGENTS.md          # copied from scaffolds/high-low/
    ├── CLAUDE.md          # copied from scaffolds/high-low/
+   ├── GEMINI.md          # copied from scaffolds/high-low/
    ├── README.md          # from README.template.md
-   ├── LICENSE            # from LICENSE.gpl.txt or LICENSE.mit.txt
+   ├── LICENSE            # from selected template
+   ├── GOVERNANCE.md      # from GOVERNANCE.template.md
    ├── .gitignore         # from gitignore.template
    └── specs/
        ├── requirements.md # from requirements.template.md
