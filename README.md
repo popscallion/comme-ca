@@ -77,13 +77,20 @@ comme-ca/
 │   │   ├── git.md
 │   │   └── shell.md
 │   └── roles/             # Agent personas
-│       ├── mise.md        # System bootstrapper
+│       ├── mise.md        # System bootstrapper + git scaffolding
 │       ├── menu.md        # Architect/planner
 │       └── taste.md       # QA/drift detector
 └── scaffolds/
-    └── high-low/
-        ├── AGENTS.md      # Router for consumer projects
-        └── CLAUDE.md      # Pointer to AGENTS.md
+    ├── high-low/          # Agent orchestration files
+    │   ├── AGENTS.md      # Router for consumer projects
+    │   └── CLAUDE.md      # Pointer to AGENTS.md
+    └── project-init/      # Git scaffolding templates
+        ├── README.template.md
+        ├── LICENSE.gpl.txt
+        ├── LICENSE.mit.txt
+        ├── gitignore.template
+        ├── requirements.template.md
+        └── design.template.md
 ```
 
 ---
@@ -115,9 +122,9 @@ export COMME_CA_HOME=/custom/path  # Default: ~/dev/comme-ca
 
 Multi-step, stateful workflows for planning, setup, and auditing.
 
-#### **mise** (`prep`) - System Bootstrapper
-**Responsibility:** Ensure development environments are ready.
-Checks git initialization, validates `AGENTS.md`, ensures tools are installed, provides system readiness report.
+#### **mise** (`prep`) - System Bootstrapper & Git Scaffolding
+**Responsibility:** Ensure development environments are ready and scaffold new projects.
+Checks git initialization (offers to scaffold if missing), validates `AGENTS.md`, ensures tools are installed, provides system readiness report. Can interactively create new repositories with GitHub integration.
 
 #### **menu** (`plan`) - Architect & Requirements Gatherer
 **Responsibility:** Transform ideas into specifications (without writing code).
@@ -131,15 +138,33 @@ Compares `specs/` vs code, checks `README.md` vs reality, identifies stale tasks
 
 ## Workflow Examples
 
-### Example 1: Starting a New Project
+### Example 1: Scaffolding a New Project
 ```bash
-prep                                 # Verify environment
-plan                                 # Create specs
-# (Implement tasks)
-audit                                # Verify specs match implementation
+mkdir my-new-project && cd my-new-project
+prep                                 # Detects no .git, offers scaffolding
+# Interactive prompts:
+# - Project name: My New Project
+# - Visibility: [private] 
+# - Create GitHub remote: [yes]
+# - License: [GPL-3.0]
+# 
+# Creates: .git/, AGENTS.md, CLAUDE.md, README.md, LICENSE, 
+#          .gitignore, specs/requirements.md, specs/design.md
+# Commits and pushes to GitHub
+
+plan                                 # Create feature specs
+# (Implement features)
+audit                                # Verify implementation matches specs
 ```
 
-### Example 2: Quick Git Translation
+### Example 2: Validating Existing Project
+```bash
+cd existing-project
+prep                                 # Detects .git, runs validation checks
+# Output: System Readiness Report with pass/warn/fail status
+```
+
+### Example 3: Quick Git Translation
 ```bash
 ca git "create branch feature/auth"
 # Output: git checkout -b feature/auth
@@ -148,7 +173,7 @@ ca git "undo last 3 commits but keep changes"
 # Output: git reset --soft HEAD~3
 ```
 
-### Example 3: Shell Command Translation
+### Example 4: Shell Command Translation
 ```bash
 ca shell "find all JSON files larger than 10MB"
 # Output: find . -name "*.json" -size +10M

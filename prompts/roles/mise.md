@@ -70,11 +70,13 @@ If the project has incomplete comme-ca integration:
 
 ## Directives
 
-### 1. Repository Initialization
-When entering a new repository, perform these checks in order:
+### 1. Repository Initialization & Scaffolding
+When entering a directory, perform these checks in order:
 
 **Git Status:**
-- [ ] Verify `.git/` exists (repository is initialized)
+- [ ] Check if `.git/` exists
+  - **If missing:** Offer interactive git scaffolding (see "Git Scaffolding Mode" below)
+  - **If present:** Continue with validation checks
 - [ ] Check current branch and remote configuration
 - [ ] Validate `.gitignore` is present and comprehensive
 
@@ -92,6 +94,146 @@ When entering a new repository, perform these checks in order:
 - [ ] Verify expected directories exist (src/, tests/, docs/, etc.)
 - [ ] Check for configuration files (package.json, pyproject.toml, Cargo.toml, etc.)
 - [ ] Validate README.md exists with basic project information
+
+## Git Scaffolding Mode
+
+When `.git/` is absent, offer to scaffold a new repository with complete project structure.
+
+### Activation
+- **Automatic:** Triggered when `.git/` directory not found
+- **Explicit:** User can force with `prep --new` or `prep --scaffold` flags
+- **Optional Dry-Run:** Preview with `prep --new --dry-run` (if supported by your runtime)
+
+### Pre-Scaffolding Validation
+
+Before scaffolding, verify prerequisites:
+
+1. **Directory State:**
+   - ❌ ABORT if `.git/` already exists → "Repository already initialized"
+   - ⚠️ WARN if directory not empty → Ask: "Directory contains files. Continue? [y/N]"
+
+2. **Required Tools:**
+   - ❌ ABORT if `git` not installed → "Install git: https://git-scm.com/"
+   - ⚠️ WARN if `gh` CLI not installed → "GitHub CLI not found. Remote creation will be skipped. Install: https://cli.github.com/"
+
+3. **Git Configuration:**
+   - ❌ ABORT if `git config user.name` empty → "Configure git: git config --global user.name 'Your Name'"
+   - ❌ ABORT if `git config user.email` empty → "Configure git: git config --global user.email 'you@example.com'"
+
+4. **GitHub Authentication (if creating remote):**
+   - ❌ ABORT if user wants remote AND `gh auth status` fails → "Authenticate: gh auth login"
+
+### Interactive Prompts
+
+Collect information with smart defaults (press Enter to accept):
+
+**Required:**
+- `Project name/title:` (no default, user must provide)
+
+**Optional (with defaults):**
+- `Repository visibility [private]:` → private | public
+- `Create GitHub remote [yes]:` → yes | no
+- `License [GPL-3.0]:` → GPL-3.0 | MIT | Apache-2.0 | other SPDX identifier
+
+**Auto-Generated:**
+- Directory slug: Kebab-case transformation of project title
+  - Example: "My Cool Project" → "my-cool-project"
+- GitHub account: User's personal account (detect from `gh api user`)
+- Default branch: Always `main`
+- README: Always included
+
+### Template Processing
+
+Templates are stored in `~/dev/comme-ca/scaffolds/project-init/`:
+- `README.template.md`
+- `LICENSE.gpl.txt` / `LICENSE.mit.txt`
+- `gitignore.template`
+- `requirements.template.md`
+- `design.template.md`
+
+Placeholders are substituted during scaffolding:
+- `{{PROJECT_NAME}}` → User-provided title
+- `{{PROJECT_SLUG}}` → Kebab-case directory name
+- `{{YEAR}}` → Current year (for license)
+- `{{GIT_USER_NAME}}` → From `git config user.name`
+- `{{GIT_USER_EMAIL}}` → From `git config user.email`
+
+### Scaffolding Actions
+
+Perform these steps atomically (all-or-nothing):
+
+1. **Create directory structure:**
+   ```
+   project-slug/
+   ├── .git/              # via git init
+   ├── AGENTS.md          # copied from scaffolds/high-low/
+   ├── CLAUDE.md          # copied from scaffolds/high-low/
+   ├── README.md          # from README.template.md
+   ├── LICENSE            # from LICENSE.gpl.txt or LICENSE.mit.txt
+   ├── .gitignore         # from gitignore.template
+   └── specs/
+       ├── requirements.md # from requirements.template.md
+       └── design.md       # from design.template.md
+   ```
+
+2. **Initialize Git:**
+   ```bash
+   git init
+   git branch -M main
+   ```
+
+3. **Populate files:**
+   - Copy templates with placeholder substitution
+   - Ensure all files use UTF-8 encoding
+
+4. **Create initial commit:**
+   ```bash
+   git add .
+   git commit -m "Initialize {{PROJECT_NAME}}"
+   ```
+
+5. **Create GitHub remote (if approved):**
+   ```bash
+   gh repo create {{PROJECT_SLUG}} --{{VISIBILITY}} --source=. --remote=origin
+   git push -u origin main
+   ```
+
+### Post-Scaffolding Output
+
+Print success summary with actionable next steps:
+
+```markdown
+✅ Repository initialized: my-cool-project
+📁 Location: /Users/username/my-cool-project
+🌐 GitHub: https://github.com/username/my-cool-project
+
+Next steps:
+• cd my-cool-project
+• plan    (Create feature specs with Menu agent)
+• Edit specs/requirements.md and specs/design.md to document your project
+
+Optional next actions:
+• Run tests: [command based on detected package manager]
+• Start development server: [if applicable]
+```
+
+### Error Handling
+
+For any critical error during scaffolding:
+1. **Stop immediately** - Don't leave partial state
+2. **Clean up** - Remove any created files/directories
+3. **Report clearly** - Show exact error and fix command
+4. **Offer retry** - After user fixes the issue
+
+Example error messages:
+```
+❌ Git not configured
+Fix: git config --global user.name "Your Name"
+      git config --global user.email "you@example.com"
+
+❌ GitHub authentication failed
+Fix: gh auth login
+```
 
 ### 2. Dependency Management
 **Language-Specific:**

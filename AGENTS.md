@@ -9,7 +9,7 @@ This is the **source repository** for the comme-ca agent orchestration system. T
 
 | Agent Role | Alias | Command | When to Use |
 |:-----------|:------|:--------|:------------|
-| **Mise (prep)** | `prep` | `goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md` | Bootstrapping, environment setup, dependency checks |
+| **Mise (prep)** | `prep` | `goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md` | New project scaffolding, environment setup, dependency checks |
 | **Menu (plan)** | `plan` | `goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md` | Requirements gathering, architecture planning, spec writing |
 | **Taste (audit)** | `audit` | `goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md` | Code review, drift detection, documentation sync |
 | **Pipe (ca)** | `ca` | `ca git "instruction"` | Quick CLI translations (low-latency, single commands) |
@@ -23,21 +23,26 @@ This is the **source repository** for the comme-ca agent orchestration system. T
 
 ## When to Use Each Agent
 
-### Mise (prep) - System Bootstrapper
+### Mise (prep) - System Bootstrapper & Git Scaffolding
 **Use when:**
+- Starting a brand new project from scratch
 - Setting up this repository on a new machine
 - Onboarding a new developer
 - Verifying dependencies after a long break
 - Troubleshooting "it works on my machine" issues
 
 **What it does:**
-- Checks for git initialization
-- Validates `AGENTS.md` exists
+- Detects if `.git/` exists and offers interactive scaffolding if missing
+- Creates complete project structure with GitHub integration
+- Scaffolds: README, LICENSE, .gitignore, AGENTS.md, CLAUDE.md, specs/
+- Validates `AGENTS.md` exists in existing repos
 - Ensures required tools are installed
 - Verifies project structure
 - Provides a "System Readiness Report"
 
-**Output:** Pass/Warn/Fail checklist with actionable fixes
+**Output:** 
+- For new projects: Interactive scaffolding with GitHub repo creation
+- For existing projects: Pass/Warn/Fail checklist with actionable fixes
 
 ### Menu (plan) - Architect & Requirements Gatherer
 **Use when:**
@@ -103,7 +108,28 @@ For target projects using comme-ca, also check for:
 
 ## Workflow Examples
 
-### Example 1: Starting a New Feature
+### Example 1: Scaffolding a Brand New Project
+```bash
+mkdir my-new-project && cd my-new-project
+prep
+# Detects no .git, offers interactive scaffolding:
+# - Project name: My New Project
+# - Visibility: [private]
+# - Create GitHub remote: [yes]
+# - License: [GPL-3.0]
+#
+# Creates complete structure and pushes to GitHub
+
+plan
+# Create first feature specs
+
+# Implement features
+
+audit
+# Verify implementation matches specs
+```
+
+### Example 2: Starting a New Feature in Existing Project
 ```bash
 # Step 1: Plan the feature (Menu)
 plan
@@ -121,14 +147,14 @@ audit
 # Verifies specs match implementation
 ```
 
-### Example 2: Quick Git Command
+### Example 3: Quick Git Command
 ```bash
 # Instead of googling "how to undo last commit"
 ca git "undo last commit"
 # Output: git reset --soft HEAD~1
 ```
 
-### Example 3: Debugging Drift
+### Example 4: Debugging Drift
 ```bash
 # Something feels off...
 audit
@@ -141,8 +167,10 @@ audit
 - ✅ Read all files
 - ✅ Install dependencies (with confirmation)
 - ✅ Run diagnostic commands
-- ❌ Modify source code
-- ❌ Change architecture
+- ✅ Scaffold new projects (create .git, README, LICENSE, etc.)
+- ✅ Create GitHub repositories (with user approval)
+- ❌ Modify existing source code
+- ❌ Change architecture of existing projects
 
 ### Menu (plan)
 - ✅ Read all files
