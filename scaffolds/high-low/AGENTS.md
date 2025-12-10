@@ -18,7 +18,7 @@ This document defines how autonomous agents (Claude Code, Goose, or other AI ass
 
 Standard roles automatically detect and adapt to project documentation:
 
-- `@_ENTRYPOINT.md` - (Mandatory) The SitRep and context handover
+- `@_ENTRYPOINT.md` - (Mandatory) The current project state and context handover
 - `@design.md` - Technical architecture, workflows, dependencies
 - `@requirements.md` - Constraints, validation rules, quality gates
 - `@tasks.md` - Current work items and priorities

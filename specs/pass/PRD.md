@@ -14,7 +14,7 @@ AI agents often leave repositories in a "messy" state at the end of a session:
 
 ## 3. Goals
 1.  **Enforce Hygiene:** Consolidate documentation before every commit.
-2.  **Preserve Context:** Generate a structured "SitRep" (Situation Report) in `_ENTRYPOINT.md`.
+2.  **Preserve Context:** Generate a structured handoff in `_ENTRYPOINT.md`.
 3.  **Standardize Handoff:** Output a copy-pasteable prompt for the next agent.
 
 ## 4. Role Behavior (The Protocol)
@@ -27,7 +27,7 @@ AI agents often leave repositories in a "messy" state at the end of a session:
     *   Update `tasks.md` if items were completed.
     *   **Prune:** Mark outdated info as legacy or archive it. Avoid "split brain" (conflicting info).
 
-### B. The SitRep (`_ENTRYPOINT.md`)
+### B. The Handoff (`_ENTRYPOINT.md`)
 *   **Mandatory File:** Every project MUST have an `_ENTRYPOINT.md`.
 *   **Structure:**
     *   `1. The Situation:` High-level context.

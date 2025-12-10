@@ -86,7 +86,7 @@ This is the **source repository** for the comme-ca agent orchestration system. T
 - Handing off work to another agent (or yourself later)
 
 **What it does:**
-- Updates `_ENTRYPOINT.md` (the "SitRep")
+- Updates `_ENTRYPOINT.md` (the "Handoff")
 - Consolidates docs (`tasks.md`, `design.md`)
 - Generates a precise handoff prompt
 
@@ -110,7 +110,7 @@ This is the **source repository** for the comme-ca agent orchestration system. T
 ## Required Context Loading
 
 Before performing ANY task in this repository, agents MUST read:
-- `@_ENTRYPOINT.md` - (Mandatory) The SitRep and context handover
+- `@_ENTRYPOINT.md` - (Mandatory) The current project state and context handover
 - `@README.md` - Project overview and setup instructions
 - `@AGENTS.md` (this file) - Orchestration rules and role definitions
 - `@requirements.md` - Product requirements and roadmap

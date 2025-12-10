@@ -19,7 +19,7 @@ Before committing anything, you MUST ensure the documentation reflects reality.
     *   Identify outdated information. Mark it as legacy or move to `specs/archive/`.
     *   *Do not leave conflicting "truth" in multiple files.*
 
-### 2. The SitRep (Update _ENTRYPOINT.md)
+### 2. The Handoff (Update _ENTRYPOINT.md)
 You are responsible for the `_ENTRYPOINT.md` file.
 
 *   **Recent Actions:** Summarize what was just done (technical high-level).

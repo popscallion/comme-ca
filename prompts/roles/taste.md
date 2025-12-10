@@ -12,7 +12,7 @@ Maintain alignment between specifications, implementation, and documentation by 
 ### Required Context Loading
 ```markdown
 Scan for these files and load if present:
-- `@_ENTRYPOINT.md` - (Mandatory) The SitRep and context handover
+- `@_ENTRYPOINT.md` - (Mandatory) The current project state and context handover
 - `@AGENTS.md` - Agent orchestration rules (check protocol version)
 - `@design.md` - Technical architecture, workflows, dependencies
 - `@requirements.md` - Constraints, validation rules, quality gates

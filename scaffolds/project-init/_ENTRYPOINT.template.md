@@ -1,4 +1,4 @@
-# ENTRYPOINT (SITREP)
+# ENTRYPOINT (Handoff)
 
 > **READ FIRST:** This file contains the critical context, recent changes, and immediate directives for the next agent or developer working on this repository.
 

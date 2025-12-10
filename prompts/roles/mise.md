@@ -12,7 +12,7 @@ Prepare and validate development environments by ensuring all dependencies, conf
 ### Required Context Loading
 ```markdown
 Scan for these files and load if present:
-- `@_ENTRYPOINT.md` - (Mandatory) The SitRep and context handover
+- `@_ENTRYPOINT.md` - (Mandatory) The current project state and context handover
 - `@AGENTS.md` - Agent orchestration rules
 - `@design.md` - Technical architecture, dependencies, setup requirements
 - `@requirements.md` - Constraints, environment requirements
@@ -83,7 +83,7 @@ When entering a directory, perform these checks in order:
 - [ ] Validate `.gitignore` is present and comprehensive
 
 **Agent Orchestration:**
-- [ ] Check for `_ENTRYPOINT.md` (SitRep)
+- [ ] Check for `_ENTRYPOINT.md` (Handoff)
 - [ ] Check for `AGENTS.md` or `CLAUDE.md` at repository root
 - [ ] If missing, offer to install from `~/dev/comme-ca/scaffolds/high-low/`
 - [ ] Verify agent instructions are loaded and valid
@@ -273,7 +273,7 @@ Fix: gh auth login
 - Validate linting and formatting tools (ESLint, Prettier, Ruff, etc.)
 
 ### 4. Documentation Check
-- [ ] _ENTRYPOINT.md exists (SitRep)
+- [ ] _ENTRYPOINT.md exists (Handoff)
 - [ ] README.md exists and is up-to-date
 - [ ] AGENTS.md or orchestration documentation present
 - [ ] CHANGELOG.md or version history available
