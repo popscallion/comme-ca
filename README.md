@@ -56,7 +56,7 @@ audit  # QA & drift detection (taste)
 cd <project>
 cca init
 ```
-Copies `AGENTS.md` and `CLAUDE.md` to current directory.
+Copies `AGENTS.md`, `CLAUDE.md`, and `GEMINI.md` to current directory.
 
 ---
 
@@ -83,7 +83,8 @@ comme-ca/
 └── scaffolds/
     ├── high-low/          # Agent orchestration files
     │   ├── AGENTS.md      # Router for consumer projects
-    │   └── CLAUDE.md      # Pointer to AGENTS.md
+    │   ├── CLAUDE.md      # Pointer to AGENTS.md
+    │   └── GEMINI.md      # Pointer to AGENTS.md
     └── project-init/      # Git scaffolding templates
         ├── README.template.md
         ├── LICENSE.gpl.txt

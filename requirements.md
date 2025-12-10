@@ -121,6 +121,7 @@ Artifacts that allow *other* repositories to inherit intelligence from `comme-ca
     *   "For planning, load the persona from `~/dev/comme-ca/prompts/roles/menu.md`."
     *   "For quick CLI tasks, use the `cca` tool."
 2.  **`CLAUDE.md`**: A symlink/pointer file directing Claude Code to read `AGENTS.md`.
+3.  **`GEMINI.md`**: A context file using `@` import syntax to mirror `AGENTS.md`.
 
 ### E. Bootstrap Installer (`bin/install`)
 A Bash script that automates the installation and configuration of comme-ca.
@@ -155,4 +156,4 @@ The implementing agent must perform the following steps:
 *   **Test 3 (High-Lift):** A user can launch an agent session using the `taste` persona to audit the `comme-ca` repo itself.
 *   **Test 4 (Independence):** The repository does not contain dotfiles (configurations), only intelligence (prompts/scripts).
 *   **Test 5 (Bootstrap):** Running `bin/install` successfully clones the repo, detects the shell, and configures PATH and aliases.
-*   **Test 6 (Init):** Running `cca init` in a new directory successfully copies `AGENTS.md` and `CLAUDE.md` from scaffolds.
+*   **Test 6 (Init):** Running `cca init` in a new directory successfully copies `AGENTS.md`, `CLAUDE.md`, and `GEMINI.md` from scaffolds.

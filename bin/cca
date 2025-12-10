@@ -45,8 +45,8 @@ EOF
 
 # Init: Bootstrap agent orchestration in current directory
 init() {
-    if [[ -f "AGENTS.md" ]] || [[ -f "CLAUDE.md" ]]; then
-        echo "Error: AGENTS.md or CLAUDE.md already exists in $(pwd)" >&2
+    if [[ -f "AGENTS.md" ]] || [[ -f "CLAUDE.md" ]] || [[ -f "GEMINI.md" ]]; then
+        echo "Error: AGENTS.md, CLAUDE.md, or GEMINI.md already exists in $(pwd)" >&2
         exit 1
     fi
 
@@ -60,6 +60,7 @@ init() {
 
     cp "${scaffold_dir}/AGENTS.md" . || { echo "Error: Failed to copy AGENTS.md" >&2; exit 1; }
     cp "${scaffold_dir}/CLAUDE.md" . || { echo "Error: Failed to copy CLAUDE.md" >&2; exit 1; }
+    cp "${scaffold_dir}/GEMINI.md" . || { echo "Error: Failed to copy GEMINI.md" >&2; exit 1; }
 
     echo "Initialized agent orchestration in $(pwd)."
 }
