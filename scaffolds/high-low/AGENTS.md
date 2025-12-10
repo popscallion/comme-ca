@@ -11,7 +11,7 @@ This document defines how autonomous agents (Claude Code, Goose, or other AI ass
 | **Mise (prep)** | `prep` | `goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md` | New project scaffolding, environment setup, dependency checks |
 | **Menu (plan)** | `plan` | `goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md` | Requirements gathering, architecture planning, spec writing |
 | **Taste (audit)** | `audit` | `goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md` | Code review, drift detection, documentation sync |
-| **Pipe (ca)** | `ca` | `ca git "instruction"` | Quick CLI translations (low-latency, single commands) |
+| **Pipe (cca)** | `cca` | `cca git "instruction"` | Quick CLI translations (low-latency, single commands) |
 
 ## Context Detection
 
@@ -45,21 +45,20 @@ Comme-ca prompts work with multiple AI CLI tools. Goose is primary; others are o
 | Tool | Setup Command | Config Location |
 |:-----|:--------------|:----------------|
 | **Goose** | None needed | Reads prompts directly |
-| **Auggie** | `ca setup:auggie` | `~/.augment/commands/` |
-| **Claude Code** | `ca setup:claude` | `~/.claude/commands/` |
-| **Crush** | `ca setup:crush` | `~/.config/crush/commands/` |
+| **Claude Code** | `cca setup:claude` | `~/.claude/commands/` |
+| **Crush** | `cca setup:crush` | `~/.config/crush/commands/` |
 
 ```bash
 # Check tool status
-ca setup:list
+cca setup:list
 
 # Configure tools
-ca setup:all        # All tools at once
-ca setup:auggie     # Individual tool
+cca setup:all        # All tools at once
+cca setup:claude     # Individual tool
 
 # Maintenance
-ca drift            # Check for prompt updates
-ca setup:sync       # Update drifted tools
+cca drift            # Check for prompt updates
+cca setup:sync       # Update drifted tools
 ```
 
 ## Usage
@@ -68,7 +67,7 @@ ca setup:sync       # Update drifted tools
 prep    # Bootstrap environment, install dependencies
 plan    # Create specifications, gather requirements
 audit   # Check for drift, validate compliance
-ca git "command"  # Quick CLI translations
+cca git "command"  # Quick CLI translations
 ```
 
 ## Project Extensions
@@ -100,9 +99,9 @@ Most project-specific behavior should go in `requirements.md` (constraints/rules
 
 ## Troubleshooting
 
-**"ca command not found"**
+**"cca command not found"**
 - Add `~/dev/comme-ca/bin` to PATH
-- Verify executable: `chmod +x ~/dev/comme-ca/bin/ca`
+- Verify executable: `chmod +x ~/dev/comme-ca/bin/cca`
 
 **"Roles not finding project context"**
 - Create `design.md` for architecture documentation
@@ -110,13 +109,13 @@ Most project-specific behavior should go in `requirements.md` (constraints/rules
 - Roles automatically detect and use these files
 
 **"Need to update from comme-ca"**
-- Run `ca update` to pull latest and diff AGENTS.md
+- Run `cca update` to pull latest and diff AGENTS.md
 
 ## Integration with comme-ca
 
 - **Repository:** `~/dev/comme-ca`
 - **Prompts:** `~/dev/comme-ca/prompts/roles/`
-- **CLI Wrapper:** `~/dev/comme-ca/bin/ca`
+- **CLI Wrapper:** `~/dev/comme-ca/bin/cca`
 
 For full documentation: `~/dev/comme-ca/README.md`
 

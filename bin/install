@@ -191,10 +191,10 @@ main() {
     echo
     info "Next steps:"
     echo "  1. Restart your shell or run: source $(get_config_file "$(detect_shell)")"
-    echo "  2. Verify with: which ca"
-    echo "  3. Initialize a project: cd <project> && ca init"
+    echo "  2. Verify with: which cca"
+    echo "  3. Initialize a project: cd <project> && cca init"
     echo "  4. Use agents: prep, plan, audit"
-    echo "  5. Use pipe: ca git \"create branch foo\""
+    echo "  5. Use pipe: cca git \"create branch foo\""
     echo
 }
 

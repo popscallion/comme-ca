@@ -1,6 +1,6 @@
 This is an excellent foundation. Your `comme-ca` repository is a sophisticated "Prompt-Ops" implementation that decouples *intelligence* (prompts/roles) from *project state*.
 
-We can easily scaffold the new "Hybrid Architecture" (Daytona/Container-Use) into this existing structure. The beauty of `comme-ca` is that it already has the concept of "High Lift" vs "Low Lift" roles (`mise`/`menu`/`taste` vs `ca`).
+We can easily scaffold the new "Hybrid Architecture" (Daytona/Container-Use) into this existing structure. The beauty of `comme-ca` is that it already has the concept of "High Lift" vs "Low Lift" roles (`mise`/`menu`/`taste` vs `cca`).
 
 We just need to add the **infrastructure awareness** to these roles.
 
@@ -18,10 +18,10 @@ We don't need to rewrite your system. We just need to map your new infrastructur
     *   *New Responsibility:* Decides *which* mode a task requires.
     *   *Update:* When `plan` creates `tasks.md`, it should tag tasks as `[Low Touch]` (CLI/Backend) or `[High Touch]` (Visual/Frontend). This tells the human (or future orchestration agent) where to run them.
 
-3.  **`ca` (pipe) -> The Bridge**
+3.  **`cca` (pipe) -> The Bridge**
     *   *Current Role:* CLI Translator.
     *   *New Capability:* We can add "Pipe" prompts that control the infrastructure.
-    *   *New Prompts:* `prompts/pipe/daytona.md` (e.g., `ca daytona "spin up frontend"` -> `daytona create ...`).
+    *   *New Prompts:* `prompts/pipe/daytona.md` (e.g., `cca daytona "spin up frontend"` -> `daytona create ...`).
 
 ***
 
@@ -60,7 +60,7 @@ We will implement a **Hybrid Infrastructure** on a single headless host, integra
 
 2.  **Integration with `comme-ca`:**
     *   **`mise` (prep):** Will be updated to validate the presence of Daytona/Dagger and health-check the headless host connection.
-    *   **`ca` (pipe):** Will gain new prompts to control these tools (e.g., `ca sand "new visual env"`).
+    *   **`cca` (pipe):** Will gain new prompts to control these tools (e.g., `cca sand "new visual env"`).
     *   **`menu` (plan):** Will explicitly tag tasks in `tasks.md` as `[HEADLESS]` or `[VISUAL]` to guide execution.
 
 3.  **Future Proofing:**
@@ -89,7 +89,7 @@ To extend the `comme-ca` prompt orchestration system with a physical runtime env
 ## 2. User Stories
 *   **As `menu` (The Architect),** I want to define a task as `[VISUAL]` so the execution agent knows to request a Daytona environment with a desktop.
 *   **As a Developer,** I want to run `audit` (Taste) on three different branches simultaneously without them fighting over `localhost:3000`.
-*   **As a Developer,** I want to run `ca sand "open frontend"` and instantly get a VNC window to a container where an agent is waiting for instructions.
+*   **As a Developer,** I want to run `cca sand "open frontend"` and instantly get a VNC window to a container where an agent is waiting for instructions.
 
 ## 3. Functional Requirements
 
@@ -122,7 +122,7 @@ To extend the `comme-ca` prompt orchestration system with a physical runtime env
 
 ### 3.4. `comme-ca` Integration
 *   **New Pipe Prompt:** `prompts/pipe/sandbox.md`.
-    *   Usage: `ca sand "list environments"`, `ca sand "kill all audits"`.
+    *   Usage: `cca sand "list environments"`, `cca sand "kill all audits"`.
 *   **Drift Detection (`taste`):**
     *   Must be able to run *inside* a container and report back to the host (or commit to git).
 
@@ -144,7 +144,7 @@ To extend the `comme-ca` prompt orchestration system with a physical runtime env
 
 ## 5. Success Criteria
 *   **Concurrency:** 3 background agents + 1 foreground visual agent running simultaneously on the headless host.
-*   **Integration:** `ca sand` command successfully controls remote containers from the local laptop.
+*   **Integration:** `cca sand` command successfully controls remote containers from the local laptop.
 *   **Experience:** User can view a remote agent clicking buttons in a browser via a local VNC/Web window with <150ms latency.
 ```
 

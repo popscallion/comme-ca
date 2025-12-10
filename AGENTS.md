@@ -3,7 +3,7 @@
 
 This is the **source repository** for the comme-ca agent orchestration system. This document defines how autonomous agents (Claude Code, Goose, or other AI assistants) should operate within this repository. All agents must read and follow these orchestration rules.
 
-> **Note:** This AGENTS.md serves dual purposes: (1) it governs agent behavior in this repo, and (2) it is the template that `ca init` copies to target projects. Changes here propagate to all new projects.
+> **Note:** This AGENTS.md serves dual purposes: (1) it governs agent behavior in this repo, and (2) it is the template that `cca init` copies to target projects. Changes here propagate to all new projects.
 
 ## Quick Reference
 
@@ -12,7 +12,7 @@ This is the **source repository** for the comme-ca agent orchestration system. T
 | **Mise (prep)** | `prep` | `goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md` | New project scaffolding, environment setup, dependency checks |
 | **Menu (plan)** | `plan` | `goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md` | Requirements gathering, architecture planning, spec writing |
 | **Taste (audit)** | `audit` | `goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md` | Code review, drift detection, documentation sync |
-| **Pipe (ca)** | `ca` | `ca git "instruction"` | Quick CLI translations (low-latency, single commands) |
+| **Pipe (cca)** | `cca` | `cca git "instruction"` | Quick CLI translations (low-latency, single commands) |
 
 ## Core Principles
 
@@ -78,7 +78,7 @@ This is the **source repository** for the comme-ca agent orchestration system. T
 
 **Output:** Drift Report with prioritized recommendations
 
-### Pipe (ca) - CLI Command Translator
+### Pipe (cca) - CLI Command Translator
 **Use when:**
 - You need a quick command but can't remember syntax
 - Translating natural language to Git commands
@@ -150,7 +150,7 @@ audit
 ### Example 3: Quick Git Command
 ```bash
 # Instead of googling "how to undo last commit"
-ca git "undo last commit"
+cca git "undo last commit"
 # Output: git reset --soft HEAD~1
 ```
 
@@ -186,7 +186,7 @@ audit
 - ❌ Auto-fix issues (only recommend)
 - ❌ Modify code or specs
 
-### Pipe (ca)
+### Pipe (cca)
 - ✅ Return commands based on natural language
 - ❌ Execute commands (user must run them)
 - ❌ Interactive multi-turn conversations
@@ -202,7 +202,7 @@ alias plan="goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md"
 alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
 
 # Low-Lift CLI Tool
-export PATH="$HOME/dev/comme-ca/bin:$PATH"  # Adds 'ca' to PATH
+export PATH="$HOME/dev/comme-ca/bin:$PATH"  # Adds 'cca' to PATH
 ```
 
 Then use simply:
@@ -210,7 +210,7 @@ Then use simply:
 prep    # Bootstrap environment
 plan    # Create specs
 audit   # Check for drift
-ca git "command"  # Quick translations
+cca git "command"  # Quick translations
 ```
 
 ## Multi-Tool Integration
@@ -222,45 +222,42 @@ Comme-ca prompts can be used with multiple AI CLI tools. Goose is the primary ru
 | Tool | Status | Setup Command | Config Location |
 |:-----|:-------|:--------------|:----------------|
 | **Goose** | Primary | None needed | Reads prompts directly |
-| **Auggie** | Optional | `ca setup:auggie` | `~/.augment/commands/` |
-| **Claude Code** | Optional | `ca setup:claude` | `~/.claude/commands/` |
-| **Crush** | Optional | `ca setup:crush` | `~/.config/crush/commands/` |
+| **Claude Code** | Optional | `cca setup:claude` | `~/.claude/commands/` |
+| **Crush** | Optional | `cca setup:crush` | `~/.config/crush/commands/` |
 
 ### Managing Tools
 
 ```bash
 # Check which tools are configured
-ca setup:list
+cca setup:list
 
 # Configure a tool
-ca setup:auggie
-ca setup:claude
-ca setup:crush
+cca setup:claude
+cca setup:crush
 
 # Remove a tool's configuration
-ca setup:remove auggie
+cca setup:remove claude
 
 # Check for drift (prompt changes not yet synced)
-ca drift
+cca drift
 ```
 
 ### When to Use Each Tool
 
 - **Goose**: Primary runtime for all roles. Best for automation, CI/CD, and direct prompt execution.
-- **Auggie**: Has cloud-based codebase indexing. Good for deep codebase queries.
 - **Claude Code**: IDE integration. Good for development workflows.
 - **Crush**: Charm's terminal AI. Good for interactive terminal use.
 
 ### Drift Detection
 
-When you modify prompts in `~/dev/comme-ca/prompts/roles/`, configured tools may become out of sync. The `ca drift` command detects this by comparing MD5 hashes.
+When you modify prompts in `~/dev/comme-ca/prompts/roles/`, configured tools may become out of sync. The `cca drift` command detects this by comparing MD5 hashes.
 
 ```bash
 # Check all tools for drift
-ca drift
+cca drift
 
 # If drift detected, re-run setup for affected tools
-ca setup:auggie  # Regenerates from current prompts
+cca setup:claude  # Regenerates from current prompts
 ```
 
 ## Repository Structure (comme-ca)
@@ -268,7 +265,7 @@ ca setup:auggie  # Regenerates from current prompts
 This **is** the comme-ca Intelligence System source repository:
 - **Prompts:** `prompts/roles/` - Agent persona definitions
 - **Scaffolds:** `scaffolds/high-low/` - Templates for target projects
-- **CLI:** `bin/ca` - Command translator wrapper
+- **CLI:** `bin/cca` - Command translator wrapper
 - **Installer:** `bin/install` - Bootstrap script
 
 To use comme-ca in other projects:
@@ -278,16 +275,16 @@ git clone git@github.com:popscallion/comme-ca.git ~/dev/comme-ca
 
 # Initialize a target project
 cd /path/to/your/project
-ca init
+cca init
 ```
 
 For full documentation, see `README.md` in this repository.
 
 ## Troubleshooting
 
-**"ca command not found"**
+**"cca command not found"**
 - Ensure `~/dev/comme-ca/bin` is in your PATH
-- Verify `~/dev/comme-ca/bin/ca` is executable (`chmod +x`)
+- Verify `~/dev/comme-ca/bin/cca` is executable (`chmod +x`)
 
 **"Agent not following instructions"**
 - Ensure agent is loading the correct persona file
@@ -301,7 +298,7 @@ For full documentation, see `README.md` in this repository.
 
 ## Customization
 
-This is the **canonical AGENTS.md** for comme-ca. It is copied to target projects via `ca init`.
+This is the **canonical AGENTS.md** for comme-ca. It is copied to target projects via `cca init`.
 
 **For target projects:** Customize your copy by:
 - Adding project-specific agent roles

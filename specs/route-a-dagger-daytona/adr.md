@@ -35,7 +35,7 @@ The architecture is split into two distinct planes running on the **Headless Hos
 #### Integration with `comme-ca`
 The `comme-ca` repository serves as the "Control Plane":
 *   **`mise` (prep):** Validates infrastructure health (Docker, Daytona daemon).
-*   **`ca` (pipe):** Provides the CLI interface (`ca sand ...`) to spawn environments.
+*   **`cca` (pipe):** Provides the CLI interface (`cca sand ...`) to spawn environments.
 *   **`menu` (plan):** Categorizes work items as `[HEADLESS]` or `[VISUAL]`.
 
 #### Networking & Security
@@ -48,7 +48,7 @@ The `comme-ca` repository serves as the "Control Plane":
 A new CLI tool to manage the infrastructure.
 
 **Logic Flow:**
-1.  **Parse Input:** User runs `ca sand "spin up audit for feature-x"`.
+1.  **Parse Input:** User runs `cca sand "spin up audit for feature-x"`.
 2.  **Determine Type:** Agent determines if this is a headless or visual task.
 3.  **Execute Command:**
     *   *If Headless:* `container-use create --name feature-x ...`

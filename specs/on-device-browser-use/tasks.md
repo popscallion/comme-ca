@@ -1,4 +1,0 @@
-- [] read through adr.md to understand task
-- [] perform setup for both, using ollama to run and pull models. 
-- [] do some interactive benchmarking iwth user in the loop
-- [] also evaluate microsoft fara 7b and compare perf with qwen3 vl

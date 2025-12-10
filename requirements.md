@@ -20,7 +20,7 @@ To distinguish agent capabilities, this system uses specific naming conventions 
 
 | Internal Name | User Alias | Former Name | Responsibility | Scope |
 | :--- | :--- | :--- | :--- | :--- |
-| **`ca`** | N/A | `pp` | **The Wrapper** | The CLI tool that executes Pipe prompts. |
+| **`cca`** | N/A | `ca` | **The Wrapper** | The CLI tool that executes Pipe prompts. |
 | **`mise`** | `prep` | Initializer | **Setup** | Bootstrapping repos, ensuring tools/env are ready. |
 | **`menu`** | `plan` | Clarifier | **Planning** | Requirements gathering, spec generation, architecting. |
 | **`taste`** | `audit` | Maintainer | **QA/Sync** | Drift detection, code cleanup, doc synchronization. |
@@ -35,7 +35,7 @@ comme-ca/
 ├── README.md           # Documentation and alias definitions
 ├── requirements.md     # This PRD
 ├── bin/
-│   ├── ca              # The executable wrapper script (Bash)
+│   ├── cca             # The executable wrapper script (Bash)
 │   └── install         # Bootstrap installer script
 ├── prompts/
 │   ├── pipe/           # LOW-LIFT: Single-shot, fast prompts
@@ -57,13 +57,13 @@ comme-ca/
 
 ## 4. Component Specifications
 
-### A. The CLI Wrapper (`bin/ca`)
+### A. The CLI Wrapper (`bin/cca`)
 A Bash script serving as the bridge between the user's terminal and the Markdown prompts.
 
 **Requirements:**
 1.  **Engine Agnostic:** Must default to `goose` but support `claude` (headless) via configuration.
-2.  **Input Handling:** Must accept input via Argument (`ca git "undo"`) OR Stdin (`cat file | ca data-clean`).
-3.  **Init Subcommand:** Must support `ca init` to bootstrap agent orchestration in the current directory:
+2.  **Input Handling:** Must accept input via Argument (`cca git "undo"`) OR Stdin (`cat file | cca data-clean`).
+3.  **Init Subcommand:** Must support `cca init` to bootstrap agent orchestration in the current directory:
     *   Check if `AGENTS.md` or `CLAUDE.md` already exist
     *   Copy scaffold files from `~/dev/comme-ca/scaffolds/high-low/`
     *   Print success message: "Initialized agent orchestration in $(pwd)."
@@ -106,7 +106,7 @@ These are "Personas" used by autonomous agents (Claude/Goose) when running in lo
 
 1.  **`mise.md` (Alias: `prep`)**:
     *   **Role:** System bootstrapper.
-    *   **Directives:** Check for git initialization, check for `AGENTS.md`, ensure `ca` is in PATH, validate directory structure.
+    *   **Directives:** Check for git initialization, check for `AGENTS.md`, ensure `cca` is in PATH, validate directory structure.
 2.  **`menu.md` (Alias: `plan`)**:
     *   **Role:** Architect and Requirements gatherer.
     *   **Directives:** Interactively interview user, create `specs/[feature]/requirements.md`, generate `design.md` and `tasks.md`. Never write code; only write specs.
@@ -119,7 +119,7 @@ Artifacts that allow *other* repositories to inherit intelligence from `comme-ca
 
 1.  **`AGENTS.md`**: The constitution file copied into consumer projects. It explicitly defines:
     *   "For planning, load the persona from `~/dev/comme-ca/prompts/roles/menu.md`."
-    *   "For quick CLI tasks, use the `ca` tool."
+    *   "For quick CLI tasks, use the `cca` tool."
 2.  **`CLAUDE.md`**: A symlink/pointer file directing Claude Code to read `AGENTS.md`.
 
 ### E. Bootstrap Installer (`bin/install`)
@@ -140,7 +140,7 @@ A Bash script that automates the installation and configuration of comme-ca.
 The implementing agent must perform the following steps:
 
 1.  **Scaffold Structure:** Create the `comme-ca` directory tree.
-2.  **Implement The Pipe (`ca`):** Write the Bash script with the Regex Shim logic. Make executable.
+2.  **Implement The Pipe (`cca`):** Write the Bash script with the Regex Shim logic. Make executable.
 3.  **Create Templates:** Write the `_template.md`, `git.md`, and `shell.md` using the Raycast syntax.
 4.  **Define Personas:** Write the `mise`, `menu`, and `taste` markdown system prompts.
 5.  **Build Scaffolds:** Create the `high-low` folder with the master `AGENTS.md`.
@@ -150,9 +150,9 @@ The implementing agent must perform the following steps:
 
 ## 6. Success Criteria
 
-*   **Test 1 (Low-Lift):** Running `ca git "create branch foo"` outputs `git checkout -b foo` instantly without markdown formatting.
+*   **Test 1 (Low-Lift):** Running `cca git "create branch foo"` outputs `git checkout -b foo` instantly without markdown formatting.
 *   **Test 2 (Compatibility):** The content of `prompts/pipe/git.md` can be pasted into Raycast "Create AI Command" and works without modification.
 *   **Test 3 (High-Lift):** A user can launch an agent session using the `taste` persona to audit the `comme-ca` repo itself.
 *   **Test 4 (Independence):** The repository does not contain dotfiles (configurations), only intelligence (prompts/scripts).
 *   **Test 5 (Bootstrap):** Running `bin/install` successfully clones the repo, detects the shell, and configures PATH and aliases.
-*   **Test 6 (Init):** Running `ca init` in a new directory successfully copies `AGENTS.md` and `CLAUDE.md` from scaffolds.
+*   **Test 6 (Init):** Running `cca init` in a new directory successfully copies `AGENTS.md` and `CLAUDE.md` from scaffolds.
