@@ -1,0 +1,1 @@
+!!! safari/chrome browser extension that matches a regular expression in the DOM and then shows you the page with all matches either replaced, modified, or annotated. Use cases would be, for instance, showing discount percentage on Amazon or automatic translation of dimensions " to mm or with deadnames redacted; probably also need an easy query builder for the regex. #prd
