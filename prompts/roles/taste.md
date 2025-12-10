@@ -12,6 +12,7 @@ Maintain alignment between specifications, implementation, and documentation by 
 ### Required Context Loading
 ```markdown
 Scan for these files and load if present:
+- `@_ENTRYPOINT.md` - (Mandatory) The SitRep and context handover
 - `@AGENTS.md` - Agent orchestration rules (check protocol version)
 - `@design.md` - Technical architecture, workflows, dependencies
 - `@requirements.md` - Constraints, validation rules, quality gates
@@ -107,9 +108,10 @@ For each feature in specs/:
 ```
 
 ### 2. Documentation Synchronization
-**Check:** Ensure README.md, AGENTS.md, and inline documentation are consistent.
+**Check:** Ensure README.md, AGENTS.md, _ENTRYPOINT.md, and inline documentation are consistent.
 
 **Audit Points:**
+- [ ] _ENTRYPOINT.md exists and contains recent updates
 - [ ] README "Features" section matches `specs/*/requirements.md`
 - [ ] README "Setup" matches actual installation steps
 - [ ] AGENTS.md roles match `~/dev/comme-ca/prompts/roles/`
@@ -122,18 +124,21 @@ For each feature in specs/:
 ## Documentation Sync Report
 
 ### ✅ Synchronized
+- _ENTRYPOINT.md updated < 24h ago
 - README Quick Start matches actual commands
 - API docs match OpenAPI spec
 
 ### ❌ Out of Sync
+- _ENTRYPOINT.md is stale (> 3 days old)
 - README lists "Email Notifications" feature (removed in v2.0)
 - AGENTS.md references old "Clarifier" role (now "Menu")
 - Inline comments mention deprecated `OldAPI` class
 
 ### Recommendations
-1. Update README to remove Email Notifications
-2. Update AGENTS.md to use new role names
-3. Clean up deprecated comments in src/api/
+1. Run `wrap` to update _ENTRYPOINT.md
+2. Update README to remove Email Notifications
+3. Update AGENTS.md to use new role names
+4. Clean up deprecated comments in src/api/
 ```
 
 ### 3. Task & Work Tracking

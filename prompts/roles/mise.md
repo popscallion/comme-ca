@@ -12,6 +12,7 @@ Prepare and validate development environments by ensuring all dependencies, conf
 ### Required Context Loading
 ```markdown
 Scan for these files and load if present:
+- `@_ENTRYPOINT.md` - (Mandatory) The SitRep and context handover
 - `@AGENTS.md` - Agent orchestration rules
 - `@design.md` - Technical architecture, dependencies, setup requirements
 - `@requirements.md` - Constraints, environment requirements
@@ -64,9 +65,10 @@ Detect project type and include specialized setup:
 If the project has incomplete comme-ca integration:
 
 1. **Check for AGENTS.md** - Offer to initialize with `cca init`
-2. **Check for design.md** - Suggest creating for setup documentation
-3. **Check for requirements.md** - Suggest creating for constraints
-4. **Verify protocol version** - Warn if outdated
+2. **Check for _ENTRYPOINT.md** - Offer to generate from template
+3. **Check for design.md** - Suggest creating for setup documentation
+4. **Check for requirements.md** - Suggest creating for constraints
+5. **Verify protocol version** - Warn if outdated
 
 ## Directives
 
@@ -81,6 +83,7 @@ When entering a directory, perform these checks in order:
 - [ ] Validate `.gitignore` is present and comprehensive
 
 **Agent Orchestration:**
+- [ ] Check for `_ENTRYPOINT.md` (SitRep)
 - [ ] Check for `AGENTS.md` or `CLAUDE.md` at repository root
 - [ ] If missing, offer to install from `~/dev/comme-ca/scaffolds/high-low/`
 - [ ] Verify agent instructions are loaded and valid
@@ -151,6 +154,7 @@ Collect information with smart defaults (press Enter to accept):
 
 Templates are stored in `~/dev/comme-ca/scaffolds/project-init/`:
 - `README.template.md`
+- `_ENTRYPOINT.template.md`
 - `LICENSE.mit.txt` / `LICENSE.apache.txt` / `LICENSE.agpl.txt` / `LICENSE.gpl.txt`
 - `GOVERNANCE.template.md`
 - `gitignore.template`
@@ -173,6 +177,7 @@ Perform these steps atomically (all-or-nothing):
    ```
    project-slug/
    ├── .git/              # via git init
+   ├── _ENTRYPOINT.md     # from _ENTRYPOINT.template.md
    ├── AGENTS.md          # copied from scaffolds/high-low/
    ├── CLAUDE.md          # copied from scaffolds/high-low/
    ├── GEMINI.md          # copied from scaffolds/high-low/
@@ -268,6 +273,7 @@ Fix: gh auth login
 - Validate linting and formatting tools (ESLint, Prettier, Ruff, etc.)
 
 ### 4. Documentation Check
+- [ ] _ENTRYPOINT.md exists (SitRep)
 - [ ] README.md exists and is up-to-date
 - [ ] AGENTS.md or orchestration documentation present
 - [ ] CHANGELOG.md or version history available
@@ -287,6 +293,7 @@ After completing checks, provide a **System Readiness Report**:
 
 ## ✅ Passed Checks
 - Git initialized (branch: main)
+- _ENTRYPOINT.md present
 - AGENTS.md present and valid
 - Dependencies installed (package.json: 42 packages)
 - Tests configured (Jest)
@@ -296,13 +303,15 @@ After completing checks, provide a **System Readiness Report**:
 - Pre-commit hooks not installed (consider adding)
 
 ## ❌ Failed Checks
+- _ENTRYPOINT.md missing (run: cp ~/dev/comme-ca/scaffolds/project-init/_ENTRYPOINT.template.md _ENTRYPOINT.md)
 - `cca` command not found in PATH (install: ~/dev/comme-ca/bin/cca)
 - README.md missing "Quick Start" section
 
 ## Recommended Actions
-1. Add ~/dev/comme-ca/bin to PATH: `export PATH="$HOME/dev/comme-ca/bin:$PATH"`
-2. Create .env.example with documented variables
-3. Update README.md with setup instructions
+1. Create _ENTRYPOINT.md to track session context
+2. Add ~/dev/comme-ca/bin to PATH: `export PATH="$HOME/dev/comme-ca/bin:$PATH"`
+3. Create .env.example with documented variables
+4. Update README.md with setup instructions
 ```
 
 ## Workflow

@@ -11,12 +11,14 @@ This document defines how autonomous agents (Claude Code, Goose, or other AI ass
 | **Mise (prep)** | `prep` | `goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md` | New project scaffolding, environment setup, dependency checks |
 | **Menu (plan)** | `plan` | `goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md` | Requirements gathering, architecture planning, spec writing |
 | **Taste (audit)** | `audit` | `goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md` | Code review, drift detection, documentation sync |
+| **Pass (wrap)** | `wrap` | `goose run --instructions ~/dev/comme-ca/prompts/roles/pass.md` | Handoff, session closure, context consolidation |
 | **Pipe (cca)** | `cca` | `cca git "instruction"` | Quick CLI translations (low-latency, single commands) |
 
 ## Context Detection
 
 Standard roles automatically detect and adapt to project documentation:
 
+- `@_ENTRYPOINT.md` - (Mandatory) The SitRep and context handover
 - `@design.md` - Technical architecture, workflows, dependencies
 - `@requirements.md` - Constraints, validation rules, quality gates
 - `@tasks.md` - Current work items and priorities
@@ -33,6 +35,7 @@ Add to your shell config (`~/.config/fish/config.fish` or `~/.zshrc`):
 alias prep="goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md"
 alias plan="goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md"
 alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
+alias wrap="goose run --instructions ~/dev/comme-ca/prompts/roles/pass.md"
 
 # Low-Lift CLI Tool
 export PATH="$HOME/dev/comme-ca/bin:$PATH"
@@ -67,6 +70,7 @@ cca setup:sync       # Update drifted tools
 prep    # Bootstrap environment, install dependencies
 plan    # Create specifications, gather requirements
 audit   # Check for drift, validate compliance
+wrap    # Consolidate docs, commit, and generate handoff
 cca git "command"  # Quick CLI translations
 ```
 

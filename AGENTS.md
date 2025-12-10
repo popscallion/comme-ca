@@ -12,6 +12,7 @@ This is the **source repository** for the comme-ca agent orchestration system. T
 | **Mise (prep)** | `prep` | `goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md` | New project scaffolding, environment setup, dependency checks |
 | **Menu (plan)** | `plan` | `goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md` | Requirements gathering, architecture planning, spec writing |
 | **Taste (audit)** | `audit` | `goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md` | Code review, drift detection, documentation sync |
+| **Pass (wrap)** | `wrap` | `goose run --instructions ~/dev/comme-ca/prompts/roles/pass.md` | Handoff, session closure, context consolidation |
 | **Pipe (cca)** | `cca` | `cca git "instruction"` | Quick CLI translations (low-latency, single commands) |
 
 ## Core Principles
@@ -78,6 +79,19 @@ This is the **source repository** for the comme-ca agent orchestration system. T
 
 **Output:** Drift Report with prioritized recommendations
 
+### Pass (wrap) - Handoff & Expediter
+**Use when:**
+- Ending a coding session
+- Consolidating documentation before a commit
+- Handing off work to another agent (or yourself later)
+
+**What it does:**
+- Updates `_ENTRYPOINT.md` (the "SitRep")
+- Consolidates docs (`tasks.md`, `design.md`)
+- Generates a precise handoff prompt
+
+**Output:** A clean commit and a "Ticket" (handoff prompt) for the next agent
+
 ### Pipe (cca) - CLI Command Translator
 **Use when:**
 - You need a quick command but can't remember syntax
@@ -96,6 +110,7 @@ This is the **source repository** for the comme-ca agent orchestration system. T
 ## Required Context Loading
 
 Before performing ANY task in this repository, agents MUST read:
+- `@_ENTRYPOINT.md` - (Mandatory) The SitRep and context handover
 - `@README.md` - Project overview and setup instructions
 - `@AGENTS.md` (this file) - Orchestration rules and role definitions
 - `@requirements.md` - Product requirements and roadmap
@@ -145,6 +160,10 @@ prep
 # Step 4: Audit before release (Taste)
 audit
 # Verifies specs match implementation
+
+# Step 5: Wrap up session (Pass)
+wrap
+# Updates _ENTRYPOINT.md, commits, and output handoff prompt
 ```
 
 ### Example 3: Quick Git Command
@@ -186,6 +205,12 @@ audit
 - ❌ Auto-fix issues (only recommend)
 - ❌ Modify code or specs
 
+### Pass (wrap)
+- ✅ Read all files
+- ✅ Update `_ENTRYPOINT.md` and documentation
+- ✅ Stage and commit changes
+- ❌ Write feature implementation code
+
 ### Pipe (cca)
 - ✅ Return commands based on natural language
 - ❌ Execute commands (user must run them)
@@ -200,6 +225,7 @@ Add to your shell config (`~/.config/fish/config.fish` or `~/.zshrc`):
 alias prep="goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md"
 alias plan="goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md"
 alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
+alias wrap="goose run --instructions ~/dev/comme-ca/prompts/roles/pass.md"
 
 # Low-Lift CLI Tool
 export PATH="$HOME/dev/comme-ca/bin:$PATH"  # Adds 'cca' to PATH
@@ -210,6 +236,7 @@ Then use simply:
 prep    # Bootstrap environment
 plan    # Create specs
 audit   # Check for drift
+wrap    # Handoff session
 cca git "command"  # Quick translations
 ```
 
