@@ -122,6 +122,7 @@ set -gx PATH $HOME/dev/comme-ca/bin $PATH
 alias prep="goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md"
 alias plan="goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md"
 alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
+alias wrap="goose run --instructions ~/dev/comme-ca/prompts/roles/pass.md"
 EOF
 }
 
@@ -136,6 +137,7 @@ export PATH="$HOME/dev/comme-ca/bin:$PATH"
 alias prep="goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md"
 alias plan="goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md"
 alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
+alias wrap="goose run --instructions ~/dev/comme-ca/prompts/roles/pass.md"
 EOF
 }
 
