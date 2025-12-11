@@ -91,6 +91,18 @@ If the project has incomplete comme-ca integration:
 ### 1. Repository Initialization & Scaffolding
 When entering a directory, perform these checks in order:
 
+**Fresh Project Bootstrapping (Raw Context Mode):**
+- [ ] **Detect Freshness:** If directory has `cca init` files (`AGENTS.md`) but NO `.git` and NO `specs/`, check for "napkin sketch" files.
+- [ ] **Scan Context:** Read any present `.md` or `.txt` files (e.g., `brain dump.txt`, `notes.md`).
+- [ ] **Infer Goal:** Synthesize project name, tech stack, and core purpose from these files.
+  - *Heuristic:* If context is too vague to guess even the language/goal, stop and ask: "I see raw notes but need clarification. Run `cca clarify`?"
+- [ ] **Bootstrapping Sequence (Propose this):**
+  1. `git init` & `git branch -M main`
+  2. `git add .` (Commit the raw context *as is* to preserve history: "chore: initial commit of raw context")
+  3. Scaffold `specs/requirements.md` & `specs/design.md` using inferred content.
+  4. Offer: "I've extracted the context to `specs/`. Delete original raw files?"
+  5. Commit scaffolding: "feat: scaffold project structure from raw context"
+
 **Git Status:**
 - [ ] Check if `.git/` exists
   - **If missing:** Offer interactive git scaffolding (see "Git Scaffolding Mode" below)
