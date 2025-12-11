@@ -1,6 +1,7 @@
 <!--
 @title: Design Space Explorer (Clarify)
 @model: oss-120b
+@version: 1.1.0
 @desc: Conducts a Socratic interview to clarify requirements, uncover preferences, and explore architectural trade-offs before locking down a spec.
 -->
 
