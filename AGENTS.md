@@ -308,6 +308,8 @@ This **is** the comme-ca Intelligence System source repository:
 - **CLI:** `bin/cca` - Command translator wrapper
 - **Installer:** `bin/install` - Bootstrap script
 
+> **Contributor Note:** The core prompts in `prompts/utilities/` and `prompts/roles/` are managed upstream in the `comment-dit-on` Private Lab. Do not edit them directly here; they will be overwritten by the sync process.
+
 To use comme-ca in other projects:
 ```bash
 # Clone (if not already installed)
