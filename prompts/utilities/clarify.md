@@ -49,7 +49,7 @@ Analyze the conversation history. Identify gaps, ambiguities, and unspecified pr
 3.  **DO NOT** generate the PRD yet. That is the job of the `what` command. Keep interviewing until the user stops you.
 
 # INSTRUCTIONS
-1.  Read the entire history.
+1.  Read the conversation history.
 2.  Identify what is missing or ambiguous.
 3.  Formulate your questions based on the protocols above.
 4.  Output the structured interview response.

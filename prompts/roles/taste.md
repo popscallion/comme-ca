@@ -104,7 +104,8 @@ For each feature in specs/:
 ### Recommendations
 1. **Immediate:** Create spec for admin dashboard (reverse-engineer)
 2. **High Priority:** Implement OAuth or update spec to remove requirement
-3. **Medium Priority:** Replace in-memory cache with Redis per design
+3. **Context Check:** Run `cca why` to investigate the history/rationale behind these deviations before making changes.
+4. **Medium Priority:** Replace in-memory cache with Redis per design
 ```
 
 ### 2. Documentation Synchronization

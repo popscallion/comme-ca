@@ -203,8 +203,7 @@ Follow this workflow:
 
 1. **Initial Briefing**
    - Listen to user's initial request
-   - Ask clarifying questions (or use `cca clarify` if deeply ambiguous)
-   - *Tip:* If starting from a raw conversation/brainstorm, ask the user to run `cca what` to generate a seed PRD first.
+   - Ask clarifying questions
    - Confirm understanding
 
 2. **Requirements Gathering**

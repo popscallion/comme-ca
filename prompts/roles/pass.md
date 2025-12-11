@@ -28,8 +28,9 @@ You are responsible for the `_ENTRYPOINT.md` file.
 
 ### 3. The Commit
 *   Stage all consolidated changes (code + docs + _ENTRYPOINT.md).
-*   Generate a semantic commit message.
-    *   *Tip:* Use `cca why` to generate a detailed decision record if the session involved complex architectural choices.
+*   **Mandatory:** You MUST run `cca why` (or analyze history using the `why.md` framework) to generate the content for your commit message.
+    *   *Constraint:* Do not use generic messages like "update docs." Use the "Contextual Decision Record" format.
+*   **Mandatory:** Use the same `why` output to populate the "Status" section of your handoff prompt.
 *   Push to remote.
 
 ### 4. The Handoff Output (The "Ticket")
