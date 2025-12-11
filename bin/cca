@@ -17,10 +17,9 @@ Usage: cca <prompt-name> [input]
        cca init
        cca update
        cca setup:list
+       cca setup:all
        cca setup:claude
        cca setup:gemini
-       cca setup:all
-       cca setup:remove <tool>
        cca drift
        echo "input" | cca <prompt-name>
 
@@ -28,10 +27,9 @@ Commands:
   init                      Initialize agent orchestration in current dir
   update                    Pull comme-ca updates and diff AGENTS.md
   setup:list                List available/configured tools
-  setup:claude              Configure Claude Code with comme-ca prompts
-  setup:gemini              Configure Gemini CLI with custom slash commands
-  setup:all                 Configure all tools at once
-  setup:remove <tool>       Remove tool configuration
+  setup:all                 Configure/Update all tools (recommended)
+  setup:claude              Configure Claude Code only
+  setup:gemini              Configure Gemini CLI only
   drift                     Check for prompt drift
 
 Prompts:
@@ -194,80 +192,6 @@ setup_all() {
     echo ""
     echo "─────────────────────────────────────────────"
     echo "✓ All tools configured"
-}
-
-# Sync all configured tools (re-run setup for tools with drift)
-setup_sync() {
-    echo "Syncing configured tools..."
-    echo "─────────────────────────────────────────────"
-    echo ""
-
-    local synced=0
-
-    # Sync Claude Code if configured and has drift
-    if [[ -f "${HOME}/.claude/.comme-ca-setup" ]]; then
-        if ! check_tool_drift "claude"; then
-            setup_claude
-            echo ""
-            ((synced++))
-        else
-            echo "Claude Code: Already up to date"
-        fi
-    fi
-
-    # Sync Gemini CLI if configured and has drift
-    if [[ -f "${HOME}/.gemini/.comme-ca-setup" ]]; then
-        if ! check_tool_drift "gemini"; then
-            setup_gemini
-            echo ""
-            ((synced++))
-        else
-            echo "Gemini CLI: Already up to date"
-        fi
-    fi
-
-    echo ""
-    echo "─────────────────────────────────────────────"
-    if [[ $synced -eq 0 ]]; then
-        echo "✓ All configured tools already in sync"
-    else
-        echo "✓ Synced $synced tool(s)"
-    fi
-}
-
-# Remove tool configuration
-setup_remove() {
-    local tool="$1"
-
-    case "$tool" in
-        claude)
-            if [[ -d "${HOME}/.claude/commands" ]]; then
-                rm -f "${HOME}/.claude/commands/prep.md"
-                rm -f "${HOME}/.claude/commands/plan.md"
-                rm -f "${HOME}/.claude/commands/audit.md"
-                rm -f "${HOME}/.claude/.comme-ca-setup"
-                echo "✓ Removed Claude Code comme-ca configuration"
-            else
-                echo "Claude Code not configured"
-            fi
-            ;;
-        gemini)
-            if [[ -d "${HOME}/.gemini/commands" ]]; then
-                rm -f "${HOME}/.gemini/commands/prep.toml"
-                rm -f "${HOME}/.gemini/commands/plan.toml"
-                rm -f "${HOME}/.gemini/commands/audit.toml"
-                rm -f "${HOME}/.gemini/.comme-ca-setup"
-                echo "✓ Removed Gemini CLI comme-ca configuration"
-            else
-                echo "Gemini CLI not configured"
-            fi
-            ;;
-        *)
-            echo "Unknown tool: $tool" >&2
-            echo "Available: claude, gemini" >&2
-            exit 1
-            ;;
-    esac
 }
 
 # Store setup metadata for drift detection
@@ -438,8 +362,11 @@ main() {
         setup:claude)
             setup_claude
             ;;
-        setup:remove)
-            setup_remove
+        setup:gemini)
+            setup_gemini
+            ;;
+        setup:all)
+            setup_all
             ;;
         drift)
             drift
