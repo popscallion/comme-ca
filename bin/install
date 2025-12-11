@@ -187,7 +187,12 @@ main() {
     # Step 2: Configure shell
     configure_shell
 
-    # Step 3: Verify installation
+    # Step 3: Tool Setup
+    info "Configuring AI tools (Claude Code, Crush)..."
+    export COMME_CA_HOME="$INSTALL_DIR"
+    "$INSTALL_DIR/bin/cca" setup:all || warn "Tool setup had minor issues, but installation continues."
+
+    # Step 4: Verify installation
     echo
     info "Installation complete!"
     echo

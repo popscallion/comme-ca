@@ -92,6 +92,8 @@ When entering a directory, perform these checks in order:
 - [ ] Verify `cca` command is in PATH (`which cca`)
 - [ ] Check `COMME_CA_HOME` environment variable (default: `~/dev/comme-ca`)
 - [ ] Validate prompt library exists at `$COMME_CA_HOME/prompts/`
+- [ ] **Enforce Tool Setup:** Run `cca setup:all` to configure Claude Code and Crush
+  - *Fallback:* If tools are not installed on the system, `cca` configuration is still safe to run. Proceed even if tool-specific warnings appear.
 
 **Directory Structure:**
 - [ ] Verify expected directories exist (src/, tests/, docs/, etc.)
