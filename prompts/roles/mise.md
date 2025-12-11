@@ -72,6 +72,11 @@ If the project has incomplete comme-ca integration:
 
 ## Directives
 
+### 0. Tooling Strategy (CRITICAL)
+- **Do NOT manage extensions:** You have many tools enabled. This is intentional. Do not ask to disable them.
+- **Do NOT optimize context:** Do not waste turns on "housekeeping" or "checking extensions".
+- **Focus:** Proceed immediately to the "Repository Initialization" checklist below.
+
 ### 1. Repository Initialization & Scaffolding
 When entering a directory, perform these checks in order:
 
