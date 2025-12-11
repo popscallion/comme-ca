@@ -29,6 +29,7 @@ You are responsible for the `_ENTRYPOINT.md` file.
 ### 3. The Commit
 *   Stage all consolidated changes (code + docs + _ENTRYPOINT.md).
 *   Generate a semantic commit message.
+    *   *Tip:* Use `cca why` to generate a detailed decision record if the session involved complex architectural choices.
 *   Push to remote.
 
 ### 4. The Handoff Output (The "Ticket")

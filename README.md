@@ -51,6 +51,13 @@ plan   # Specs & architecture (menu)
 audit  # QA & drift detection (taste)
 ```
 
+### Context Utilities (Ad-Hoc)
+```bash
+clarify  # Design space explorer (Socratic interview)
+what     # PRD generator from context
+why      # Decision record/commit message generator
+```
+
 ### Project Setup
 ```bash
 cd <project>
@@ -76,10 +83,14 @@ comme-ca/
 │   │   ├── _template.md
 │   │   ├── git.md
 │   │   └── shell.md
-│   └── roles/             # Agent personas
+│   ├── roles/             # Agent personas
 │       ├── mise.md        # System bootstrapper + git scaffolding
 │       ├── menu.md        # Architect/planner
 │       └── taste.md       # QA/drift detector
+│   └── utilities/         # Ad-hoc context tools
+│       ├── clarify.md     # Design explorer
+│       ├── what.md        # PRD generator
+│       └── why.md         # Decision recorder
 └── scaffolds/
     ├── high-low/          # Agent orchestration files
     │   ├── AGENTS.md      # Router for consumer projects
@@ -134,6 +145,20 @@ Interviews user, creates `specs/[feature]/{requirements,design,tasks}.md`, desig
 #### **taste** (`audit`) - QA & Drift Detector
 **Responsibility:** Ensure implementation matches specifications.
 Compares `specs/` vs code, checks `README.md` vs reality, identifies stale tasks, detects quality issues.
+
+### Context Utilities
+
+#### **clarify** - Design Space Explorer
+**Responsibility:** Refine vague ideas into concrete specs.
+Conducts a Socratic interview to uncover hidden requirements and architectural preferences. Run this *before* `plan` or `what`.
+
+#### **what** - Contextual PRD Generator
+**Responsibility:** Crystallize a conversation into a Product Requirements Document (PRD) or Research Synthesis.
+Acts as a "Seed" for the `menu` agent.
+
+#### **why** - Contextual Decision Recorder
+**Responsibility:** Capture the "Why" behind changes for commit messages or decision logs.
+Run this *before* `wrap` to generate high-quality context for the handoff.
 
 ---
 

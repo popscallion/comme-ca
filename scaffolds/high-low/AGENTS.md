@@ -14,6 +14,14 @@ This document defines how autonomous agents (Claude Code, Goose, or other AI ass
 | **Pass (wrap)** | `wrap` | `goose run --instructions ~/dev/comme-ca/prompts/roles/pass.md` | Handoff, session closure, context consolidation |
 | **Pipe (cca)** | `cca` | `cca git "instruction"` | Quick CLI translations (low-latency, single commands) |
 
+## Context Utilities (Ad-Hoc)
+
+| Tool | Alias | Command | When to Use |
+|:-----|:------|:--------|:------------|
+| **Clarify** | `clarify` | `goose run --instructions ~/dev/comme-ca/prompts/utilities/clarify.md` | Pre-planning exploration & ambiguity resolution |
+| **What** | `what` | `goose run --instructions ~/dev/comme-ca/prompts/utilities/what.md` | Generate PRD/Research Synthesis from context |
+| **Why** | `why` | `goose run --instructions ~/dev/comme-ca/prompts/utilities/why.md` | Generate Decision Record/Commit Context |
+
 ## Context Detection
 
 Standard roles automatically detect and adapt to project documentation:
@@ -36,6 +44,11 @@ alias prep="goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md"
 alias plan="goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md"
 alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
 alias wrap="goose run --instructions ~/dev/comme-ca/prompts/roles/pass.md"
+
+# Context Utilities
+alias clarify="goose run --instructions ~/dev/comme-ca/prompts/utilities/clarify.md"
+alias what="goose run --instructions ~/dev/comme-ca/prompts/utilities/what.md"
+alias why="goose run --instructions ~/dev/comme-ca/prompts/utilities/why.md"
 
 # Low-Lift CLI Tool
 export PATH="$HOME/dev/comme-ca/bin:$PATH"
