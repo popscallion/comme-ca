@@ -18,7 +18,9 @@ Usage: cca <prompt-name> [input]
        cca update
        cca setup:list
        cca setup:claude
-       cca setup:remove
+       cca setup:gemini
+       cca setup:all
+       cca setup:remove <tool>
        cca drift
        echo "input" | cca <prompt-name>
 
@@ -27,7 +29,9 @@ Commands:
   update                    Pull comme-ca updates and diff AGENTS.md
   setup:list                List available/configured tools
   setup:claude              Configure Claude Code with comme-ca prompts
-  setup:remove              Remove tool configuration
+  setup:gemini              Configure Gemini CLI with custom slash commands
+  setup:all                 Configure all tools at once
+  setup:remove <tool>       Remove tool configuration
   drift                     Check for prompt drift
 
 Prompts:
@@ -108,6 +112,13 @@ setup_list() {
         echo "  ○ claude   - Not configured (run: cca setup:claude)"
     fi
 
+    # Check Gemini CLI custom commands
+    if [[ -d "${HOME}/.gemini/commands" ]] && [[ -f "${HOME}/.gemini/commands/prep.toml" ]]; then
+        echo "  ✓ gemini   - Custom commands configured at ~/.gemini/commands/"
+    else
+        echo "  ○ gemini   - Custom commands not configured (run: cca setup:gemini)"
+    fi
+
     echo ""
     echo "Prompt source: ${ROLES_DIR}"
 }
@@ -137,23 +148,138 @@ setup_claude() {
     echo "  Commands: /prep, /plan, /audit"
 }
 
+# Setup Gemini CLI
+setup_gemini() {
+    echo "Setting up Gemini CLI custom commands..."
+
+    local dest="${HOME}/.gemini/commands"
+    mkdir -p "${dest}"
+
+    # Helper to generate TOML
+    generate_toml() {
+        local name="$1"
+        local description="$2"
+        local source_file="$3"
+        local output_file="${dest}/${name}.toml"
+
+        echo "description = \"${description}\"" > "$output_file"
+        echo "prompt = \"\"\"" >> "$output_file"
+        cat "$source_file" >> "$output_file"
+        echo "\"\"\"" >> "$output_file"
+        echo "  ✓ ${name}.toml"
+    }
+
+    generate_toml "prep" "System bootstrapper - validates environment and dependencies" "${ROLES_DIR}/mise.md"
+    generate_toml "plan" "Requirements gathering and architecture planning" "${ROLES_DIR}/menu.md"
+    generate_toml "audit" "Quality assurance and drift detection" "${ROLES_DIR}/taste.md"
+
+    # Store metadata for drift detection
+    store_setup_metadata "gemini"
+
+    echo ""
+    echo "✓ Gemini CLI configured at ${dest}"
+    echo "  Commands: /prep, /plan, /audit"
+}
+
+# Setup all tools at once
+setup_all() {
+    echo "Configuring all tools with comme-ca prompts..."
+    echo "─────────────────────────────────────────────"
+    echo ""
+
+    setup_claude
+    echo ""
+    setup_gemini
+
+    echo ""
+    echo "─────────────────────────────────────────────"
+    echo "✓ All tools configured"
+}
+
+# Sync all configured tools (re-run setup for tools with drift)
+setup_sync() {
+    echo "Syncing configured tools..."
+    echo "─────────────────────────────────────────────"
+    echo ""
+
+    local synced=0
+
+    # Sync Claude Code if configured and has drift
+    if [[ -f "${HOME}/.claude/.comme-ca-setup" ]]; then
+        if ! check_tool_drift "claude"; then
+            setup_claude
+            echo ""
+            ((synced++))
+        else
+            echo "Claude Code: Already up to date"
+        fi
+    fi
+
+    # Sync Gemini CLI if configured and has drift
+    if [[ -f "${HOME}/.gemini/.comme-ca-setup" ]]; then
+        if ! check_tool_drift "gemini"; then
+            setup_gemini
+            echo ""
+            ((synced++))
+        else
+            echo "Gemini CLI: Already up to date"
+        fi
+    fi
+
+    echo ""
+    echo "─────────────────────────────────────────────"
+    if [[ $synced -eq 0 ]]; then
+        echo "✓ All configured tools already in sync"
+    else
+        echo "✓ Synced $synced tool(s)"
+    fi
+}
+
 # Remove tool configuration
 setup_remove() {
-    if [[ -d "${HOME}/.claude/commands" ]]; then
-        rm -f "${HOME}/.claude/commands/prep.md"
-        rm -f "${HOME}/.claude/commands/plan.md"
-        rm -f "${HOME}/.claude/commands/audit.md"
-        rm -f "${HOME}/.claude/.comme-ca-setup"
-        echo "✓ Removed Claude Code comme-ca configuration"
-    else
-        echo "Claude Code not configured"
-    fi
+    local tool="$1"
+
+    case "$tool" in
+        claude)
+            if [[ -d "${HOME}/.claude/commands" ]]; then
+                rm -f "${HOME}/.claude/commands/prep.md"
+                rm -f "${HOME}/.claude/commands/plan.md"
+                rm -f "${HOME}/.claude/commands/audit.md"
+                rm -f "${HOME}/.claude/.comme-ca-setup"
+                echo "✓ Removed Claude Code comme-ca configuration"
+            else
+                echo "Claude Code not configured"
+            fi
+            ;;
+        gemini)
+            if [[ -d "${HOME}/.gemini/commands" ]]; then
+                rm -f "${HOME}/.gemini/commands/prep.toml"
+                rm -f "${HOME}/.gemini/commands/plan.toml"
+                rm -f "${HOME}/.gemini/commands/audit.toml"
+                rm -f "${HOME}/.gemini/.comme-ca-setup"
+                echo "✓ Removed Gemini CLI comme-ca configuration"
+            else
+                echo "Gemini CLI not configured"
+            fi
+            ;;
+        *)
+            echo "Unknown tool: $tool" >&2
+            echo "Available: claude, gemini" >&2
+            exit 1
+            ;;
+    esac
 }
 
 # Store setup metadata for drift detection
 store_setup_metadata() {
     local tool="$1"
-    local metadata_file="${HOME}/.claude/.comme-ca-setup"
+    local metadata_file
+
+    case "$tool" in
+        claude) metadata_file="${HOME}/.claude/.comme-ca-setup" ;;
+        gemini) metadata_file="${HOME}/.gemini/.comme-ca-setup" ;;
+        *) return ;;
+    esac
 
     mkdir -p "$(dirname "$metadata_file")"
 
@@ -181,7 +307,7 @@ drift() {
     # Check Claude Code
     if [[ -f "${HOME}/.claude/.comme-ca-setup" ]]; then
         echo "Claude Code:"
-        if check_tool_drift; then
+        if check_tool_drift "claude"; then
             echo "  ✓ Up to date"
         else
             echo "  ⚠ Drift detected - run: cca setup:claude"
@@ -189,6 +315,19 @@ drift() {
         fi
     else
         echo "Claude Code: Not configured"
+    fi
+
+    # Check Gemini CLI
+    if [[ -f "${HOME}/.gemini/.comme-ca-setup" ]]; then
+        echo "Gemini CLI:"
+        if check_tool_drift "gemini"; then
+            echo "  ✓ Up to date"
+        else
+            echo "  ⚠ Drift detected - run: cca setup:gemini"
+            has_drift=true
+        fi
+    else
+        echo "Gemini CLI: Not configured"
     fi
 
     echo ""
@@ -220,30 +359,14 @@ drift() {
 
 # Check if a tool's configuration has drifted
 check_tool_drift() {
-    local metadata_file="${HOME}/.claude/.comme-ca-setup"
+    local tool="$1"
+    local metadata_file
 
-    if [[ ! -f "$metadata_file" ]]; then
-        return 1
-    fi
-
-    # Get stored hashes
-    local stored_mise=$(grep "^mise_hash=" "$metadata_file" | cut -d= -f2)
-    local stored_menu=$(grep "^menu_hash=" "$metadata_file" | cut -d= -f2)
-    local stored_taste=$(grep "^taste_hash=" "$metadata_file" | cut -d= -f2)
-
-    # Get current hashes
-    local current_mise=$(md5 -q "${ROLES_DIR}/mise.md" 2>/dev/null || md5sum "${ROLES_DIR}/mise.md" | cut -d' ' -f1)
-    local current_menu=$(md5 -q "${ROLES_DIR}/menu.md" 2>/dev/null || md5sum "${ROLES_DIR}/menu.md" | cut -d' ' -f1)
-    local current_taste=$(md5 -q "${ROLES_DIR}/taste.md" 2>/dev/null || md5sum "${ROLES_DIR}/taste.md" | cut -d' ' -f1)
-
-    # Compare
-    if [[ "$stored_mise" == "$current_mise" ]] && \
-       [[ "$stored_menu" == "$current_menu" ]] && \
-       [[ "$stored_taste" == "$current_taste" ]]; then
-        return 0
-    else
-        return 1
-    fi
+    case "$tool" in
+        claude) metadata_file="${HOME}/.claude/.comme-ca-setup" ;;
+        gemini) metadata_file="${HOME}/.gemini/.comme-ca-setup" ;;
+        *) return 1 ;;
+    esac
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
