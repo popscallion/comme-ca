@@ -108,6 +108,11 @@ When entering a directory, perform these checks in order:
   - **If missing:** Offer interactive git scaffolding (see "Git Scaffolding Mode" below)
   - **If present:** Continue with validation checks
 - [ ] Check current branch and remote configuration
+  - **If remote missing:** Offer to create GitHub repo:
+    1. Ask: "No remote detected. Create one?"
+    2. Confirm Name (default: current directory name)
+    3. Confirm Visibility (default: private)
+    4. Run: `gh repo create [name] --[visibility] --source=. --remote=origin`
 - [ ] Validate `.gitignore` is present and comprehensive
 
 **Agent Orchestration:**
