@@ -15,13 +15,41 @@ This is the **source repository** for the comme-ca agent orchestration system. T
 | **Pass (wrap)** | `wrap` | `goose run --instructions ~/dev/comme-ca/prompts/roles/pass.md` | Handoff, session closure, context consolidation |
 | **Pipe (cca)** | `cca` | `cca git "instruction"` | Quick CLI translations (low-latency, single commands) |
 
-## Context Utilities (Ad-Hoc)
+## Context Utilities (Conversation Synthesis)
+
+**Version:** Clarify v1.1.0, What v2.0.0, Why v2.0.0
 
 | Tool | Alias | Command | When to Use |
 |:-----|:------|:--------|:------------|
-| **Clarify** | `clarify` | `goose run --instructions ~/dev/comme-ca/prompts/utilities/clarify.md` | Pre-planning exploration & ambiguity resolution |
-| **What** | `what` | `goose run --instructions ~/dev/comme-ca/prompts/utilities/what.md` | Generate PRD/Research Synthesis from context |
-| **Why** | `why` | `goose run --instructions ~/dev/comme-ca/prompts/utilities/why.md` | Generate Decision Record/Commit Context |
+| **Clarify** | `clarify` | `goose run --instructions ~/dev/comme-ca/prompts/utilities/clarify.md` | Live conversation: Socratic questioning to explore design space |
+| **What** | `what` | `goose run --instructions ~/dev/comme-ca/prompts/utilities/what.md` | Post-conversation: Generate PRD or Research Synthesis (forward-looking) |
+| **Why** | `why` | `goose run --instructions ~/dev/comme-ca/prompts/utilities/why.md` | Post-conversation: Generate Decision Record with narrative arc (backward-looking) |
+
+### Recommended Workflows
+
+**Standard Workflow (Post-Conversation):**
+```bash
+# After a conversation concludes:
+what   # Produces: Requirements, constraints, assumptions, unknowns
+why    # Produces: Context, journey, synthesis logic, trade-offs
+# Result: Complete session documentation (what + why = enriched superset)
+```
+
+**Enhanced Workflow (Live + Post):**
+```bash
+# During conversation:
+clarify   # Socratic questioning to resolve ambiguities
+
+# After conversation:
+what      # Detects clarify usage, documents which decisions came from exploration
+why       # Detects clarify usage, documents unresolved questions
+# Result: Session documentation + exploration audit trail
+```
+
+**Key Features (v2.0.0):**
+- **What:** Epistemic markers (DEFINITIVE/INFERRED/SPECULATIVE), Open Questions section, SHALL requirements
+- **Why:** Conversation Arc (Trigger/Pivot/Relationship), Synthesis Logic (tie-breaker reasoning), clarify integration
+- **Combined:** 100% coverage of deprecated summarize.md + new formal structures
 
 ## Core Principles
 
