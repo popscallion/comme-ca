@@ -29,10 +29,9 @@ cca setup:list
 ```
 
 ### Dependencies
-- **Goose** (Primary Runtime): [Install Goose](https://block.github.io/goose/docs/getting-started/installation)
+- **Claude Code** (Primary Runtime): `npm i -g @anthropic-ai/claude-code`
 - **Git** & **GitHub CLI (`gh`)**
 - **Ripgrep (`rg`)** (for fast context searching)
-- *Optional:* Claude Code (`npm i -g @anthropic-ai/claude-code`) or Crush CLI
 
 ## Usage
 

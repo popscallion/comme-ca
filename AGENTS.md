@@ -9,10 +9,10 @@ This is the **source repository** for the comme-ca agent orchestration system. T
 
 | Agent Role | Alias | Command | When to Use |
 |:-----------|:------|:--------|:------------|
-| **Mise (prep)** | `prep` | `goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md` | New project scaffolding, environment setup, dependency checks |
-| **Menu (plan)** | `plan` | `goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md` | Requirements gathering, architecture planning, spec writing |
-| **Taste (audit)** | `audit` | `goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md` | Code review, drift detection, documentation sync |
-| **Pass (wrap)** | `wrap` | `goose run --instructions ~/dev/comme-ca/prompts/roles/pass.md` | Handoff, session closure, context consolidation |
+| **Mise (prep)** | `prep` | `cca prep` (or `/prep` in Claude) | New project scaffolding, environment setup, dependency checks |
+| **Menu (plan)** | `plan` | `cca plan` (or `/plan` in Claude) | Requirements gathering, architecture planning, spec writing |
+| **Taste (audit)** | `audit` | `cca audit` (or `/audit` in Claude) | Code review, drift detection, documentation sync |
+| **Pass (wrap)** | `wrap` | `cca wrap` (or `/wrap` in Claude) | Handoff, session closure, context consolidation |
 | **Pipe (cca)** | `cca` | `cca git "instruction"` | Quick CLI translations (low-latency, single commands) |
 
 ## Context Utilities (Conversation Synthesis)
@@ -21,9 +21,9 @@ This is the **source repository** for the comme-ca agent orchestration system. T
 
 | Tool | Alias | Command | When to Use |
 |:-----|:------|:--------|:------------|
-| **Clarify** | `clarify` | `goose run --instructions ~/dev/comme-ca/prompts/utilities/clarify.md` | Live conversation: Socratic questioning to explore design space |
-| **What** | `what` | `goose run --instructions ~/dev/comme-ca/prompts/utilities/what.md` | Post-conversation: Generate PRD or Research Synthesis (forward-looking) |
-| **Why** | `why` | `goose run --instructions ~/dev/comme-ca/prompts/utilities/why.md` | Post-conversation: Generate Decision Record with narrative arc (backward-looking) |
+| **Clarify** | `clarify` | `cca clarify` | Live conversation: Socratic questioning to explore design space |
+| **What** | `what` | `cca what` | Post-conversation: Generate PRD or Research Synthesis (forward-looking) |
+| **Why** | `why` | `cca why` | Post-conversation: Generate Decision Record with narrative arc (backward-looking) |
 
 ### Recommended Workflows
 

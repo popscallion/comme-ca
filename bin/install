@@ -119,10 +119,10 @@ add_fish_config() {
 
 # comme-ca intelligence system
 set -gx PATH $HOME/dev/comme-ca/bin $PATH
-alias prep="goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md"
-alias plan="goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md"
-alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
-alias wrap="goose run --instructions ~/dev/comme-ca/prompts/roles/pass.md"
+alias prep="cca prep"
+alias plan="cca plan"
+alias audit="cca audit"
+alias wrap="cca wrap"
 EOF
 }
 
@@ -134,10 +134,10 @@ add_posix_config() {
 
 # comme-ca intelligence system
 export PATH="$HOME/dev/comme-ca/bin:$PATH"
-alias prep="goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md"
-alias plan="goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md"
-alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
-alias wrap="goose run --instructions ~/dev/comme-ca/prompts/roles/pass.md"
+alias prep="cca prep"
+alias plan="cca plan"
+alias audit="cca audit"
+alias wrap="cca wrap"
 EOF
 }
 
@@ -188,9 +188,9 @@ main() {
     configure_shell
 
     # Step 3: Tool Setup
-    info "Configuring AI tools (Claude Code, Crush)..."
+    info "Configuring Claude Code..."
     export COMME_CA_HOME="$INSTALL_DIR"
-    "$INSTALL_DIR/bin/cca" setup:all || warn "Tool setup had minor issues, but installation continues."
+    "$INSTALL_DIR/bin/cca" setup:claude || warn "Claude setup had minor issues, but installation continues."
 
     # Step 4: Verify installation
     echo

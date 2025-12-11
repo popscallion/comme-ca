@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # cca - The Pipe: CLI wrapper for comme-ca prompts
 # Bridges terminal and Markdown prompts with Raycast compatibility
-# Renamed from 'ca' to avoid shadowing certificate authority
 
 set -euo pipefail
 
@@ -9,7 +8,7 @@ set -euo pipefail
 COMME_CA_HOME="${COMME_CA_HOME:-$HOME/dev/comme-ca}"
 PROMPTS_DIR="${COMME_CA_HOME}/prompts/pipe"
 ROLES_DIR="${COMME_CA_HOME}/prompts/roles"
-ENGINE="${COMME_CA_ENGINE:-goose}"  # Default: goose; override: claude
+ENGINE="${COMME_CA_ENGINE:-claude}"  # Default: claude
 
 # Usage
 usage() {
@@ -17,7 +16,9 @@ usage() {
 Usage: cca <prompt-name> [input]
        cca init
        cca update
-       cca setup:<tool>
+       cca setup:list
+       cca setup:claude
+       cca setup:remove
        cca drift
        echo "input" | cca <prompt-name>
 
@@ -26,11 +27,8 @@ Commands:
   update                    Pull comme-ca updates and diff AGENTS.md
   setup:list                List available/configured tools
   setup:claude              Configure Claude Code with comme-ca prompts
-  setup:crush               Configure Crush CLI with comme-ca prompts
-  setup:all                 Configure all tools at once
-  setup:sync                Update tools with drifted prompts
-  setup:remove <tool>       Remove tool configuration
-  drift                     Check for prompt drift across configured tools
+  setup:remove              Remove tool configuration
+  drift                     Check for prompt drift
 
 Prompts:
   cca git "create branch foo"   Translate to git command
@@ -38,7 +36,7 @@ Prompts:
 
 Environment:
   COMME_CA_HOME   - Path to comme-ca repo (default: ~/dev/comme-ca)
-  COMME_CA_ENGINE - AI engine: goose (default) or claude
+  COMME_CA_ENGINE - AI engine: claude (default)
 EOF
     exit 1
 }
@@ -99,23 +97,15 @@ setup_list() {
     echo "─────────────────────────────────────────────"
     echo ""
     echo "Base (always available):"
-    echo "  ✓ goose    - Primary agent runtime (reads prompts directly)"
     echo "  ✓ gemini   - Interactive CLI agent (reads GEMINI.md context)"
     echo ""
-    echo "Optional tools:"
+    echo "Supported tools:"
 
     # Check Claude Code
     if [[ -d "${HOME}/.claude/commands" ]] && [[ -f "${HOME}/.claude/commands/prep.md" ]]; then
         echo "  ✓ claude   - Configured at ~/.claude/"
     else
         echo "  ○ claude   - Not configured (run: cca setup:claude)"
-    fi
-
-    # Check Crush
-    if [[ -d "${HOME}/.config/crush/commands" ]] && [[ -f "${HOME}/.config/crush/commands/prep.md" ]]; then
-        echo "  ✓ crush    - Configured at ~/.config/crush/"
-    else
-        echo "  ○ crush    - Not configured (run: cca setup:crush)"
     fi
 
     echo ""
@@ -147,150 +137,23 @@ setup_claude() {
     echo "  Commands: /prep, /plan, /audit"
 }
 
-# Setup Crush CLI
-setup_crush() {
-    echo "Setting up Crush CLI with comme-ca prompts..."
-
-    local dest="${HOME}/.config/crush"
-    mkdir -p "${dest}/commands"
-
-    # Generate prep command (mise)
-    cat > "${dest}/commands/prep.md" <<'FRONTMATTER'
----
-description: System bootstrapper - validates environment and dependencies
----
-
-FRONTMATTER
-    cat "${ROLES_DIR}/mise.md" >> "${dest}/commands/prep.md"
-    echo "  ✓ prep.md (mise)"
-
-    # Generate plan command (menu)
-    cat > "${dest}/commands/plan.md" <<'FRONTMATTER'
----
-description: Requirements gathering and architecture planning
----
-
-FRONTMATTER
-    cat "${ROLES_DIR}/menu.md" >> "${dest}/commands/plan.md"
-    echo "  ✓ plan.md (menu)"
-
-    # Generate audit command (taste)
-    cat > "${dest}/commands/audit.md" <<'FRONTMATTER'
----
-description: Quality assurance and drift detection
----
-
-FRONTMATTER
-    cat "${ROLES_DIR}/taste.md" >> "${dest}/commands/audit.md"
-    echo "  ✓ audit.md (taste)"
-
-    # Store metadata for drift detection
-    store_setup_metadata "crush"
-
-    echo ""
-    echo "✓ Crush CLI configured at ${dest}"
-    echo "  Commands: /prep, /plan, /audit"
-}
-
-# Setup all tools at once
-setup_all() {
-    echo "Configuring all tools with comme-ca prompts..."
-    echo "─────────────────────────────────────────────"
-    echo ""
-
-    setup_claude
-    echo ""
-    setup_crush
-
-    echo ""
-    echo "─────────────────────────────────────────────"
-    echo "✓ All tools configured"
-}
-
-# Sync all configured tools (re-run setup for tools with drift)
-setup_sync() {
-    echo "Syncing configured tools..."
-    echo "─────────────────────────────────────────────"
-    echo ""
-
-    local synced=0
-
-    # Sync Claude Code if configured and has drift
-    if [[ -f "${HOME}/.claude/.comme-ca-setup" ]]; then
-        if ! check_tool_drift "claude"; then
-            setup_claude
-            echo ""
-            ((synced++))
-        else
-            echo "Claude Code: Already up to date"
-        fi
-    fi
-
-    # Sync Crush if configured and has drift
-    if [[ -f "${HOME}/.config/crush/.comme-ca-setup" ]]; then
-        if ! check_tool_drift "crush"; then
-            setup_crush
-            echo ""
-            ((synced++))
-        else
-            echo "Crush CLI: Already up to date"
-        fi
-    fi
-
-    echo ""
-    echo "─────────────────────────────────────────────"
-    if [[ $synced -eq 0 ]]; then
-        echo "✓ All configured tools already in sync"
-    else
-        echo "✓ Synced $synced tool(s)"
-    fi
-}
-
 # Remove tool configuration
 setup_remove() {
-    local tool="$1"
-
-    case "$tool" in
-        claude)
-            if [[ -d "${HOME}/.claude/commands" ]]; then
-                rm -f "${HOME}/.claude/commands/prep.md"
-                rm -f "${HOME}/.claude/commands/plan.md"
-                rm -f "${HOME}/.claude/commands/audit.md"
-                rm -f "${HOME}/.claude/.comme-ca-setup"
-                echo "✓ Removed Claude Code comme-ca configuration"
-            else
-                echo "Claude Code not configured"
-            fi
-            ;;
-        crush)
-            if [[ -d "${HOME}/.config/crush/commands" ]]; then
-                rm -f "${HOME}/.config/crush/commands/prep.md"
-                rm -f "${HOME}/.config/crush/commands/plan.md"
-                rm -f "${HOME}/.config/crush/commands/audit.md"
-                rm -f "${HOME}/.config/crush/.comme-ca-setup"
-                echo "✓ Removed Crush CLI comme-ca configuration"
-            else
-                echo "Crush CLI not configured"
-            fi
-            ;;
-        *)
-            echo "Unknown tool: $tool" >&2
-            echo "Available: claude, crush" >&2
-            exit 1
-            ;;
-    esac
+    if [[ -d "${HOME}/.claude/commands" ]]; then
+        rm -f "${HOME}/.claude/commands/prep.md"
+        rm -f "${HOME}/.claude/commands/plan.md"
+        rm -f "${HOME}/.claude/commands/audit.md"
+        rm -f "${HOME}/.claude/.comme-ca-setup"
+        echo "✓ Removed Claude Code comme-ca configuration"
+    else
+        echo "Claude Code not configured"
+    fi
 }
 
 # Store setup metadata for drift detection
 store_setup_metadata() {
     local tool="$1"
-    local metadata_file
-
-    case "$tool" in
-        claude) metadata_file="${HOME}/.claude/.comme-ca-setup" ;;
-        crush) metadata_file="${HOME}/.config/crush/.comme-ca-setup" ;;
-        *) return ;;
-    esac
+    local metadata_file="${HOME}/.claude/.comme-ca-setup"
 
     mkdir -p "$(dirname "$metadata_file")"
 
@@ -318,23 +181,14 @@ drift() {
     # Check Claude Code
     if [[ -f "${HOME}/.claude/.comme-ca-setup" ]]; then
         echo "Claude Code:"
-        if check_tool_drift "claude"; then
+        if check_tool_drift; then
             echo "  ✓ Up to date"
         else
             echo "  ⚠ Drift detected - run: cca setup:claude"
             has_drift=true
         fi
-    fi
-
-    # Check Crush
-    if [[ -f "${HOME}/.config/crush/.comme-ca-setup" ]]; then
-        echo "Crush CLI:"
-        if check_tool_drift "crush"; then
-            echo "  ✓ Up to date"
-        else
-            echo "  ⚠ Drift detected - run: cca setup:crush"
-            has_drift=true
-        fi
+    else
+        echo "Claude Code: Not configured"
     fi
 
     echo ""
@@ -366,14 +220,7 @@ drift() {
 
 # Check if a tool's configuration has drifted
 check_tool_drift() {
-    local tool="$1"
-    local metadata_file
-
-    case "$tool" in
-        claude) metadata_file="${HOME}/.claude/.comme-ca-setup" ;;
-        crush) metadata_file="${HOME}/.config/crush/.comme-ca-setup" ;;
-        *) return 1 ;;
-    esac
+    local metadata_file="${HOME}/.claude/.comme-ca-setup"
 
     if [[ ! -f "$metadata_file" ]]; then
         return 1
@@ -433,15 +280,11 @@ execute_engine() {
     local prompt="$1"
 
     case "$ENGINE" in
-        goose)
-            # --quiet suppresses session info, showing only the model response
-            goose run --quiet -t "$prompt"
-            ;;
         claude)
             echo "$prompt" | claude
             ;;
         *)
-            echo "Error: Unknown engine '$ENGINE'. Use 'goose' or 'claude'." >&2
+            echo "Error: Unknown engine '$ENGINE'. Only 'claude' is supported." >&2
             exit 1
             ;;
     esac
@@ -472,21 +315,8 @@ main() {
         setup:claude)
             setup_claude
             ;;
-        setup:crush)
-            setup_crush
-            ;;
-        setup:all)
-            setup_all
-            ;;
-        setup:sync)
-            setup_sync
-            ;;
         setup:remove)
-            if [[ $# -eq 0 ]]; then
-                echo "Usage: cca setup:remove <tool>" >&2
-                exit 1
-            fi
-            setup_remove "$1"
+            setup_remove
             ;;
         drift)
             drift
