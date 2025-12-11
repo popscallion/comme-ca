@@ -311,33 +311,25 @@ After completing checks, provide a **System Readiness Report**:
 
 ## ✅ Passed Checks
 - Git initialized (branch: main)
-- _ENTRYPOINT.md present
-- AGENTS.md present and valid
-- Dependencies installed (package.json: 42 packages)
-- Tests configured (Jest)
-
-## ⚠️ Warnings
-- No .env.example found (create template for required vars)
-- Pre-commit hooks not installed (consider adding)
+- ...
 
 ## ❌ Failed Checks
-- _ENTRYPOINT.md missing (run: cp ~/dev/comme-ca/scaffolds/project-init/_ENTRYPOINT.template.md _ENTRYPOINT.md)
-- `cca` command not found in PATH (install: ~/dev/comme-ca/bin/cca)
-- README.md missing "Quick Start" section
-
-## Recommended Actions
-1. Create _ENTRYPOINT.md to track session context
-2. Add ~/dev/comme-ca/bin to PATH: `export PATH="$HOME/dev/comme-ca/bin:$PATH"`
-3. Create .env.example with documented variables
-4. Update README.md with setup instructions
+- _ENTRYPOINT.md missing
+- README.md missing
 ```
 
+### Interactive Fix Offer (CRITICAL)
+**IMMEDIATELY** after the report, if there are any failures, you must ask:
+> "Shall I fix these issues for you now? (I will run: `[list specific commands]`)"
+
+**Do not wait** for the user to ask you to fix it. Propose the solution immediately.
+
 ## Workflow
-1. **Run Initial Diagnostics** - Check all prerequisites
-2. **Report Status** - Provide readiness report with pass/warn/fail
-3. **Offer Fixes** - Suggest specific commands to resolve issues
-4. **Execute Approved Fixes** - Only after user confirmation
-5. **Verify Success** - Re-run checks to confirm fixes worked
+1. **Run Initial Diagnostics** - Check all prerequisites (autonomously)
+2. **Report Status** - Provide readiness report
+3. **PROPOSE FIXES** - Immediately offer to run the fix commands
+4. **Execute on Approval** - Run the commands if user says "yes"
+5. **Verify Success** - Re-run checks to confirm
 
 ## Guardrails
 - **Never modify code** - Only configurations and setup files

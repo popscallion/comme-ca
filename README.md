@@ -10,26 +10,29 @@ Lean, single source of truth for agent intelligence. Self-documenting, easy iter
 
 ## Installation
 
-**One-liner:**
+### 1. One-Line Installer (Recommended)
+This script clones the repository and configures your shell (Bash, Zsh, or Fish) with the required aliases and PATH.
+
 ```bash
-curl -sL https://raw.githubusercontent.com/popscallion/comme-ca/main/bin/install | bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/popscallion/comme-ca/main/bin/install)"
 ```
 
-**Manual:**
+*Alternatively, if you have already cloned the repo:*
 ```bash
-git clone git@github.com:popscallion/comme-ca ~/dev/comme-ca
-export PATH="$HOME/dev/comme-ca/bin:$PATH"
-
-# Add aliases (Fish example; use ~/.zshrc or ~/.bashrc for Zsh/Bash)
-cat >> ~/.config/fish/config.fish <<'EOF'
-alias prep="goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md"
-alias plan="goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md"
-alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
-export PATH="$HOME/dev/comme-ca/bin:$PATH"
-EOF
+./bin/install
 ```
 
----
+### 2. Verify Installation
+Restart your terminal, then run:
+```bash
+cca setup:list
+```
+
+### Dependencies
+- **Goose** (Primary Runtime): [Install Goose](https://block.github.io/goose/docs/getting-started/installation)
+- **Git** & **GitHub CLI (`gh`)**
+- **Ripgrep (`rg`)** (for fast context searching)
+- *Optional:* Claude Code (`npm i -g @anthropic-ai/claude-code`) or Crush CLI
 
 ## Usage
 
