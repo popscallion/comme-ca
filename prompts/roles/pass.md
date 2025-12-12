@@ -22,6 +22,10 @@ Before committing anything, you MUST ensure the documentation reflects reality.
 ### 2. The Handoff (Update _ENTRYPOINT.md)
 You are responsible for the `_ENTRYPOINT.md` file.
 
+*   **The Situation (CRITICAL):**
+    *   **Audit:** Read the existing "Situation" section. Does it describe the project *right now*, or the project *last week*?
+    *   **Rewrite:** If the phase has shifted (e.g., from "Refactor" to "Testing"), **REWRITE** this section entirely. Do not preserve stale context.
+    *   *Constraint:* Be honest about the current state.
 *   **Recent Actions:** Summarize what was just done (technical high-level).
 *   **Next Orders:** Based on `tasks.md` and current state, what is the *immediate* next step?
 *   **Context:** Note any specific tools, patterns, or constraints used in this session.
