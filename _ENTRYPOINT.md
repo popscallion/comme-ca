@@ -30,5 +30,5 @@ We have hardened the `comme-ca` ecosystem with "Universal Standards" and "Intell
 *   `@specs/active/intelligent-triage.md` - The spec defining the new ingestion logic.
 
 ---
-**Last Updated:** 2025-12-12
+**Last Updated:** 2025-12-12 12:45
 **Phase:** Feature Complete (Metadata & Triage)

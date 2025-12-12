@@ -25,6 +25,7 @@ You are responsible for the `_ENTRYPOINT.md` file.
 *   **Recent Actions:** Summarize what was just done (technical high-level).
 *   **Next Orders:** Based on `tasks.md` and current state, what is the *immediate* next step?
 *   **Context:** Note any specific tools, patterns, or constraints used in this session.
+*   **Timestamp:** Update **Last Updated** field to `YYYY-MM-DD HH:MM` (e.g., `2025-12-12 14:30`). Do not include seconds.
 
 ### 3. The Commit
 *   Stage all consolidated changes (code + docs + _ENTRYPOINT.md).

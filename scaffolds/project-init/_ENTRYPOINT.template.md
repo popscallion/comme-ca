@@ -24,5 +24,5 @@
 *   `@AGENTS.md` - Role definitions.
 
 ---
-**Last Updated:** {{DATE}}
+**Last Updated:** {{DATE}} (YYYY-MM-DD HH:MM)
 **Phase:** [Current Phase]
