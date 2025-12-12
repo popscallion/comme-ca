@@ -1,4 +1,9 @@
 <!--
+@id: requirements
+@version: 1.0.0
+@model: claude-3-5-sonnet-20241022
+-->
+<!--
 This file defines WHAT needs to be built.
 Document user stories, functional requirements, constraints, and success criteria.
 See: ~/dev/comme-ca/prompts/roles/menu.md for guidance.

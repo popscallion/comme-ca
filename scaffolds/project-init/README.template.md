@@ -1,3 +1,8 @@
+<!--
+@id: readme
+@version: 1.0.0
+@model: claude-3-5-sonnet-20241022
+-->
 # {{PROJECT_NAME}}
 
 [Project description goes here]

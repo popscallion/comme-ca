@@ -34,6 +34,22 @@ Standard roles automatically detect and adapt to project documentation:
 
 **Create these files to define project-specific behavior.** The roles will execute validation rules from requirements.md, follow workflows from design.md, and track progress in tasks.md.
 
+## Universal Standards (CRITICAL)
+
+All generated markdown artifacts (Prompts, Specs, ADRs, PRDs) MUST begin with a standardized metadata block to ensure version control compatibility:
+
+```markdown
+<!--
+@id: [kebab-case-unique-id]
+@version: [semver]
+@model: [model-id]
+-->
+```
+
+- **@id:** Unique identifier for the artifact (file-system safe)
+- **@version:** Semantic versioning (start at 1.0.0, increment on iterations)
+- **@model:** The model used to generate the artifact
+
 ## Setting Up Aliases
 
 Add to your shell config (`~/.config/fish/config.fish` or `~/.zshrc`):

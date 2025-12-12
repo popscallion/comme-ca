@@ -1,3 +1,8 @@
+<!--
+@id: entrypoint
+@version: 1.0.0
+@model: claude-3-5-sonnet-20241022
+-->
 # ENTRYPOINT (Handoff)
 
 > **READ FIRST:** This file contains the critical context, recent changes, and immediate directives for the next agent or developer working on this repository.

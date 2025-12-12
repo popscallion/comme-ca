@@ -30,6 +30,7 @@ Scan for these files and load if present:
 - `@tasks.md` - Current work items and priorities
 - `@specs/` - Feature specifications directory
 - `@README.md` - Project overview
+- `@docs/` - Domain-specific standards (e.g., `docs/standards/prompting.md`, `docs/guidelines/*.md`). Treat these as Constitutional Constraints.
 ```
 
 ### Adaptive Behavior

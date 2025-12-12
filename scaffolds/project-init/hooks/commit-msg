@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# commit-msg hook to enforce proper handoff procedures via 'wrap'
+#
+# Checks if _ENTRYPOINT.md is being modified in the commit.
+# If not, it warns the user that they might be skipping the wrap/handoff process.
+
+# Allow bypassing with a specific environment variable or git config if strictly necessary
+# e.g. SKIP_WRAP_CHECK=1 git commit ...
+if [ -n "$SKIP_WRAP_CHECK" ]; then
+    exit 0
+fi
+
+# Check if _ENTRYPOINT.md is in the list of staged files
+if ! git diff --cached --name-only | grep -q "_ENTRYPOINT.md"; then
+    echo "================================================================"
+    echo "⚠️  WARNING: _ENTRYPOINT.md is NOT included in this commit."
+    echo ""
+    echo "The 'comme-ca' workflow relies on updating _ENTRYPOINT.md"
+    echo "to maintain context for the next session."
+    echo ""
+    echo "Did you run 'cca wrap'?"
+    echo ""
+    echo "To proceed anyway, run:"
+    echo "  SKIP_WRAP_CHECK=1 git commit ..."
+    echo "================================================================"
+    exit 1
+fi
+
+exit 0

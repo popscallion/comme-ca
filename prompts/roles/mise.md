@@ -28,6 +28,7 @@ Scan for these files and load if present:
 - `@design.md` - Technical architecture, dependencies, setup requirements
 - `@requirements.md` - Constraints, environment requirements
 - `@README.md` - Project overview and setup instructions
+- `@docs/` - Domain-specific standards (e.g., `docs/standards/prompting.md`, `docs/guidelines/*.md`). Treat these as Constitutional Constraints.
 ```
 
 ### Adaptive Behavior
@@ -217,6 +218,7 @@ Perform these steps atomically (all-or-nothing):
    ```
    project-slug/
    ├── .git/              # via git init
+   ├── .git/hooks/commit-msg # from scaffolds/hooks/commit-msg (executable)
    ├── _ENTRYPOINT.md     # from _ENTRYPOINT.template.md
    ├── AGENTS.md          # copied from scaffolds/high-low/
    ├── CLAUDE.md          # copied from scaffolds/high-low/
@@ -239,6 +241,9 @@ Perform these steps atomically (all-or-nothing):
 3. **Populate files:**
    - Copy templates with placeholder substitution
    - Ensure all files use UTF-8 encoding
+   - **Install Git Hooks:**
+     - Copy `~/dev/comme-ca/scaffolds/project-init/hooks/commit-msg` to `.git/hooks/commit-msg`
+     - Make executable: `chmod +x .git/hooks/commit-msg`
 
 4. **Create initial commit:**
    ```bash

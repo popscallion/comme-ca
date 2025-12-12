@@ -1,4 +1,9 @@
 <!--
+@id: design
+@version: 1.0.0
+@model: claude-3-5-sonnet-20241022
+-->
+<!--
 This file defines HOW it will be built.
 Document architecture, component design, data models, and technical decisions.
 See: ~/dev/comme-ca/prompts/roles/menu.md for guidance.

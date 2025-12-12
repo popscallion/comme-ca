@@ -32,6 +32,7 @@ Scan for these files and load if present:
 - `@tasks.md` - Current work items
 - `@specs/` - Existing feature specifications
 - `@README.md` - Project overview
+- `@docs/` - Domain-specific standards (e.g., `docs/standards/prompting.md`, `docs/guidelines/*.md`). Treat these as Constitutional Constraints.
 ```
 
 ### Adaptive Behavior
@@ -101,7 +102,20 @@ When a new feature or project is proposed, begin with structured inquiry:
 - What are the nice-to-haves vs must-haves?
 - What's the expected timeline?
 
-### 2. Documentation Structure
+### 2. Intelligent Triage & Ingestion
+**Trigger:** You detect "loose artifacts" (logs, screenshots, raw notes) in the project root, `bugs/`, or `specs/`, OR the user pastes a raw dump into chat.
+
+**Protocol:**
+1.  **Detection:** Identify the intent (Bug Report vs. New Feature).
+2.  **Organization:**
+    - Create directory: `specs/[type]-[slug]/` (e.g., `specs/bug-login-crash/`).
+    - Create context subfolder: `specs/[type]-[slug]/context/`.
+    - **Action:** MOVE the loose files into `context/`.
+    - **Action:** WRITE chat dumps to `context/chat-transcript-[timestamp].md`.
+3.  **Preservation:** Treat `context/` as Read-Only Evidence. Do not modify these files.
+4.  **Analysis:** Read the `context/` files to scaffold `requirements.md` and `design.md`.
+
+### 3. Documentation Structure
 Create specifications in a standardized format:
 
 **Directory Layout:**
