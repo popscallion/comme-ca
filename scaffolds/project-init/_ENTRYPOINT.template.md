@@ -25,4 +25,4 @@
 
 ---
 **Last Updated:** {{DATE}} (YYYY-MM-DD HH:MM)
-**Phase:** [Current Phase]
+**Previous:** [Summary of session before this one]
