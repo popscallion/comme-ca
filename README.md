@@ -29,7 +29,8 @@ cca setup:list
 ```
 
 ### Dependencies
-- **Claude Code** (Primary Runtime): `npm i -g @anthropic-ai/claude-code`
+- **Claude Code**: `npm i -g @anthropic-ai/claude-code` (Required for `cca` pipe commands)
+- **Gemini CLI**: (Optional, for interactive agent sessions)
 - **Git** & **GitHub CLI (`gh`)**
 - **Ripgrep (`rg`)** (for fast context searching)
 
@@ -119,7 +120,7 @@ Translate natural language to executable commands instantly.
 1. Input: `cca git "undo last commit"`
 2. Script reads `prompts/pipe/git.md`
 3. Applies Raycast Shim (replaces `{argument}`, `{shell_name}`, etc.)
-4. Forwards to `goose` (default) or `claude`
+4. Forwards to `claude`
 5. Output: `git reset --soft HEAD~1`
 
 **Available prompts:**
@@ -128,7 +129,6 @@ Translate natural language to executable commands instantly.
 
 **Configuration:**
 ```bash
-export COMME_CA_ENGINE=claude      # Default: goose
 export COMME_CA_HOME=/custom/path  # Default: ~/dev/comme-ca
 ```
 

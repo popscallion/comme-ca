@@ -9,6 +9,12 @@ See: ~/dev/comme-ca/prompts/roles/menu.md for guidance.
 ## Architecture Overview
 [High-level description]
 
+## Key Decisions & Trade-offs
+- **Decision:** [What we chose]
+- **Rationale:** [Why we chose it]
+- **Alternatives Considered:** [What we rejected and why]
+- **Trade-offs:** [What was sacrificed]
+
 ## Component Breakdown
 ### Component A
 - **Purpose:** [What it does]

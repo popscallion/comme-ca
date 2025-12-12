@@ -1,7 +1,7 @@
 # Agent Orchestration & Roles
 **Canonical Source: comme-ca Intelligence System**
 
-This is the **source repository** for the comme-ca agent orchestration system. This document defines how autonomous agents (Claude Code, Goose, or other AI assistants) should operate within this repository. All agents must read and follow these orchestration rules.
+This is the **source repository** for the comme-ca agent orchestration system. This document defines how autonomous agents (Claude Code, Gemini CLI) should operate within this repository. All agents must read and follow these orchestration rules.
 
 > **Note:** This AGENTS.md serves dual purposes: (1) it governs agent behavior in this repo, and (2) it is the template that `cca init` copies to target projects. Changes here propagate to all new projects.
 
@@ -9,10 +9,10 @@ This is the **source repository** for the comme-ca agent orchestration system. T
 
 | Agent Role | Alias | Command | When to Use |
 |:-----------|:------|:--------|:------------|
-| **Mise (prep)** | `prep` | `cca prep` (or `/prep` in Claude) | New project scaffolding, environment setup, dependency checks |
-| **Menu (plan)** | `plan` | `cca plan` (or `/plan` in Claude) | Requirements gathering, architecture planning, spec writing |
-| **Taste (audit)** | `audit` | `cca audit` (or `/audit` in Claude) | Code review, drift detection, documentation sync |
-| **Pass (wrap)** | `wrap` | `cca wrap` (or `/wrap` in Claude) | Handoff, session closure, context consolidation |
+| **Mise (prep)** | `prep` | `/prep` (Claude/Gemini) | New project scaffolding, environment setup, dependency checks |
+| **Menu (plan)** | `plan` | `/plan` (Claude/Gemini) | Requirements gathering, architecture planning, spec writing |
+| **Taste (audit)** | `audit` | `/audit` (Claude/Gemini) | Code review, drift detection, documentation sync |
+| **Pass (wrap)** | `wrap` | `/wrap` (Claude/Gemini) | Handoff, session closure, context consolidation |
 | **Pipe (cca)** | `cca` | `cca git "instruction"` | Quick CLI translations (low-latency, single commands) |
 
 ## Context Utilities (Conversation Synthesis)
@@ -257,41 +257,34 @@ audit
 Add to your shell config (`~/.config/fish/config.fish` or `~/.zshrc`):
 
 ```bash
-# High-Lift Agents
-alias prep="goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md"
-alias plan="goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md"
-alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
-alias wrap="goose run --instructions ~/dev/comme-ca/prompts/roles/pass.md"
-
-# Context Utilities
-alias clarify="goose run --instructions ~/dev/comme-ca/prompts/utilities/clarify.md"
-alias what="goose run --instructions ~/dev/comme-ca/prompts/utilities/what.md"
-alias why="goose run --instructions ~/dev/comme-ca/prompts/utilities/why.md"
-
 # Low-Lift CLI Tool
 export PATH="$HOME/dev/comme-ca/bin:$PATH"  # Adds 'cca' to PATH
 ```
 
+Then configure your tools:
+```bash
+cca setup:all      # Configures both Claude Code and Gemini CLI
+```
+
 Then use simply:
 ```bash
-prep    # Bootstrap environment
-plan    # Create specs
-audit   # Check for drift
-wrap    # Handoff session
-cca git "command"  # Quick translations
+/prep   # In Claude or Gemini: Bootstrap environment
+/plan   # In Claude or Gemini: Create specs
+/audit  # In Claude or Gemini: Check for drift
+/wrap   # In Claude or Gemini: Handoff session
+cca git "command"  # Quick translations (Terminal)
 ```
 
 ## Multi-Tool Integration
 
-Comme-ca prompts can be used with multiple AI CLI tools. Goose is the primary runtime, while others are optional.
+Comme-ca prompts can be used with multiple AI CLI tools.
 
 ### Tool Status
 
 | Tool | Status | Setup Command | Config Location |
 |:-----|:-------|:--------------|:----------------|
-| **Goose** | Primary | None needed | Reads prompts directly |
-| **Claude Code** | Optional | `cca setup:claude` | `~/.claude/commands/` |
-| **Crush** | Optional | `cca setup:crush` | `~/.config/crush/commands/` |
+| **Claude Code** | Primary | `cca setup:claude` | `~/.claude/commands/` |
+| **Gemini CLI** | Primary | `cca setup:gemini` | `~/.gemini/commands/` |
 
 ### Managing Tools
 
@@ -301,10 +294,7 @@ cca setup:list
 
 # Configure a tool
 cca setup:claude
-cca setup:crush
-
-# Remove a tool's configuration
-cca setup:remove claude
+cca setup:gemini
 
 # Check for drift (prompt changes not yet synced)
 cca drift
@@ -312,9 +302,8 @@ cca drift
 
 ### When to Use Each Tool
 
-- **Goose**: Primary runtime for all roles. Best for automation, CI/CD, and direct prompt execution.
 - **Claude Code**: IDE integration. Good for development workflows.
-- **Crush**: Charm's terminal AI. Good for interactive terminal use.
+- **Gemini CLI**: Interactive CLI agent. Good for fast, contextual tasks.
 
 ### Drift Detection
 

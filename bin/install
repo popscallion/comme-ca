@@ -119,10 +119,6 @@ add_fish_config() {
 
 # comme-ca intelligence system
 set -gx PATH $HOME/dev/comme-ca/bin $PATH
-alias prep="cca prep"
-alias plan="cca plan"
-alias audit="cca audit"
-alias wrap="cca wrap"
 EOF
 }
 
@@ -134,10 +130,6 @@ add_posix_config() {
 
 # comme-ca intelligence system
 export PATH="$HOME/dev/comme-ca/bin:$PATH"
-alias prep="cca prep"
-alias plan="cca plan"
-alias audit="cca audit"
-alias wrap="cca wrap"
 EOF
 }
 
@@ -188,9 +180,10 @@ main() {
     configure_shell
 
     # Step 3: Tool Setup
-    info "Configuring Claude Code..."
+    info "Configuring AI Tools..."
     export COMME_CA_HOME="$INSTALL_DIR"
-    "$INSTALL_DIR/bin/cca" setup:claude || warn "Claude setup had minor issues, but installation continues."
+    "$INSTALL_DIR/bin/cca" setup:claude || warn "Claude setup had minor issues."
+    "$INSTALL_DIR/bin/cca" setup:gemini || warn "Gemini setup had minor issues."
 
     # Step 4: Verify installation
     echo
@@ -200,7 +193,7 @@ main() {
     echo "  1. Restart your shell or run: source $(get_config_file "$(detect_shell)")"
     echo "  2. Verify with: which cca"
     echo "  3. Initialize a project: cd <project> && cca init"
-    echo "  4. Use agents: prep, plan, audit"
+    echo "  4. Use agents (in Claude/Gemini): /prep, /plan, /audit"
     echo "  5. Use pipe: cca git \"create branch foo\""
     echo
 }

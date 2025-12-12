@@ -2,25 +2,25 @@
 # Agent Orchestration
 **Powered by comme-ca Intelligence System**
 
-This document defines how autonomous agents (Claude Code, Goose, or other AI assistants) should operate within this repository.
+This document defines how autonomous agents (Claude Code, Gemini CLI) should operate within this repository.
 
 ## Standard Roles
 
 | Role | Alias | Command | When to Use |
 |:-----|:------|:--------|:------------|
-| **Mise (prep)** | `prep` | `goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md` | New project scaffolding, environment setup, dependency checks |
-| **Menu (plan)** | `plan` | `goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md` | Requirements gathering, architecture planning, spec writing |
-| **Taste (audit)** | `audit` | `goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md` | Code review, drift detection, documentation sync |
-| **Pass (wrap)** | `wrap` | `goose run --instructions ~/dev/comme-ca/prompts/roles/pass.md` | Handoff, session closure, context consolidation |
+| **Mise (prep)** | `prep` | `/prep` (Claude/Gemini) | New project scaffolding, environment setup, dependency checks |
+| **Menu (plan)** | `plan` | `/plan` (Claude/Gemini) | Requirements gathering, architecture planning, spec writing |
+| **Taste (audit)** | `audit` | `/audit` (Claude/Gemini) | Code review, drift detection, documentation sync |
+| **Pass (wrap)** | `wrap` | `/wrap` (Claude/Gemini) | Handoff, session closure, context consolidation |
 | **Pipe (cca)** | `cca` | `cca git "instruction"` | Quick CLI translations (low-latency, single commands) |
 
 ## Context Utilities (Ad-Hoc)
 
 | Tool | Alias | Command | When to Use |
 |:-----|:------|:--------|:------------|
-| **Clarify** | `clarify` | `goose run --instructions ~/dev/comme-ca/prompts/utilities/clarify.md` | Pre-planning exploration & ambiguity resolution |
-| **What** | `what` | `goose run --instructions ~/dev/comme-ca/prompts/utilities/what.md` | Generate PRD/Research Synthesis from context |
-| **Why** | `why` | `goose run --instructions ~/dev/comme-ca/prompts/utilities/why.md` | Generate Decision Record/Commit Context |
+| **Clarify** | `clarify` | `cca clarify` | Pre-planning exploration & ambiguity resolution |
+| **What** | `what` | `cca what` | Generate PRD/Research Synthesis from context |
+| **Why** | `why` | `cca why` | Generate Decision Record/Commit Context |
 
 ## Context Detection
 
@@ -39,30 +39,23 @@ Standard roles automatically detect and adapt to project documentation:
 Add to your shell config (`~/.config/fish/config.fish` or `~/.zshrc`):
 
 ```bash
-# High-Lift Agents
-alias prep="goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md"
-alias plan="goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md"
-alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
-alias wrap="goose run --instructions ~/dev/comme-ca/prompts/roles/pass.md"
-
-# Context Utilities
-alias clarify="goose run --instructions ~/dev/comme-ca/prompts/utilities/clarify.md"
-alias what="goose run --instructions ~/dev/comme-ca/prompts/utilities/what.md"
-alias why="goose run --instructions ~/dev/comme-ca/prompts/utilities/why.md"
-
 # Low-Lift CLI Tool
 export PATH="$HOME/dev/comme-ca/bin:$PATH"
 ```
 
+Then configure your tools:
+```bash
+cca setup:all      # Configures both Claude Code and Gemini CLI
+```
+
 ## Multi-Tool Integration
 
-Comme-ca prompts work with multiple AI CLI tools. Goose is primary; others are optional.
+Comme-ca prompts work with multiple AI CLI tools.
 
 | Tool | Setup Command | Config Location |
 |:-----|:--------------|:----------------|
-| **Goose** | None needed | Reads prompts directly |
 | **Claude Code** | `cca setup:claude` | `~/.claude/commands/` |
-| **Crush** | `cca setup:crush` | `~/.config/crush/commands/` |
+| **Gemini CLI** | `cca setup:gemini` | `~/.gemini/commands/` |
 
 ```bash
 # Check tool status
@@ -71,6 +64,7 @@ cca setup:list
 # Configure tools
 cca setup:all        # All tools at once
 cca setup:claude     # Individual tool
+cca setup:gemini     # Individual tool
 
 # Maintenance
 cca drift            # Check for prompt updates
@@ -80,10 +74,10 @@ cca setup:sync       # Update drifted tools
 ## Usage
 
 ```bash
-prep    # Bootstrap environment, install dependencies
-plan    # Create specifications, gather requirements
-audit   # Check for drift, validate compliance
-wrap    # Consolidate docs, commit, and generate handoff
+/prep   # Bootstrap environment, install dependencies
+/plan   # Create specifications, gather requirements
+/audit  # Check for drift, validate compliance
+/wrap   # Consolidate docs, commit, and generate handoff
 cca git "command"  # Quick CLI translations
 ```
 

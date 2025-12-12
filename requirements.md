@@ -61,7 +61,7 @@ comme-ca/
 A Bash script serving as the bridge between the user's terminal and the Markdown prompts.
 
 **Requirements:**
-1.  **Engine Agnostic:** Must default to `goose` but support `claude` (headless) via configuration.
+1.  **Engine Agnostic:** Must default to `claude`.
 2.  **Input Handling:** Must accept input via Argument (`cca git "undo"`) OR Stdin (`cat file | cca data-clean`).
 3.  **Init Subcommand:** Must support `cca init` to bootstrap agent orchestration in the current directory:
     *   Check if `AGENTS.md` or `CLAUDE.md` already exist

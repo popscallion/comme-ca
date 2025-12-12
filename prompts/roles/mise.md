@@ -93,13 +93,18 @@ When entering a directory, perform these checks in order:
 
 **Fresh Project Bootstrapping (Raw Context Mode):**
 - [ ] **Detect Freshness:** If directory has `cca init` files (`AGENTS.md`) but NO `.git` and NO `specs/`, check for "napkin sketch" files.
-- [ ] **Scan Context:** Read any present `.md` or `.txt` files (e.g., `brain dump.txt`, `notes.md`).
-- [ ] **Infer Goal:** Synthesize project name, tech stack, and core purpose from these files.
-  - *Heuristic:* If context is too vague to guess even the language/goal, stop and ask: "I see raw notes but need clarification. Run `cca clarify`?"
+- [ ] **Scan Context:** Read any present `.md` or `.txt` files (e.g., `brain dump.txt`, `notes.md`, `what-output.md`).
+- [ ] **Analyze Source:** Determine if files are outputs from `what` (PRD) or `why` (Decision Record) prompts.
+- [ ] **Infer Goal:** Synthesize project name, tech stack, and core purpose.
+  - *Heuristic:* If context is too vague, stop and ask: "I see raw notes but need clarification. Run `cca clarify`?"
 - [ ] **Bootstrapping Sequence (Propose this):**
   1. `git init` & `git branch -M main`
-  2. `git add .` (Commit the raw context *as is* to preserve history: "chore: initial commit of raw context")
-  3. Scaffold `specs/requirements.md` & `specs/design.md` using inferred content.
+  2. `git add .` (Commit the raw context *as is*: "chore: initial commit of raw context")
+  3. Scaffold `specs/requirements.md` & `specs/design.md`.
+     - **CRITICAL:** Extract structured data from raw context:
+       - Map `what` -> "User Stories", "Functional Requirements", "Assumptions & Defaults", "Open Questions" -> `requirements.md`
+       - Map `why` -> "Key Decisions", "Discarded Approaches" (to "Alternatives Considered"), "Synthesis Logic" -> `design.md`
+     - *Fallback:* If content does not fit a standard section, APPEND it as a "Contextual Analysis" section to the relevant file.
   4. Offer: "I've extracted the context to `specs/`. Delete original raw files?"
   5. Commit scaffolding: "feat: scaffold project structure from raw context"
 

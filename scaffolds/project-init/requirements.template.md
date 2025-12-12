@@ -18,5 +18,13 @@ See: ~/dev/comme-ca/prompts/roles/menu.md for guidance.
 ## Constraints
 - [Technical or business constraint]
 
+## Assumptions & Defaults
+- **Assumption:** [User did not specify X, assuming Y]
+- **Reasoning:** [Why this default was chosen]
+
+## Open Questions
+- **Unknown:** [Critical missing information]
+- **Impact:** [How this affects the project]
+
 ## Success Metrics
 - [Measurable outcome]

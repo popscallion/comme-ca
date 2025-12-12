@@ -3,26 +3,24 @@
 > **READ FIRST:** This file contains the critical context, recent changes, and immediate directives for the next agent or developer working on this repository.
 
 ## 1. The Situation
-We have just integrated the "Pass" (wrap) role into the `comme-ca` system. This role standardizes session handoffs and ensures documentation hygiene. `_ENTRYPOINT.md` (this file) is now a mandatory context file for all operations.
+We have completed the migration to a "Claude Code & Gemini CLI only" ecosystem. We removed all documentation and installer references to the deprecated tools (Goose, Crush) to align with the codebase state.
 
 ## 2. Recent Actions
-*   **Role Installation:** Added `prompts/roles/pass.md`.
-*   **Documentation Update:** Updated `AGENTS.md` and `scaffolds/high-low/AGENTS.md` with the new role.
-*   **Tooling Update:**
-    *   Updated `bin/cca` to generate `_ENTRYPOINT.md` during `init`.
-    *   Updated `bin/install` to include the `wrap` alias.
-*   **Protocol Update:** Updated `prompts/roles/mise.md` and `prompts/roles/taste.md` to enforce `_ENTRYPOINT.md` usage.
-*   **Spec Migration:** Moved `pass/` implementation notes to `specs/pass/`.
+*   **Docs Cleanup:** Updated `AGENTS.md` (root & scaffold), `README.md`, and `requirements.md` to remove Goose/Crush and feature Gemini/Claude.
+*   **Installer Fix:** Updated `bin/install`:
+    *   Removed broken terminal aliases (`prep`, `plan`, `audit`, `wrap`).
+    *   Added `cca setup:gemini` to the install flow.
+    *   Updated post-install instructions.
+*   **Scaffold Sync:** Updated `scaffolds/high-low/AGENTS.md` to match the root version.
 
 ## 3. Next Orders
-*   **Adopt `wrap`:** Use the `wrap` command (or `goose run --instructions prompts/roles/pass.md`) to end sessions.
-*   **Maintain Hygiene:** Ensure `_ENTRYPOINT.md` is updated before every commit (handled by `wrap`).
+*   **Verify Install:** Run `./bin/install` locally to verify the new flow works.
+*   **Drift Check:** Run `cca drift` to ensure your local config matches the new prompts/setup.
 
 ## 4. Key References
-*   `@tasks.md` - Master checklist.
-*   `@design.md` - Architecture source of truth.
-*   `@AGENTS.md` - Role definitions.
+*   `@AGENTS.md` - Now the single source of truth for Claude/Gemini usage.
+*   `@bin/install` - The updated bootstrap script.
 
 ---
-**Last Updated:** 2025-12-10
-**Phase:** Integration Complete
+**Last Updated:** 2025-12-12
+**Phase:** Cleanup & Consolidation
