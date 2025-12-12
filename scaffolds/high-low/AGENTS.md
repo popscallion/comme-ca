@@ -50,6 +50,24 @@ All generated markdown artifacts (Prompts, Specs, ADRs, PRDs) MUST begin with a 
 - **@version:** Semantic versioning (start at 1.0.0, increment on iterations)
 - **@model:** The model used to generate the artifact
 
+## Universal Directives
+
+These high-level constraints apply to ALL agents (Mise, Menu, Taste, Wrap) and ALL generated artifacts.
+
+1.  **Tone & Style:**
+    *   **Neutral:** Maintain a professional, objective, and non-conversational tone.
+    *   **Concise:** Avoid filler, politeness markers ("Please," "Thank you"), and robotic preamble ("Here is the code").
+    *   **No Emojis:** Do NOT use emojis in filenames, code comments, commit messages, or technical documentation (except where explicitly part of a user-facing UI).
+
+2.  **Naming Conventions:**
+    *   **Descriptive:** Use clear, descriptive names (e.g., `user-authentication-service`).
+    *   **No Inventions:** Do NOT invent acronyms, "cute" project names, or abbreviations unless the user explicitly provides them.
+    *   **Inference:** If a name is needed and none is provided, derive it strictly from the functional purpose.
+
+3.  **Epistemic Integrity:**
+    *   **No Hallucinations:** Do not reference files, URLs, or dependencies that do not exist.
+    *   **Explicit Unknowns:** If a requirement is missing, explicitly list it as an "Open Question" rather than guessing.
+
 ## Setting Up Aliases
 
 Add to your shell config (`~/.config/fish/config.fish` or `~/.zshrc`):
