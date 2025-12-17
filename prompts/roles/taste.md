@@ -277,6 +277,108 @@ For each feature in specs/:
 **Why This Matters:**
 Protocol version drift indicates the local project may be missing important agent orchestration updates, new capabilities, or security fixes from the canonical comme-ca source.
 
+### 7. Ecosystem Audit Mode (Cross-Repository)
+
+**Purpose:** When comme-ci (chezmoi) is detected as the ecosystem governor, perform cross-repository validation across the intelligence distribution system.
+
+**Detection Logic:**
+```
+IF directory `ecosystem/` exists at project root
+AND contains symlinks named `lab/` and `distro/`
+AND symlinks resolve to valid git repositories (contain .git/)
+THEN → Enter Ecosystem Audit Mode
+```
+
+**Guardrail (Ambiguity Check):**
+```
+IF symlinks exist at project root (but NOT in ecosystem/ subdirectory)
+OR symlink names don't match expected pattern (lab, distro)
+OR symlinks resolve to directories without AGENTS.md
+THEN → STOP and prompt user:
+
+  "⚠️  Detected symlinks that may indicate ecosystem structure,
+       but pattern doesn't match expected `ecosystem/{lab,distro}/` layout.
+
+       Found: [list detected symlinks]
+       Expected: ecosystem/lab/ → prompt research repo
+                 ecosystem/distro/ → tooling distribution repo
+
+       Is this an ecosystem audit? [y/n/skip]
+       - y: Proceed with ecosystem checks on detected symlinks
+       - n: Skip ecosystem checks, continue normal audit
+       - skip: Ignore symlinks entirely for this audit"
+```
+
+**Ecosystem Checks (when confirmed):**
+
+1. **Protocol Version Alignment**
+   - Parse `@protocol` and `@version` from each symlinked repo's `AGENTS.md`
+   - Report version mismatches across the ecosystem
+   - Warn if any repo lacks protocol version header
+
+2. **Data Flow Validation**
+   - List files in `ecosystem/distro/prompts/utilities/`
+   - Verify each exists in `ecosystem/lab/prompts/utilities/`
+   - Flag reverse flow: files in Distro but not in Lab indicate sync issues
+   - Check for Lab files pending release to Distro
+
+3. **Naming Consistency**
+   - Grep for CLI references (`ca git`, `ca shell`) across all symlinked docs
+   - Should find zero matches (canonical name is `cca`)
+   - Report any naming drift
+
+4. **Freshness Check**
+   - Check `_ENTRYPOINT.md` modified time in each symlinked repo
+   - Warn if any repo's entrypoint is > 7 days stale
+   - Suggest running `wrap` in stale repos
+
+5. **Semantic Collision Detection**
+   - Compare `AGENTS.md` primary purpose across repos
+   - Flag if same filename serves different semantic purposes
+   - Example: Lab AGENTS.md = "Research Assistant" vs Distro = "Role System"
+
+**Output Format:**
+```markdown
+## Ecosystem Governance Report
+
+### Repository Status
+| Repo | Path | Protocol | Version | Last Updated | Status |
+|:-----|:-----|:---------|:--------|:-------------|:-------|
+| lab | ecosystem/lab/ | comme-ca | (none) | 2025-12-12 | ⚠️ No version |
+| distro | ecosystem/distro/ | comme-ca | 1.2.0 | 2025-12-17 | ✅ |
+
+### Data Flow Analysis
+✅ Core utilities aligned: clarify.md, what.md, why.md
+⚠️ Lab has files not in Distro (pending release?):
+   - compare.md
+   - extract.md
+❌ Reverse flow detected (Distro has, Lab doesn't):
+   - (none found)
+
+### Naming Consistency
+✅ No legacy `ca` references found
+   (or)
+❌ Found 3 references to deprecated `ca` command:
+   - ecosystem/lab/README.md:55
+   - ecosystem/distro/docs/old-guide.md:12
+
+### Semantic Collisions
+⚠️ AGENTS.md serves different purposes:
+   - Lab: "Research Assistant" (two-phase search agent)
+   - Distro: "Role System" (Mise, Menu, Taste, Pass)
+   Recommendation: Rename lab/AGENTS.md to SEARCH_AGENT_GUIDE.md
+
+### Freshness
+✅ All _ENTRYPOINT.md files updated within 7 days
+   (or)
+⚠️ Stale entrypoints detected:
+   - ecosystem/lab/_ENTRYPOINT.md (12 days old)
+   Action: Run `wrap` in lab to update handoff state
+```
+
+**Integration with comme-ci:**
+This mode is specifically designed for comme-ci (chezmoi) acting as the ecosystem governor. The `ecosystem/` directory structure signals that this project oversees other repositories in the intelligence distribution system.
+
 ## Comprehensive Drift Report
 After all checks, generate a summary report:
 
@@ -368,6 +470,6 @@ Consider integrating as:
 
 ---
 
-**Version:** 1.0.0
-**Role:** QA/Drift Detector
+**Version:** 1.1.0
+**Role:** QA/Drift Detector + Ecosystem Governor
 **Alias:** `audit`
