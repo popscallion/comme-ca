@@ -47,6 +47,20 @@ cca git "create branch feature/auth"
 cca shell "find all JSON files"
 ```
 
+### Search Agent (`cca search`)
+A unified search tool wrapping Haiku 4.5 (smart) and GPT-OSS-120b (fast).
+
+**Usage:**
+```bash
+cca search "What is the latest context7 version?"  # Single Shot
+cca search --interactive                           # Interactive REPL
+cca search --resume                                # Resume last session
+```
+
+**Shortcuts (via `AGENTS.md` setup):**
+- `?` → Interactive Search
+- `,` → Resume Session
+
 ### Agents (High-Lift)
 ```bash
 prep   # System setup (mise)

@@ -84,6 +84,10 @@ Add to your shell config (`~/.config/fish/config.fish` or `~/.zshrc`):
 ```bash
 # Low-Lift CLI Tool
 export PATH="$HOME/dev/comme-ca/bin:$PATH"
+
+# Search Agent Shortcuts (Fish)
+abbr -a ? "cca search --interactive"
+abbr -a , "cca search --resume"
 ```
 
 Then configure your tools:
