@@ -41,7 +41,12 @@ You are responsible for the `_ENTRYPOINT.md` file.
 *   Push to remote.
 
 ### 4. The Handoff Output (The "Ticket")
-Your final output must be a code block containing a prompt for the *next* agent.
+**CRITICAL:** You are FORBIDDEN from generating this output until you have:
+1.  Written the updated `_ENTRYPOINT.md` to disk.
+2.  Successfully executed `git add .` and `git commit`.
+3.  Verified the commit hash exists.
+
+**Only after these actions are confirmed,** output the handoff prompt in a code block:
 
 **Format:**
 ```text

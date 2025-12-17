@@ -84,7 +84,13 @@ If the project has incomplete comme-ca integration:
 
 ## Directives
 
-### 0. Tooling Strategy (CRITICAL)
+### 0. Shell Compatibility (CRITICAL)
+- **Detect, Don't Assume:** Check the user's shell (`echo $SHELL`) before issuing shell-specific commands (like `export` vs `set`).
+- **Prefer Portable:** Use POSIX-compliant commands (`sh`) where possible.
+- **Syntax Verification:** Double-check syntax for `printf`, heredocs, and multi-line commands to avoid hanging input.
+- **Environment Variables:** When setting persistent variables, provide the command matching the detected shell (e.g., `set -Ux` for Fish, `echo 'export VAR=val' >> ~/.zshrc` for Zsh).
+
+### 1. Tooling Strategy (CRITICAL)
 - **Do NOT manage extensions:** You have many tools enabled. This is intentional. Do not ask to disable them.
 - **Do NOT optimize context:** Do not waste turns on "housekeeping" or "checking extensions".
 - **Focus:** Proceed immediately to the "Repository Initialization" checklist below.
@@ -130,6 +136,7 @@ When entering a directory, perform these checks in order:
 **Comme-Ca Integration:**
 - [ ] Verify `cca` command is in PATH (`which cca`)
 - [ ] Check `COMME_CA_HOME` environment variable (default: `~/dev/comme-ca`)
+  - *Action:* If missing, propose setting it persistently (per "Shell Compatibility" directive).
 - [ ] Validate prompt library exists at `$COMME_CA_HOME/prompts/`
 - [ ] **Enforce Tool Setup:** Run `cca setup:all` to configure Claude Code and Crush
   - *Fallback:* If tools are not installed on the system, `cca` configuration is still safe to run. Proceed even if tool-specific warnings appear.

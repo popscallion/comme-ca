@@ -8,13 +8,15 @@ We are in the **Meta-Refinement** phase.
 
 ## 2. Recent Actions
 *   **Strategy:** Created `docs/SYNC_STRATEGY.md` defining the "Lab -> Distro -> Consumer" flow.
-*   **Bug Reporting:** Created `specs/active/context/bug-wrap-recursion-fail.md` detailing the silent failure of the wrap workflow.
-*   **Documentation:** Created specs for `Atomic Prompt-Templates` and `Lab-Distro Sync` (pending implementation).
+*   **Fix:** Updated `prompts/roles/pass.md` to enforce file write/commit before handoff generation.
+*   **Spec:** Defined `specs/flow-audit/flow-audit.md` for lifecycle verification.
+*   **Bootstrapping:** Created `bin/install` for easy onramp.
+*   **Protocol:** Added "Shell Portability" and "Auto-Wrap" directives to `AGENTS.md` (and scaffolds).
 
 ## 3. Next Orders
-*   **CRITICAL FIX:** Investigate and fix the `prompts/roles/pass.md` logic to ensure it writes files and commits BEFORE outputting the handoff text.
-*   **Search Agent:** Implement `bin/search` (native search agent) as per the roadmap, so downstream consumers (`larval`) can inherit it.
-*   **Resume:** Once fixed, proceed with `clarify` -> `atomic-prompt-templates.md`.
+*   **Flow Audit:** Execute the autonomous verification tests defined in `specs/flow-audit/flow-audit.md` (Tests A, E, F).
+*   **Search Agent:** Review `specs/search-agent-recommendation.md` (pending creation) to decide on standalone vs. integrated approach.
+*   **Resume:** Proceed with `clarify` -> `atomic-prompt-templates.md`.
 
 ## 4. Key References
 *   `@docs/SYNC_STRATEGY.md` - The Ecosystem Architecture.
