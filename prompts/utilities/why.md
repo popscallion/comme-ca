@@ -17,6 +17,17 @@ The full conversation history (User <-> Assistant).
 # OUTPUT FORMAT
 Strict Markdown. No preamble. No conversational filler.
 
+## Metadata Header (Mandatory)
+Start the document with a metadata comment block:
+```markdown
+<!--
+@id: [kebab-case-slug]
+@version: [1.0.0 for new / increment if iterating]
+@model: [model-id]
+-->
+```
+*Rule: If this is a new document, default to 1.0.0. If you are iterating on an existing doc, increment the version.*
+
 # DOCUMENT STRUCTURE
 
 ## Metadata
