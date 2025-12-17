@@ -1,6 +1,6 @@
 # comme-ca
 
-Centralized repository for AI agent prompts, CLI tools, and orchestration workflows.
+RepRap inspired, recursive repository for behavioral holons: AI agent prompts, CLI tools, and orchestration workflows.
 
 ## Rationale
 
