@@ -3,63 +3,33 @@
 > **READ FIRST:** This file contains the critical context, recent changes, and immediate directives for the next agent or developer working on this repository.
 
 ## 1. The Situation
-**Phase:** Debugging & Ecosystem Hardening.
-We are addressing two critical issues:
-1.  **Agent Interactive Hangup:** Agents get stuck in `cca audit` calls.
-2.  **Missing API Keys:** Gemini CLI and other tools lacked access to Tavily/Perplexity keys due to missing exports in `fish` config.
+**Phase:** Debugging & Architecture Review.
+We have paused the "fix-it" cycle for the **Interactive Hangup** issue (`cca audit` hanging) to perform a root cause analysis. The system is otherwise operational, with missing API keys fixed.
 
 ## 2. Recent Actions
-*   **Documentation Sync:** Backported `AGENTS.md` from `chezmoi` to `comme-ca`.
-*   **Wrap Protocol:** Hardened `pass.md` to enforce `git push`.
-*   **Debugging `cca`:**
-    *   Updated `bin/cca` to use `claude -p` (print mode) and `--dangerously-skip-permissions`.
-    *   Added logic to append user input to role prompts.
-    *   **Status:** `cca git` works. `cca audit` hangs.
-*   **Fixing Secrets:**
-    *   Identified `00-gx-secrets.fish.tmpl` was missing `TAVILY_API_KEY`, `PERPLEXITY_API_KEY`, `EXA_API_KEY`, `CONTEXT7_API_KEY`.
-    *   **FIXED:** Updated template and ran `chezmoi apply`. Shell reload required.
+*   **API Keys:** Fixed missing `TAVILY`, `PERPLEXITY`, etc. keys in `fish` config. (Requires shell reload).
+*   **Wrapper Debugging:** Modified `bin/cca` to use `claude -p` (print mode) and `--dangerously-skip-permissions`, but hangs persist for complex roles.
+*   **Root Cause Analysis:** Identified likely **Stdout Capture Deadlock**. `cca` captures stdout `$(...)`, swallowing interactive prompts from `claude`.
 
-## 3. Critical Blockers
-1.  **Interactive Hangup:** `cca audit "sanity check"` still hangs.
-    *   **Root Cause:** `claude` CLI permission prompts or input handling on closed stdin.
-    *   **Next Step:** Research `claude` CLI non-interactive behavior (requires working search).
-2.  **Broken Tooling:** My (Gemini CLI) MCP tools (Tavily, Perplexity) are broken in *current* session due to missing env vars.
-    *   **Workaround:** Use `google_web_search`.
-    *   **Fix:** Restart session (shell) to pick up new `fish` secrets.
+## 3. Critical Issue: The "Deadlock"
+*   **Symptom:** `cca audit` hangs.
+*   **Mechanism:** `claude` prints a prompt (e.g., "Allow tool?") to stdout. `cca` script captures it into a variable. The prompt is never displayed. `claude` waits for input on closed stdin.
+*   **Conclusion:** The current `cca` wrapper architecture (simple bash capture) is incompatible with `claude`'s interactive-by-default behavior, even with `-p`.
 
 ## 4. System Capabilities
 *   **Unified Search:** `cca search` (abbreviated `?`) launches the interactive agent.
 *   **Agent Roles:** Standard roles (`/prep`, `/plan`, `/audit`, `/wrap`) defined in `AGENTS.md`.
 *   **CLI Wrapper:** `bin/cca` provides the unified interface.
 
-## 5. Troubleshooting Guide
+## 5. Next Orders (Strategic Pivot)
+1.  **Isolate `claude` Behavior:** Run `claude` directly (without `cca` wrapper) with `tee` or redirection to see *exactly* what it outputs before hanging.
+2.  **Re-architect Wrapper:** Consider rewriting `cca` to stream output (avoiding `$(...)` capture) or switch to a language (Python/Go) that handles PTYs/streams better than bash.
+3.  **Verify Keys:** Ensure the API key fix works after shell reload.
 
-### "cca command not found"
-**Likely Cause:** `bin/` not in PATH.
-**Fix:**
-```bash
-export PATH="$HOME/dev/comme-ca/bin:$PATH"
-```
-
-### "Drift detected in AGENTS.md"
-**Likely Cause:** Updates in `chezmoi` haven't been backported.
-**Fix:**
-```bash
-cp ~/.local/share/chezmoi/AGENTS.md ~/dev/comme-ca/AGENTS.md
-```
-
-## 6. Next Orders (Immediate Handoff)
-
-1.  **Restart Session:** The user/agent needs to reload shell or restart to pick up `TAVILY_API_KEY` etc.
-2.  **Research Root Cause:** With working keys, use Perplexity/Tavily to investigate `claude` CLI non-interactive behavior.
-3.  **Fix `cca` Wrapper:** Implement robust `claude` invocation (timeout, flags).
-4.  **Backport Shell Portability:** (Pending).
-
-## 7. Key References
-*   `@specs/active/agent-interactive-safety.md` - Spec for the safety protocol.
-*   `@bin/cca` - The wrapper script under investigation.
-*   `@~/.config/fish/conf.d/00-gx-secrets.fish` - Source of truth for secrets.
+## 6. Key References
+*   `@specs/active/agent-interactive-safety.md` - Safety protocol spec.
+*   `@bin/cca` - The problematic wrapper.
 
 ---
 **Last Updated:** 2025-12-17
-**Phase:** Debugging / Hardening
+**Phase:** Root Cause Analysis
