@@ -25,6 +25,7 @@ We have paused the "fix-it" cycle for the **Interactive Hangup** issue (`cca aud
 1.  **Isolate `claude` Behavior:** Run `claude` directly (without `cca` wrapper) with `tee` or redirection to see *exactly* what it outputs before hanging.
 2.  **Re-architect Wrapper:** Consider rewriting `cca` to stream output (avoiding `$(...)` capture) or switch to a language (Python/Go) that handles PTYs/streams better than bash.
 3.  **Verify Keys:** Ensure the API key fix works after shell reload.
+4. clarify the req mentioned in @specs/!HIGH_PRIORITY-serena-mcp with user
 
 ## 6. Key References
 *   `@specs/active/agent-interactive-safety.md` - Safety protocol spec.
