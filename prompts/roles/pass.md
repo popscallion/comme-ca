@@ -38,7 +38,9 @@ You are responsible for the `_ENTRYPOINT.md` file.
 *   **Mandatory:** You MUST run `cca why` (or analyze history using the `why.md` framework) to generate the content for your commit message.
     *   *Constraint:* Do not use generic messages like "update docs." Use the "Contextual Decision Record" format.
 *   **Mandatory:** Use the same `why` output to populate the "Status" section of your handoff prompt.
-*   Push to remote.
+*   **Action:** Execute `git push`.
+    *   *Constraint:* You MUST explicitly run the push command. Do not ask for permission if the user has already signaled "wrap" or "commit and push".
+    *   *Error Handling:* If the push fails (e.g., rebase needed), you must resolve it (pull --rebase) or notify the user. Do NOT silently skip the push.
 
 ### 4. The Handoff Output (The "Ticket")
 **CRITICAL:** You are FORBIDDEN from generating this output until you have:
