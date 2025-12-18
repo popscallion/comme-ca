@@ -157,3 +157,20 @@ The implementing agent must perform the following steps:
 *   **Test 4 (Independence):** The repository does not contain dotfiles (configurations), only intelligence (prompts/scripts).
 *   **Test 5 (Bootstrap):** Running `bin/install` successfully clones the repo, detects the shell, and configures PATH and aliases.
 *   **Test 6 (Init):** Running `cca init` in a new directory successfully copies `AGENTS.md`, `CLAUDE.md`, and `GEMINI.md` from scaffolds.
+### F. Bootstrap Hardening (Addendum)
+
+**Refined Requirements for `bin/install`:**
+To prevent interactive hangups and ensure safety in agentic workflows:
+
+1.  **Paranoid Safety Check:**
+    - Before cloning or applying, check if `~/.local/share/chezmoi` exists.
+    - If it exists and is a git repo, verify the remote URL.
+    - If the remote does not match the target repo, **HALT** with a fatal error. Do not attempt to overwrite.
+
+2.  **Interactive Secret Bootstrap:**
+    - If `~/.config/chezmoi/key.txt` is missing, the script MUST pause and ask the user to paste the `age` private key (with hidden input).
+    - It must then write this key to the correct location with `chmod 600`.
+    - If no key is provided, it should exit gracefully or fall back to a "public-only" mode if supported.
+
+3.  **Config Stability:**
+    - The installer should favor generating a `chezmoi.toml` that delegates volatile data to `.chezmoidata.toml` to avoid circular overwrite prompts during the first apply.
