@@ -22,6 +22,7 @@ We have paused the "fix-it" cycle for the **Interactive Hangup** issue (`cca aud
 *   **CLI Wrapper:** `bin/cca` provides the unified interface.
 
 ## 5. Next Orders (Strategic Pivot)
+0. **first** investigate the alternate route mentioned in specs/HEADLESS-CLAUDE.md, and check against root level docs and commit history, this may have been considred and rejected but discuss with user who thinks it might be an easy way to fix the cca serach thing 
 1.  **Isolate `claude` Behavior:** Run `claude` directly (without `cca` wrapper) with `tee` or redirection to see *exactly* what it outputs before hanging.
 2.  **Re-architect Wrapper:** Consider rewriting `cca` to stream output (avoiding `$(...)` capture) or switch to a language (Python/Go) that handles PTYs/streams better than bash.
 3.  **Verify Keys:** Ensure the API key fix works after shell reload.
