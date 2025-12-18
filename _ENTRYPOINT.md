@@ -3,36 +3,34 @@
 > **READ FIRST:** This file contains the critical context, recent changes, and immediate directives for the next agent or developer working on this repository.
 
 ## 1. The Situation
-**Phase:** Feature Complete & Operational.
-We have successfully implemented the **Search Agent** (`cca search`) and resolved the ecosystem deployment blockers. The system is now healthy and ready for broader adoption.
+**Phase:** Debugging & Ecosystem Hardening.
+We are addressing two critical issues:
+1.  **Agent Interactive Hangup:** Agents get stuck in `cca audit` calls.
+2.  **Missing API Keys:** Gemini CLI and other tools lacked access to Tavily/Perplexity keys due to missing exports in `fish` config.
 
 ## 2. Recent Actions
-*   **Search Agent:** Implemented `cca search` in `bin/cca` and verified deployment via `chezmoi`.
-*   **Prompt Port:** Ported prompts to `prompts/search_agents/`.
-*   **Deployment Fix:** Resolved `chezmoi` bootstrapping issues in `comme-ci`, ensuring `cca search` abbreviations (`?`, `,`) are correctly deployed.
-*   **Configuration:** Updated `AGENTS.md` abbreviations.
-*   **Documentation Sync:** Backported `AGENTS.md` from `chezmoi` (Governor) to `comme-ca` (Distro) to resolve drift.
-*   **Hardening:** Updated `prompts/roles/pass.md` to explicitly enforce `git push` during the wrap protocol.
+*   **Documentation Sync:** Backported `AGENTS.md` from `chezmoi` to `comme-ca`.
+*   **Wrap Protocol:** Hardened `pass.md` to enforce `git push`.
+*   **Debugging `cca`:**
+    *   Updated `bin/cca` to use `claude -p` (print mode) and `--dangerously-skip-permissions`.
+    *   Added logic to append user input to role prompts.
+    *   **Status:** `cca git` works. `cca audit` hangs.
+*   **Fixing Secrets:**
+    *   Identified `00-gx-secrets.fish.tmpl` was missing `TAVILY_API_KEY`, `PERPLEXITY_API_KEY`, `EXA_API_KEY`, `CONTEXT7_API_KEY`.
+    *   **FIXED:** Updated template and ran `chezmoi apply`. Shell reload required.
 
-## 3. System Capabilities
+## 3. Critical Blockers
+1.  **Interactive Hangup:** `cca audit "sanity check"` still hangs.
+    *   **Root Cause:** `claude` CLI permission prompts or input handling on closed stdin.
+    *   **Next Step:** Research `claude` CLI non-interactive behavior (requires working search).
+2.  **Broken Tooling:** My (Gemini CLI) MCP tools (Tavily, Perplexity) are broken in *current* session due to missing env vars.
+    *   **Workaround:** Use `google_web_search`.
+    *   **Fix:** Restart session (shell) to pick up new `fish` secrets.
+
+## 4. System Capabilities
 *   **Unified Search:** `cca search` (abbreviated `?`) launches the interactive agent.
 *   **Agent Roles:** Standard roles (`/prep`, `/plan`, `/audit`, `/wrap`) defined in `AGENTS.md`.
 *   **CLI Wrapper:** `bin/cca` provides the unified interface.
-
-## 4. Manual Testing Checklist
-Run these tests to verify the Distro's health.
-
-### Test 1: Search Agent
-```bash
-bin/cca search --interactive "What is the capital of France?"
-```
-**Expected:** Agent launches, thinks, and responds correctly.
-
-### Test 2: Role Prompt Loading
-```bash
-bin/cca git "status"
-```
-**Expected:** `cca` wrapper executes the git command via the LLM (or directly if configured).
 
 ## 5. Troubleshooting Guide
 
@@ -52,15 +50,16 @@ cp ~/.local/share/chezmoi/AGENTS.md ~/dev/comme-ca/AGENTS.md
 
 ## 6. Next Orders (Immediate Handoff)
 
-1.  **Backport Shell Portability:** The Ecosystem Audit identified that "Shell Portability" directives are present in Distro (`comme-ca`) but missing from Lab (`comment-dit-on`). This needs to be backported to maintain the "Lab -> Distro" flow.
-2.  **Lab Cleanup:** Verify if Lab (`comment-dit-on`) has renamed `AGENTS.md` to `SEARCH_AGENT_GUIDE.md` to resolve the semantic collision.
-3.  **Search Agent Polish:** Monitor usage of `cca search` for any edge cases in the interactive mode.
+1.  **Restart Session:** The user/agent needs to reload shell or restart to pick up `TAVILY_API_KEY` etc.
+2.  **Research Root Cause:** With working keys, use Perplexity/Tavily to investigate `claude` CLI non-interactive behavior.
+3.  **Fix `cca` Wrapper:** Implement robust `claude` invocation (timeout, flags).
+4.  **Backport Shell Portability:** (Pending).
 
 ## 7. Key References
-*   `@specs/search-agent/spec.md` - Search Agent Specification.
-*   `@bin/cca` - The implementation.
-*   `@prompts/search_agents/` - Search prompt definitions.
+*   `@specs/active/agent-interactive-safety.md` - Spec for the safety protocol.
+*   `@bin/cca` - The wrapper script under investigation.
+*   `@~/.config/fish/conf.d/00-gx-secrets.fish` - Source of truth for secrets.
 
 ---
 **Last Updated:** 2025-12-17
-**Phase:** Feature Complete / Operational
+**Phase:** Debugging / Hardening

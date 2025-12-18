@@ -394,7 +394,10 @@ execute_engine() {
 
     case "$ENGINE" in
         claude)
-            echo "$prompt" | claude
+            # Use -p for non-interactive print mode
+            # Use --dangerously-skip-permissions to prevent hangs on tool confirmation
+            # since we are running in a trusted wrapper context
+            echo "$prompt" | claude -p --dangerously-skip-permissions
             ;; 
         *)
             echo "Error: Unknown engine '$ENGINE'. Only 'claude' is supported." >&2
@@ -443,11 +446,32 @@ main() {
         *)
             # Treat as prompt name
             local prompt_file="${PROMPTS_DIR}/${cmd}.md"
-
+            local is_role=false
+            
+            # Fallback 1: Check if prompt exists in PROMPTS_DIR
             if [[ ! -f "$prompt_file" ]]; then
-                echo "Error: Unknown command or prompt '${cmd}'" >&2
-                echo "Run 'cca' without arguments for usage." >&2
-                exit 1
+                # Fallback 2: Check ROLES_DIR (e.g. cca taste)
+                if [[ -f "${ROLES_DIR}/${cmd}.md" ]]; then
+                    prompt_file="${ROLES_DIR}/${cmd}.md"
+                    is_role=true
+                # Fallback 3: Check aliases (e.g. audit -> taste)
+                elif [[ "$cmd" == "audit" ]] && [[ -f "${ROLES_DIR}/taste.md" ]]; then
+                    prompt_file="${ROLES_DIR}/taste.md"
+                    is_role=true
+                elif [[ "$cmd" == "prep" ]] && [[ -f "${ROLES_DIR}/mise.md" ]]; then
+                    prompt_file="${ROLES_DIR}/mise.md"
+                    is_role=true
+                elif [[ "$cmd" == "plan" ]] && [[ -f "${ROLES_DIR}/menu.md" ]]; then
+                    prompt_file="${ROLES_DIR}/menu.md"
+                    is_role=true
+                elif [[ "$cmd" == "wrap" ]] && [[ -f "${ROLES_DIR}/pass.md" ]]; then
+                    prompt_file="${ROLES_DIR}/pass.md"
+                    is_role=true
+                else
+                    echo "Error: Unknown command or prompt '${cmd}'" >&2
+                    echo "Run 'cca' without arguments for usage." >&2
+                    exit 1
+                fi
             fi
 
             # Get user input
@@ -463,6 +487,13 @@ main() {
 
             local prompt_template=$(cat "$prompt_file")
             local processed_prompt=$(apply_raycast_shim "$prompt_template" "$user_input")
+
+            # If user input was NOT used in placeholders (processed == template),
+            # AND it's a role or just looks like we ignored input, append it.
+            if [[ "$processed_prompt" == "$prompt_template" ]] && [[ -n "$user_input" ]]; then
+                processed_prompt="${processed_prompt}\n\nUser Directive:\n${user_input}"
+            fi
+
             execute_engine "$processed_prompt"
             ;; 
     esac
