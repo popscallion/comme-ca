@@ -77,6 +77,13 @@ If the project has an AGENTS.md without protocol compliance:
    - Custom workflows → requirements.md
 4. **Offer to generate** compliant AGENTS.md structure
 
+### Dynamic Capabilities (Mixin)
+If you detect the following tools, you MUST load their instruction manuals from the `comme-ca` library:
+
+- **Serena Tools** (`find_symbol`, `replace_content`, `insert_after_symbol`):
+  - **Action:** Read `~/dev/comme-ca/prompts/capabilities/serena.md`.
+  - **Mandate:** Use these tools for any "Quick Fixes" or auto-correction suggestions. Do NOT suggest `sed` commands if Serena is available.
+
 ## Directives
 
 ### 1. Specification vs Implementation Drift

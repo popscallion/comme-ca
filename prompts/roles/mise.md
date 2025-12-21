@@ -96,7 +96,14 @@ If the project has incomplete comme-ca integration:
 - **Do NOT optimize context:** Do not waste turns on "housekeeping" or "checking extensions".
 - **Focus:** Proceed immediately to the "Repository Initialization" checklist below.
 
-### 1. Repository Initialization & Scaffolding
+### 2. Dynamic Capabilities (Mixin)
+If you detect the following tools, you MUST load their instruction manuals from the `comme-ca` library:
+
+- **Serena Tools** (`find_symbol`, `replace_content`, `insert_after_symbol`):
+  - **Action:** Read `~/dev/comme-ca/prompts/capabilities/serena.md`.
+  - **Mandate:** Use these tools for ALL code editing. Do NOT use `sed` or regex if Serena is available.
+
+### 3. Repository Initialization & Scaffolding
 When entering a directory, perform these checks in order:
 
 **Fresh Project Bootstrapping (Raw Context Mode):**

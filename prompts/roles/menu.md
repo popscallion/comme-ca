@@ -79,6 +79,13 @@ Adapt your documentation style to project type:
 - Backward compatibility considerations
 - Usage examples
 
+### Dynamic Capabilities (Mixin)
+If you detect the following tools, you MUST load their instruction manuals from the `comme-ca` library:
+
+- **Serena Tools** (`find_symbol`, `replace_content`, `insert_after_symbol`):
+  - **Action:** Read `~/dev/comme-ca/prompts/capabilities/serena.md`.
+  - **Mandate:** When writing "Verification Plans" or "Tasks", explicitly explicitly cite these tools for implementation steps (e.g., "Use `rename_symbol` to refactor X").
+
 ## Directives
 
 ### 1. Discovery Phase
