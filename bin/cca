@@ -279,8 +279,9 @@ setup_claude() {
     echo "  ✓ prep.md → mise.md (symlink)"
     ln -sf "${ROLES_DIR}/menu.md" "${dest}/commands/plan.md"
     echo "  ✓ plan.md → menu.md (symlink)"
-    ln -sf "${ROLES_DIR}/taste.md" "${dest}/commands/audit.md"
     echo "  ✓ audit.md → taste.md (symlink)"
+    ln -sf "${ROLES_DIR}/tune.md" "${dest}/commands/tune.md"
+    echo "  ✓ tune.md → tune.md (symlink)"
     store_setup_metadata "claude"
     echo ""
     echo "✓ Claude Code configured at ${dest}"
@@ -305,6 +306,7 @@ setup_gemini() {
     generate_toml "prep" "System bootstrapper" "${ROLES_DIR}/mise.md"
     generate_toml "plan" "Architect/Planner" "${ROLES_DIR}/menu.md"
     generate_toml "audit" "QA/Drift Detector" "${ROLES_DIR}/taste.md"
+    generate_toml "tune" "Process Engineer/Reflector" "${ROLES_DIR}/tune.md"
     store_setup_metadata "gemini"
     echo ""
     echo "✓ Gemini CLI configured at ${dest}"
@@ -334,6 +336,7 @@ comme_ca_commit=$(cd "$COMME_CA_HOME" && git rev-parse HEAD)
 mise_hash=$(md5 -q "${ROLES_DIR}/mise.md" 2>/dev/null || md5sum "${ROLES_DIR}/mise.md" | cut -d' ' -f1)
 menu_hash=$(md5 -q "${ROLES_DIR}/menu.md" 2>/dev/null || md5sum "${ROLES_DIR}/menu.md" | cut -d' ' -f1)
 taste_hash=$(md5 -q "${ROLES_DIR}/taste.md" 2>/dev/null || md5sum "${ROLES_DIR}/taste.md" | cut -d' ' -f1)
+tune_hash=$(md5 -q "${ROLES_DIR}/tune.md" 2>/dev/null || md5sum "${ROLES_DIR}/tune.md" | cut -d' ' -f1)
 EOF
 }
 
@@ -443,6 +446,29 @@ main() {
         drift)
             drift
             ;; 
+        tune)
+            # Shortcut for tune role
+            local prompt_file="${ROLES_DIR}/tune.md"
+            local is_role=true
+            
+            # Get user input (if any)
+            local user_input=""
+            if [[ $# -gt 1 ]]; then
+                shift
+                user_input="$*"
+            elif [[ ! -t 0 ]]; then
+                user_input=$(cat)
+            fi
+
+            local prompt_template=$(cat "$prompt_file")
+            local processed_prompt=$(apply_raycast_shim "$prompt_template" "$user_input")
+
+            if [[ "$processed_prompt" == "$prompt_template" ]] && [[ -n "$user_input" ]]; then
+                processed_prompt="${processed_prompt}\n\nUser Directive:\n${user_input}"
+            fi
+
+            execute_engine "$processed_prompt"
+            ;; 
         *)
             # Treat as prompt name
             local prompt_file="${PROMPTS_DIR}/${cmd}.md"
@@ -466,6 +492,9 @@ main() {
                     is_role=true
                 elif [[ "$cmd" == "wrap" ]] && [[ -f "${ROLES_DIR}/pass.md" ]]; then
                     prompt_file="${ROLES_DIR}/pass.md"
+                    is_role=true
+                elif [[ "$cmd" == "tune" ]] && [[ -f "${ROLES_DIR}/tune.md" ]]; then
+                    prompt_file="${ROLES_DIR}/tune.md"
                     is_role=true
                 else
                     echo "Error: Unknown command or prompt '${cmd}'" >&2

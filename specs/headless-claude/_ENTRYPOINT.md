@@ -1,6 +1,6 @@
 # Headless Claude Spec
 
-**Status:** 🟡 Paused
+**Status:** 🟢 Active
 
 ## Iteration Dashboard
 | Item | Status | Focus | Next Action |

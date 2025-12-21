@@ -1,37 +1,31 @@
 # ENTRYPOINT (HANDOFF)
 
+*   **Ecosystem Governance:** The `ecosystem/` directory signals that `comme-ci` manages `lab` and `distro`. `Taste` (Audit) now includes an "Ecosystem Audit Mode" to validate cross-repo sync.
+*   **System Hardening:** `Tune` (Reflection) role added for process optimization. All roles now follow "Discovery First" and "Deep Verification" protocols.
+
 > **READ FIRST:** This file contains the critical context, recent changes, and immediate directives for the next agent or developer working on this repository.
 
 ## 1. The Situation
+**System Hardening Complete.**
+We have successfully reorganized the `specs/` directory (flattened + `_ARCHIVE`) and implemented strict "Discovery First" and "Deep Verification" protocols across all roles (`Mise`, `Menu`, `Taste`). A new `Tune` role has been added for process reflection. The system is now robust against loose file assumptions and accidental data loss.
 
-**Phase:** Protocol Canonization & Spec Hygiene.
-
-We have successfully integrated the **"Modular Instruction" system** for tool capabilities.
-- **Serena Tools:** Now canonized as "Headless/Dumb Knife" tools via `prompts/capabilities/serena.md`.
-- **Mixin Pattern:** `mise`, `menu`, and `taste` roles now dynamically load these capability instructions when they detect the tool.
-- **Archive:** The old `specs/serena-mcp` has been moved to `specs/archived/`.
-
-## 2. Iteration Dashboard
-
-| Spec | Status | Focus | Next Action |
-|:-----|:-------|:------|:------------|
-| `modular-instructions` | 🟢 Completed | Canonization | Monitor Usage / Add new capabilities |
-| `serena-mcp` | 🟢 Archived | Legacy | None |
-| `lab-distro-sync` | 🟡 Active | Ecosystem | Audit via Codebase Discovery |
+## 2. Recent Actions
+*   **Spec Reorg:** Removed `specs/backlog`, flattened contents to `specs/`, renamed `specs/archived` to `specs/_ARCHIVE`.
+*   **Role Updates:** Updated `Taste`, `Menu`, `Mise` with "Epistemic Rigor" blocks. Created `prompts/roles/tune.md`.
+*   **Documentation:** Updated `README.md` and `AGENTS.md` (root & scaffold) to reflect new structure and logic.
+*   **CLI:** Updated `bin/cca` to support `tune` command and setup.
 
 ## 3. Immediate Directives (Mission)
-
-1.  **Codebase Discovery:** Use the Codebase Discovery agent (or `cca search`) to build a mental map of the current repository structure.
-2.  **Spec Audit:** Audit the `specs/` directory (specifically `specs/active/` vs `specs/archived/`).
-    - Identify specifications that are effectively "Done" and move them to `archived/`.
-    - Identify "Active" specs that should be promoted to canonical documentation (e.g., `lab-distro-sync`).
+1.  **Maintain Hygiene:** Keep `specs/active` clean. Only active WIP specs should reside there.
+2.  **Backlog Management:** Review `specs/backlog` when planning next iterations.
 
 ## 4. Key Files
 
-- `prompts/capabilities/serena.md`: **[NEW]** The source of truth for Serena tool usage.
-- `prompts/roles/*.md`: Updated to support Capability Mixins.
-- `specs/`: The target of the next audit.
+- `AGENTS.md`: **[UPDATED]** Now includes "Non-Interactive Contract".
+- `specs/backlog/`: **[NEW]** Holding area for unimplemented ideas.
+- `specs/archived/`: Repository of completed work.
 
 ---
-**Last Updated:** 2025-12-21
-**Previous:** Architecture Sync & Tool Integration
+*   **Previous:** Spec Hygiene & Reflection Sprint.
+*   **Last Updated:** 2025-12-21 16:30
+**Previous:** Spec Audit & Cleanup

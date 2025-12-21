@@ -11,6 +11,7 @@ This document defines how autonomous agents (Claude Code, Gemini CLI) should ope
 | **Mise (prep)** | `prep` | `/prep` (Claude/Gemini) | New project scaffolding, environment setup, dependency checks |
 | **Menu (plan)** | `plan` | `/plan` (Claude/Gemini) | Requirements gathering, architecture planning, spec writing |
 | **Taste (audit)** | `audit` | `/audit` (Claude/Gemini) | Code review, drift detection, documentation sync |
+| **Tune (retro)** | `tune` | `/tune` (Claude/Gemini) | Process reflection, session analysis, workflow optimization |
 | **Pass (wrap)** | `wrap` | `/wrap` (Claude/Gemini) | Handoff, session closure, context consolidation |
 | **Pipe (cca)** | `cca` | `cca git "instruction"` | Quick CLI translations (low-latency, single commands) |
 
@@ -32,7 +33,9 @@ Standard roles automatically detect and adapt to project documentation:
 - `@design.md` - Technical architecture, workflows, dependencies
 - `@requirements.md` - Constraints, validation rules, quality gates
 - `@tasks.md` - Current work items and priorities (if used)
+- `@tasks.md` - Current work items and priorities (if used)
 - `@specs/` - Feature specifications (nested `specs/<name>/`)
+- `@specs/_ARCHIVE/` - Deprecated/Legacy specs (Reference only)
 
 **Create these files to define project-specific behavior.** The roles will execute validation rules from requirements.md, follow workflows from design.md, and track progress in tasks.md.
 
@@ -70,12 +73,21 @@ These high-level constraints apply to ALL agents (Mise, Menu, Taste, Wrap) and A
     *   **No Hallucinations:** Do not reference files, URLs, or dependencies that do not exist.
     *   **Explicit Unknowns:** If a requirement is missing, explicitly list it as an "Open Question" rather than guessing.
 
-4.  **Shell Portability:**
+4.  **Discovery First (Epistemic Rigor):**
+    *   **List Before Read:** NEVER assume file paths. Always use `ls` (or equivalent discovery tools) to verify directory contents before attempting to read specific files.
+    *   **Tool Agnostic:** Use the best available tools for discovery. If `Serena` or other advanced agents are detected, prioritize their capabilities over basic shell commands if appropriate.
+    *   **Deep Verification:** Before declaring a feature "Implemented" or "Archived", verify its existence via `git log`, file search, or deep inspection. Do not rely solely on metadata status in markdown files.
+
+5.  **Shell Portability:**
     *   **Detect First:** Do not assume a specific shell (Bash/Zsh/Fish). Detect or ask if generating shell-specific commands (exports, aliases, functions).
     *   **POSIX Preference:** Prefer standard POSIX syntax where possible.
     *   **Explicit Syntax:** When shell-specifics are needed (e.g., `set -Ux` vs `export`), provide the correct variant for the user's active shell.
 
-5.  **Workflow Triggers (Auto-Wrap):**
+5.  **Non-Interactive Contract:**
+    *   **Constraint:** All CLI tools invoked by agents MUST accept a `--non-interactive` (or equivalent) flag or respect the `CI=true` / `NON_INTERACTIVE=true` environment variable.
+    *   **Detection:** Agents MUST detect if they are running in a potentially non-interactive environment (e.g., within `cca pipe`) and force non-interactive modes to prevent hanging.
+
+6.  **Workflow Triggers (Auto-Wrap):**
     *   **Trigger:** When the user signals completion (e.g., "we're done", "commit and push", "handoff"), ALL agents MUST initiate the `wrap` protocol.
     *   **Action:** Do not just exit. Run the hygiene checks, update `_ENTRYPOINT.md`, and perform the git commit sequence defined in `prompts/roles/pass.md`.
 

@@ -73,6 +73,7 @@ prep   # System setup (mise)
 plan   # Specs & architecture (menu)
 audit  # QA & drift detection (taste)
 wrap   # Handoff & consolidation (pass)
+tune   # Process reflection (tune)
 ```
 
 ### Context Utilities (Ad-Hoc)
@@ -104,6 +105,10 @@ Copies `AGENTS.md`, `CLAUDE.md`, and `GEMINI.md` to current directory.
     -   `tasks.md`: "When" and "Who" (Implementation Plan).
 3.  **Register:** Add the new spec to the Iteration Dashboard in the root `_ENTRYPOINT.md`.
 
+#### Spec Disposition
+- **Active/Ideation:** All specs (including ideas, research, and active features) live in the root of `specs/`.
+- **_ARCHIVE:** Only for specs that were implemented but are now deprecated, or research spikes that are explicitly closed. Do not archive unimplemented ideas; keep them in the root context.
+
 #### Working on a Spec
 1.  **Context Loading:** Always read the spec's `requirements.md` and `design.md` before starting work.
 2.  **Task Tracking:**
@@ -111,9 +116,10 @@ Copies `AGENTS.md`, `CLAUDE.md`, and `GEMINI.md` to current directory.
     -   Update the local `_ENTRYPOINT.md` dashboard.
 3.  **Verification:** Verify changes against the requirements before marking complete.
 
-#### Archiving a Spec
-1.  **Move:** Move the folder to `specs/archived/`.
-2.  **Consolidate:** Update root `requirements.md` or `design.md` if the feature introduced permanent system changes.
+#### Archiving a Spec (Deprecated/Dead Code Only)
+1.  **Verify:** Ensure no active code depends on this spec. Run `git log` to confirm implementation status.
+2.  **Move:** Move the folder to `specs/_ARCHIVE/`.
+3.  **Consolidate:** Update root `requirements.md` or `design.md` if the feature introduced permanent system changes.
 
 ### 2. Inbox Workflow (Parallel Iteration)
 
@@ -234,7 +240,11 @@ Interviews user, creates `specs/[feature]/{requirements,design,tasks}.md`, desig
 
 #### **taste** (`audit`) - QA & Drift Detector
 **Responsibility:** Ensure implementation matches specifications.
-Compares `specs/` vs code, checks `README.md` vs reality, identifies stale tasks, detects quality issues.
+Compare `specs/` vs code, checks `README.md` vs reality, identifies stale tasks, detects quality issues.
+
+#### **tune** (`retro`) - Process Engineer & Reflector
+**Responsibility:** Analyze session history to identify failures, pivots, and successful patterns.
+Generates `session_reflection.md` to optimize workflow and role definitions. Use interactively or before handoff.
 
 ### Context Utilities
 

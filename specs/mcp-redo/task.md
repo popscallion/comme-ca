@@ -1,3 +1,5 @@
+> **NOTE (2025-12-21):** This research is partially superseded by the **Serena** integration (see `prompts/capabilities/serena.md`). The "Surgical Editor" capability implements a form of safe tool execution pattern. Future work on this spec should evaluate if Serena covers the needs or if a full "App Server" pattern is still required.
+
 Now let me search for specific guidance on MCP tool filtering and migration patterns:
 
 Perfect! I found very relevant information. Let me search for more specific details on Claude's agents.md and Skills architecture.
