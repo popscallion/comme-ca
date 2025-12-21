@@ -14,23 +14,39 @@ graph TD
 
 ## 2. Configuration Strategy
 
-We will define a canonical `serena_config.yml` (or pass arguments via CLI) that enforces the constraints.
+We will use a **Global Configuration** approach for portability.
 
-### Tool Selection
-We will use the `--disable-tools` flag or `tools:` config section to whitelist:
-- `find`
-- `insert_before`
-- `insert_after`
-- `replace_content`
-
-### Mode Selection
-We will strictly enforce the combination of:
-- `--mode no-onboarding`: Skips the "Hello, let me scan your project" phase.
-- `--mode no-memories`: Disables the `.serena/memories` read/write cycle.
+- **Config Path:** `~/.config/serena/headless.yml`
+- **Tool Selection:** Whitelist the 13 specific tools.
+- **Mode Selection:** Enforce `no-onboarding` and `no-memories`.
 
 ## 3. Implementation Details
 
-### A. The Wrapper Script (`bin/serena-lite`)
+### A. Claude Code JSON Snippet
+This snippet is designed to be pasted into `~/.claude/config.json` (or equivalent plugin manifest).
+
+```json
+{
+  "mcpServers": {
+    "serena-headless": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server",
+        "--config",
+        "${HOME}/.config/serena/headless.yml",
+        "--mode",
+        "no-onboarding",
+        "--mode",
+        "no-memories"
+      ]
+    }
+  }
+}
+
+### B. The Wrapper Script (`bin/serena-lite`)
 A script to launch the server with the correct flags, abstracting the complexity.
 
 ```bash

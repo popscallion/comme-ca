@@ -1,0 +1,28 @@
+# Serena Headless Configuration
+# Purpose: Precision Editing Toolset (No Agents, No Memories)
+
+tools:
+  # --- Enabled Tools (Precision Editing) ---
+  find_file: true
+  find_symbol: true
+  insert_after_symbol: true
+  insert_at_line: true
+  insert_before_symbol: true
+  rename_symbol: true
+  replace_lines: true
+  replace_content: true
+  replace_symbol_body: true
+  restart_language_server: true
+  search_for_pattern: true
+  summarize_changes: true
+  
+  # --- Disabled Agentic/Memory Tools ---
+  write_memory: false
+  read_memory: false
+  list_memories: false
+  delete_memory: false
+  onboarding: false
+  run_tests: false
+  lint: false
+  format: false
+  # Disable any other tools by default
