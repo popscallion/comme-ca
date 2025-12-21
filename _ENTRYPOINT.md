@@ -4,11 +4,11 @@
 
 ## 1. The Situation
 
-**Phase:** Architecture Sync & Debugging.
+**Phase:** Architecture Sync & Tool Integration.
 
-We are synchronizing `comme-ca` with the **Larval Incubator** patterns (`fahn-lai-bun`, `larval-incubator`) to standardize the "Intelligence Monorepo" structure.
+We have consolidated documentation and integrated **Serena MCP** as a headless "Precision Editing" toolset for Claude Code and Gemini CLI.
 
-**Critical Issue (Paused):** The `cca audit` "Stdout Capture Deadlock" investigation is currently PAUSED to prioritize this structure sync. The issue details are documented in `specs/headless-claude/_ENTRYPOINT.md` (formerly `HEADLESS-CLAUDE.md`).
+**Critical Issue (Paused):** The `cca audit` "Stdout Capture Deadlock" investigation is currently PAUSED.
 
 ## 2. Iteration Dashboard
 
@@ -16,7 +16,7 @@ We are synchronizing `comme-ca` with the **Larval Incubator** patterns (`fahn-la
 |:-----|:-------|:------|:------------|
 | `comme-ca-sync` | 🟢 Completed | Verification | Review walkthrough.md |
 | `headless-claude` | 🟡 Paused | Deadlock | Migrate to new structure (Deferred) |
-| `serena-mcp` | 🟡 Active | Prototype | Validate config flags |
+| `serena-mcp` | 🟢 Completed | Verification | Restart agents & verify tools |
 
 ## 3. Key Files
 
