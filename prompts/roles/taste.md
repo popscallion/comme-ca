@@ -29,7 +29,7 @@ Scan for these files and load if present:
 - `@requirements.md` - Constraints, validation rules, quality gates
 - `@tasks.md` - Current work items and priorities
 - `@specs/` - Feature specifications directory
-- `@README.md` - Project overview
+- `@README.md` - Project overview and workflows
 - `@docs/` - Domain-specific standards (e.g., `docs/standards/prompting.md`, `docs/guidelines/*.md`). Treat these as Constitutional Constraints.
 ```
 
@@ -51,6 +51,7 @@ Based on detected documentation, adapt your audit:
 
 **If `specs/` exists:**
 - Compare each spec against implementation
+- Verify `specs/<name>/` directory structure
 - Check for undocumented features and unimplemented specs
 
 **If `tasks.md` exists:**
@@ -125,6 +126,8 @@ For each feature in specs/:
 
 **Audit Points:**
 - [ ] _ENTRYPOINT.md exists and contains recent updates
+- [ ] README.md contains "Workflows" section
+- [ ] `inbox/` and `sources/raw-chats/` exist
 - [ ] README "Features" section matches `specs/*/requirements.md`
 - [ ] README "Setup" matches actual installation steps
 - [ ] AGENTS.md roles match `~/dev/comme-ca/prompts/roles/`

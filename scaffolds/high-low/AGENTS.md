@@ -27,10 +27,12 @@ This document defines how autonomous agents (Claude Code, Gemini CLI) should ope
 Standard roles automatically detect and adapt to project documentation:
 
 - `@_ENTRYPOINT.md` - (Mandatory) The current project state and context handover
+- `@_ENTRYPOINT.md` - Iteration Dashboard and status
+- `@README.md` - Workflows and procedures
 - `@design.md` - Technical architecture, workflows, dependencies
 - `@requirements.md` - Constraints, validation rules, quality gates
-- `@tasks.md` - Current work items and priorities
-- `@specs/` - Feature specifications
+- `@tasks.md` - Current work items and priorities (if used)
+- `@specs/` - Feature specifications (nested `specs/<name>/`)
 
 **Create these files to define project-specific behavior.** The roles will execute validation rules from requirements.md, follow workflows from design.md, and track progress in tasks.md.
 

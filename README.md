@@ -61,11 +61,18 @@ cca search --resume                                # Resume last session
 - `?` → Interactive Search
 - `,` → Resume Session
 
+### Dashboard & Context
+All work is tracked in `_ENTRYPOINT.md`.
+- **Check Status:** `cat _ENTRYPOINT.md` to see the "Iteration Dashboard".
+- **Handoff:** Run `wrap` to update the dashboard and save context before ending a session.
+- **Inbox:** Use `inbox/` for raw notes and parallel work streams.
+
 ### Agents (High-Lift)
 ```bash
 prep   # System setup (mise)
 plan   # Specs & architecture (menu)
 audit  # QA & drift detection (taste)
+wrap   # Handoff & consolidation (pass)
 ```
 
 ### Context Utilities (Ad-Hoc)
@@ -84,17 +91,84 @@ Copies `AGENTS.md`, `CLAUDE.md`, and `GEMINI.md` to current directory.
 
 ---
 
+## Workflows
+
+### 1. Spec Workflow
+
+#### Creating a New Spec
+1.  **Create Folder:** `specs/<feature-name>/`
+2.  **Initialize Files:**
+    -   `_ENTRYPOINT.md`: Dashboard and status.
+    -   `requirements.md`: "What" we are building.
+    -   `design.md`: "How" we are building it.
+    -   `tasks.md`: "When" and "Who" (Implementation Plan).
+3.  **Register:** Add the new spec to the Iteration Dashboard in the root `_ENTRYPOINT.md`.
+
+#### Working on a Spec
+1.  **Context Loading:** Always read the spec's `requirements.md` and `design.md` before starting work.
+2.  **Task Tracking:**
+    -   Mark tasks as `[ ]`, `[/]`, or `[x]` in `tasks.md`.
+    -   Update the local `_ENTRYPOINT.md` dashboard.
+3.  **Verification:** Verify changes against the requirements before marking complete.
+
+#### Archiving a Spec
+1.  **Move:** Move the folder to `specs/archived/`.
+2.  **Consolidate:** Update root `requirements.md` or `design.md` if the feature introduced permanent system changes.
+
+### 2. Inbox Workflow (Parallel Iteration)
+
+Use `inbox/` to isolate context and prevent pollution of the main source tree.
+
+#### Structure
+```
+inbox/
+└── <topic-key>/          # e.g., "deadlock-debugging"
+    └── <date-tag>/       # e.g., "2025-12-21"
+        ├── evidence/     # Screenshots, logs, dumps
+        └── notes.md      # Analysis
+```
+
+#### Process
+1.  **Dump:** Place raw logs or "stream of consciousness" notes in the inbox folder.
+2.  **Analyze:** Use the inbox context to formulate a plan.
+3.  **Promote:** If the work results in a code change or new spec, create the appropriate files in `specs/` or `src/`.
+4.  **Preserve:** Do not delete the inbox content; it serves as a historical record.
+
+### 3. Documentation Sync
+
+-   **Drift Check:** Run `cca audit` (or use the `taste` role) to verify that `AGENTS.md` and root docs match the codebase state.
+-   **Dashboard Accuracy:** Ensure `_ENTRYPOINT.md` accurately reflects the **NEXT** action.
+
+### 4. Role Development Workflow
+
+When modifying `prompts/roles/`:
+1.  **Edit:** Modify the markdown files.
+2.  **Test:** Use `cca` or a fresh agent session to verify the role behaves as expected.
+3.  **Release:** Changes are immediate for the local repo. To distribute, update `scaffolds/`.
+
+---
+
 ## Architecture
 
 ### Directory Structure
 
 ```
 comme-ca/
-├── README.md
-├── requirements.md
+├── _ENTRYPOINT.md      # Iteration Dashboard & Context Handoff
+├── README.md           # Documentation & Workflows
+├── requirements.md     # PRD & Product Rules
 ├── bin/
-│   ├── cca                # CLI wrapper (renamed from ca)
-│   └── install            # Bootstrap installer
+│   ├── cca             # CLI wrapper (renamed from ca)
+│   └── install         # Bootstrap installer
+├── inbox/              # Parallel Iteration Buffer
+│   └── <topic>/<date>/ # Context isolation
+├── sources/
+│   └── raw-chats/      # Verbatim LLM conversation logs
+├── specs/              # Feature Specifications
+│   └── <name>/         # Spec-specific context
+│       ├── _ENTRYPOINT.md
+│       ├── requirements.md
+│       └── design.md
 ├── prompts/
 │   ├── pipe/              # Single-shot prompts
 │   │   ├── _template.md

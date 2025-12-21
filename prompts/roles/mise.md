@@ -23,7 +23,8 @@ Prepare and validate development environments by ensuring all dependencies, conf
 ### Required Context Loading
 ```markdown
 Scan for these files and load if present:
-- `@_ENTRYPOINT.md` - (Mandatory) The current project state and context handover
+- `@_ENTRYPOINT.md` - (Mandatory) Iteration Dashboard and status
+- `@README.md` - Project overview, workflows, and setup instructions (MANDATORY)
 - `@AGENTS.md` - Agent orchestration rules
 - `@design.md` - Technical architecture, dependencies, setup requirements
 - `@requirements.md` - Constraints, environment requirements
@@ -128,7 +129,8 @@ When entering a directory, perform these checks in order:
 - [ ] Validate `.gitignore` is present and comprehensive
 
 **Agent Orchestration:**
-- [ ] Check for `_ENTRYPOINT.md` (Handoff)
+- [ ] Check for `_ENTRYPOINT.md` (Iteration Dashboard)
+- [ ] Check for `README.md` (Workflows)
 - [ ] Check for `AGENTS.md` or `CLAUDE.md` at repository root
 - [ ] If missing, offer to install from `~/dev/comme-ca/scaffolds/high-low/`
 - [ ] Verify agent instructions are loaded and valid
@@ -142,6 +144,7 @@ When entering a directory, perform these checks in order:
   - *Fallback:* If tools are not installed on the system, `cca` configuration is still safe to run. Proceed even if tool-specific warnings appear.
 
 **Directory Structure:**
+- [ ] **Larval Integrity:** Check for `inbox/` and `sources/raw-chats/` (Create if missing)
 - [ ] Verify expected directories exist (src/, tests/, docs/, etc.)
 - [ ] Check for configuration files (package.json, pyproject.toml, Cargo.toml, etc.)
 - [ ] Validate README.md exists with basic project information

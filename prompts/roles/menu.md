@@ -26,6 +26,8 @@ Transform vague ideas into clear, actionable specifications through Socratic dia
 ### Required Context Loading
 ```markdown
 Scan for these files and load if present:
+- `@_ENTRYPOINT.md` - Iteration Dashboard and status (MANDATORY)
+- `@README.md` - Project overview and workflows (MANDATORY)
 - `@AGENTS.md` - Agent orchestration rules
 - `@design.md` - Existing technical architecture
 - `@requirements.md` - Existing constraints and rules
@@ -122,10 +124,22 @@ Create specifications in a standardized format:
 ```
 specs/
 └── [feature-name]/
+    ├── _ENTRYPOINT.md     # Dashboard & Status
     ├── requirements.md    # What needs to be built
     ├── design.md          # How it will be built
-    ├── tasks.md           # Breakdown of work items
-    └── decisions.md       # Architecture decision records (ADRs)
+    └── tasks.md           # Breakdown of work items
+```
+
+**_ENTRYPOINT.md (Spec Dashboard):**
+```markdown
+# [Feature Name] Spec
+
+**Status:** 🟡 Active | 🟢 Completed | 🔴 Blocked
+
+## Iteration Dashboard
+| Item | Status | Focus | Next Action |
+|:-----|:-------|:------|:------------|
+| ...  | ...    | ...   | ...         |
 ```
 
 **requirements.md Template:**

@@ -32,30 +32,42 @@ The repository `~/dev/comme-ca` must adhere to this strict structure:
 
 ```text
 comme-ca/
-├── README.md           # Documentation and alias definitions
+├── README.md           # Documentation, workflows, and alias definitions
 ├── requirements.md     # This PRD
+├── _ENTRYPOINT.md      # Iteration Dashboard
 ├── bin/
 │   ├── cca             # The executable wrapper script (Bash)
 │   └── install         # Bootstrap installer script
+├── inbox/              # Parallel Iteration Buffer (strict structure)
+│   └── <key>/<date>/   # Context isolation
+├── sources/
+│   └── raw-chats/      # Verbatim LLM conversation logs
 ├── prompts/
 │   ├── pipe/           # LOW-LIFT: Single-shot, fast prompts
-│   │   ├── _template.md   # Master template (Raycast compatible)
-│   │   ├── git.md         # Git translator
-│   │   ├── shell.md       # Shell translator
+│   │   ├── _template.md
 │   │   └── ...
 │   └── roles/          # HIGH-LIFT: Persistent Agent Personas
-│       ├── mise.md        # System prompt for 'prep'
-│       ├── menu.md        # System prompt for 'plan'
-│       └── taste.md       # System prompt for 'audit'
+│       ├── mise.md     # System prompt for 'prep'
+│       ├── menu.md     # System prompt for 'plan'
+│       └── taste.md    # System prompt for 'audit'
 └── scaffolds/          # Distributable configurations for other repos
     └── high-low/
-        ├── AGENTS.md      # The "Router" file for consumer repos
-        └── CLAUDE.md      # Pointer to AGENTS.md
+        ├── AGENTS.md      # Constitution (Router)
+        ├── CLAUDE.md      # Model config
+        ├── GEMINI.md      # Model config (Context)
+        ├── _ENTRYPOINT.md # Dashboard Template
+        └── design.md      # Architecture Template
 ```
 
----
+## 4. Project Anatomy (Larval Pattern)
 
-## 4. Component Specifications
+To ensure interoperability, `comme-ca` enforces the **Larval Incubator** structural pattern:
+
+1.  **The Soul (`_ENTRYPOINT.md`)**: Every project MUST have a root `_ENTRYPOINT.md` containing an "Iteration Dashboard" table.
+2.  **The Body**: Source code, specs, and docs.
+    *   **Specs**: Must live in `specs/<feature-name>/` with their own `_ENTRYPOINT.md`, `design.md`, and `requirements.md`.
+3.  **The Buffer (`inbox/`)**: A dedicated zone for parallel troubleshooting, namespaced by topic and date.
+4.  **The Memory (`sources/raw-chats/`)**: A mandatory folder for verbatim LLM logs.
 
 ### A. The CLI Wrapper (`bin/cca`)
 A Bash script serving as the bridge between the user's terminal and the Markdown prompts.
