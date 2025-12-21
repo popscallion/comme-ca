@@ -17,19 +17,15 @@ Integrate **Serena MCP** as a specialized "Precision Editing" tool for the `comm
 - **So that** I can deploy this capability easily.
 
 ## 3. Functional Requirements
-1.  **Tool Whitelist:** The system SHALL explicitly enable ONLY the following 13 tools (using snake_case naming):
+1.  **Tool Whitelist:** The system SHALL explicitly enable ONLY the following tools (confirmed present):
     -   `find_file`
     -   `find_symbol`
     -   `insert_after_symbol`
-    -   `insert_at_line`
     -   `insert_before_symbol`
     -   `rename_symbol`
-    -   `replace_lines`
     -   `replace_content`
     -   `replace_symbol_body`
-    -   `restart_language_server`
     -   `search_for_pattern`
-    -   `summarize_changes`
 2.  **Feature suppression:** The system SHALL explicitly DISABLE:
     -   Onboarding wizards (`no-onboarding` mode)
     -   Memory management (`no-memories` mode)
