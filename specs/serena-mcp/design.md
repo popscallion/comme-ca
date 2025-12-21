@@ -14,11 +14,10 @@ graph TD
 
 ## 2. Configuration Strategy
 
-We will use a **Global Configuration** approach for portability.
+We will use the **Global Configuration** at `~/.serena/serena_config.yml`.
 
-- **Config Path:** `~/.config/serena/headless.yml`
-- **Tool Selection:** Whitelist the 13 specific tools.
-- **Mode Selection:** Enforce `no-onboarding` and `no-memories`.
+- **Tool Selection:** Use `excluded_tools` to disable agentic features.
+- **Mode Selection:** Enforce `no-onboarding` and `no-memories` via CLI flags.
 
 ## 3. Implementation Details
 
@@ -35,12 +34,11 @@ This snippet is designed to be pasted into `~/.claude/config.json` (or equivalen
         "git+https://github.com/oraios/serena",
         "serena",
         "start-mcp-server",
-        "--config",
-        "${HOME}/.config/serena/headless.yml",
         "--mode",
         "no-onboarding",
         "--mode",
-        "no-memories"
+        "no-memories",
+        "--project-from-cwd"
       ]
     }
   }
