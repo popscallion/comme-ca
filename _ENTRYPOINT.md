@@ -16,7 +16,7 @@ We are synchronizing `comme-ca` with the **Larval Incubator** patterns (`fahn-la
 |:-----|:-------|:------|:------------|
 | `comme-ca-sync` | 🟢 Completed | Verification | Review walkthrough.md |
 | `headless-claude` | 🟡 Paused | Deadlock | Migrate to new structure (Deferred) |
-| `serena-mcp` | 🔴 Blocked | Requirements | Migrate to new structure (Deferred) |
+| `serena-mcp` | 🟡 Active | Prototype | Validate config flags |
 
 ## 3. Key Files
 

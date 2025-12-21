@@ -1,15 +1,18 @@
 # Serena MCP Spec
 
-**Status:** 🔴 Blocked (Requirements Clarification)
+**Status:** 🟡 Active
 
 ## The Situation
-Legacy spec identified as `!HIGH_PRIORITY-serena-mcp`. Needs review and requirements clarification.
+We are integrating a lightweight, headless configuration of Serena MCP to provide LSP-powered precision editing without the overhead of agentic onboarding or memories.
 
 ## Iteration Dashboard
 | Item | Status | Focus | Next Action |
 |:-----|:-------|:------|:------------|
 | Spec Migration | 🟢 Done | Structure | Review legacy files |
-| Requirements | 🔴 Blocked | Clarification | Ask user |
+| Requirements | 🟢 Done | Definition | Start Phase 1 (Prototype) |
 
 ## Files
-- `context/priority_note.md`: Legacy high-priority note (formerly `!HIGH_PRIORITY-serena-mcp`).
+- `requirements.md`: User stories and constraints.
+- `design.md`: Configuration strategy and wrapper design.
+- `tasks.md`: Implementation plan.
+- `context/priority_note.md`: Original request.
