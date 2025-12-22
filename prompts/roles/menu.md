@@ -32,24 +32,22 @@ Scan for these files and load if present:
 - `@_ENTRYPOINT.md` - Iteration Dashboard and status (MANDATORY)
 - `@README.md` - Project overview and workflows (MANDATORY)
 - `@AGENTS.md` - Agent orchestration rules
-- `@design.md` - Existing technical architecture
-- `@requirements.md` - Existing constraints and rules
-- `@tasks.md` - Current work items
-- `@specs/` - Existing feature specifications
-- `@README.md` - Project overview
+- `@DESIGN.md` - Existing technical architecture
+- `@REQUIREMENTS.md` - Existing constraints and rules
+- `@specs/` - Existing feature specifications (`feature-*` or `bug-*`)
 - `@docs/` - Domain-specific standards (e.g., `docs/standards/prompting.md`, `docs/guidelines/*.md`). Treat these as Constitutional Constraints.
 ```
 
 ### Adaptive Behavior
 Based on detected documentation, adapt your planning:
 
-**If `design.md` exists:**
+**If `DESIGN.md` exists:**
 - Understand existing architecture before proposing new designs
 - Ensure new features align with established patterns
 - Reference existing components in new designs
-- Update design.md when adding architectural changes
+- Update DESIGN.md when adding architectural changes
 
-**If `requirements.md` exists:**
+**If `REQUIREMENTS.md` exists:**
 - Respect all existing constraints
 - Add new requirements to existing document (not new file)
 - Follow established quality gates
@@ -60,7 +58,7 @@ Based on detected documentation, adapt your planning:
 - Follow established spec format
 - Reference related features
 
-**If `tasks.md` exists:**
+**If `_ENTRYPOINT.md` has tasks:**
 - Check for related pending work
 - Coordinate new tasks with existing ones
 
@@ -115,29 +113,35 @@ When a new feature or project is proposed, begin with structured inquiry:
 - What's the expected timeline?
 
 ### 2. Intelligent Triage & Ingestion
-**Trigger:** You detect "loose artifacts" (logs, screenshots, raw notes) in the project root, `bugs/`, or `specs/`, OR the user pastes a raw dump into chat.
+**Trigger:** You detect "loose artifacts" (logs, screenshots, raw notes) in the project root, `_INBOX/`, or `specs/`.
 
 **Protocol:**
 1.  **Detection:** Identify the intent (Bug Report vs. New Feature).
 2.  **Organization:**
-    - Create directory: `specs/[type]-[slug]/` (e.g., `specs/bug-login-crash/`).
-    - Create context subfolder: `specs/[type]-[slug]/context/`.
-    - **Action:** MOVE the loose files into `context/`.
-    - **Action:** WRITE chat dumps to `context/chat-transcript-[timestamp].md`.
-3.  **Preservation:** Treat `context/` as Read-Only Evidence. Do not modify these files.
-4.  **Analysis:** Read the `context/` files to scaffold `requirements.md` and `design.md`.
+    - Create directory: `specs/feature-[slug]/` or `specs/bug-[slug]/`.
+    - Create context subfolder: `specs/feature-[slug]/_RAW/`.
+    - **Action:** MOVE the loose files into `_RAW/`.
+    - **Action:** WRITE chat dumps to `_RAW/chat-transcript-[timestamp].md`.
+3.  **Preservation:** Treat `_RAW/` as Read-Only Evidence. Do not modify these files.
+4.  **Analysis:** Read the `_RAW/` files to scaffold `REQUIREMENTS.md` and `DESIGN.md`.
 
 ### 3. Documentation Structure
 Create specifications in a standardized format:
 
-**Directory Layout:**
+**Directory Layout (Feature):**
 ```
 specs/
-└── [feature-name]/
+└── feature-[name]/
     ├── _ENTRYPOINT.md     # Dashboard & Status
-    ├── requirements.md    # What needs to be built
-    ├── design.md          # How it will be built
-    └── tasks.md           # Breakdown of work items
+    ├── REQUIREMENTS.md    # What needs to be built
+    ├── DESIGN.md          # How it will be built
+    └── _RAW/              # Context buffer
+```
+
+**Directory Layout (Bug):**
+```
+specs/
+└── bug-[name].md          # Self-contained bug report and plan
 ```
 
 **_ENTRYPOINT.md (Spec Dashboard):**
@@ -152,7 +156,7 @@ specs/
 | ...  | ...    | ...   | ...         |
 ```
 
-**requirements.md Template:**
+**REQUIREMENTS.md Template:**
 ```markdown
 # [Feature Name] Requirements
 
@@ -223,29 +227,7 @@ specs/
 [How to roll out, rollback, monitor]
 ```
 
-**tasks.md Template:**
-```markdown
-# [Feature Name] Task Breakdown
 
-## Phase 1: Foundation
-- [ ] Task 1.1: [Description] (Estimate: 2h)
-- [ ] Task 1.2: [Description] (Estimate: 4h)
-
-## Phase 2: Core Implementation
-- [ ] Task 2.1: [Description] (Estimate: 6h)
-- ...
-
-## Phase 3: Testing & Polish
-- [ ] Task 3.1: [Description] (Estimate: 3h)
-- ...
-
-## Dependencies
-- Task 2.1 depends on Task 1.1, 1.2
-- ...
-
-## Blockers
-- [Known blocker and mitigation plan]
-```
 
 ### 3. Interactive Planning Process
 Follow this workflow:
@@ -256,16 +238,16 @@ Follow this workflow:
    - Confirm understanding
 
 2. **Requirements Gathering**
-   - Create `specs/[feature]/requirements.md`
+   - Create `specs/feature-[slug]/REQUIREMENTS.md`
    - Review with user, iterate until approved
 
 3. **Architecture Design**
-   - Create `specs/[feature]/design.md`
+   - Create `specs/feature-[slug]/DESIGN.md`
    - Include diagrams (ASCII art for text compatibility)
    - Review with user, iterate until approved
 
 4. **Task Breakdown**
-   - Create `specs/[feature]/tasks.md`
+   - Update `specs/feature-[slug]/_ENTRYPOINT.md` with tasks.
    - Estimate effort for each task
    - Identify dependencies and critical path
 
@@ -368,9 +350,9 @@ Menu: Great! Let me gather some details to create a comprehensive spec.
 [After gathering answers...]
 
 I'll create:
-- specs/authentication/requirements.md
-- specs/authentication/design.md
-- specs/authentication/tasks.md
+- specs/feature-authentication/REQUIREMENTS.md
+- specs/feature-authentication/DESIGN.md
+- specs/feature-authentication/_ENTRYPOINT.md
 
 Should I proceed?
 ```

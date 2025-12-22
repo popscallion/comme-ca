@@ -1,31 +1,29 @@
 # ENTRYPOINT (HANDOFF)
 
-*   **Ecosystem Governance:** The `ecosystem/` directory signals that `comme-ci` manages `lab` and `distro`. `Taste` (Audit) now includes an "Ecosystem Audit Mode" to validate cross-repo sync.
-*   **System Hardening:** `Tune` (Reflection) role added for process optimization. All roles now follow "Discovery First" and "Deep Verification" protocols.
-
 > **READ FIRST:** This file contains the critical context, recent changes, and immediate directives for the next agent or developer working on this repository.
 
 ## 1. The Situation
-**System Hardening Complete.**
-We have successfully reorganized the `specs/` directory (flattened + `_ARCHIVE`) and implemented strict "Discovery First" and "Deep Verification" protocols across all roles (`Mise`, `Menu`, `Taste`). A new `Tune` role has been added for process reflection. The system is now robust against loose file assumptions and accidental data loss.
+**Process Hardening In Progress.**
+A session reflection revealed verification blind spots in agent workflows. A new top-priority spec (`feature-process-hardening`) addresses systemic improvements to prevent missed references during bulk refactoring tasks.
 
 ## 2. Recent Actions
-*   **Spec Reorg:** Removed `specs/backlog`, flattened contents to `specs/`, renamed `specs/archived` to `specs/_ARCHIVE`.
-*   **Role Updates:** Updated `Taste`, `Menu`, `Mise` with "Epistemic Rigor" blocks. Created `prompts/roles/tune.md`.
-*   **Documentation:** Updated `README.md` and `AGENTS.md` (root & scaffold) to reflect new structure and logic.
-*   **CLI:** Updated `bin/cca` to support `tune` command and setup.
+*   **Naming Conventions:** Enforced strict naming conventions (`REQUIREMENTS.md`, `DESIGN.md`, `_INBOX/`, `feature-*`, `bug-*`).
+*   **Session Reflection:** Analyzed why `tasks.md` references were missed. Root cause: singular vs plural search term, no final verification grep.
+*   **New Spec Created:** `specs/feature-process-hardening/` with requirements and design for guardrails.
 
 ## 3. Immediate Directives (Mission)
-1.  **Maintain Hygiene:** Keep `specs/active` clean. Only active WIP specs should reside there.
-2.  **Backlog Management:** Review `specs/backlog` when planning next iterations.
+1.  **TOP PRIORITY:** Implement `specs/feature-process-hardening/` — Add Search Hygiene and Verification rules to role prompts.
+2.  **Maintain Hygiene:** Follow new naming conventions strictly.
 
 ## 4. Key Files
 
-- `AGENTS.md`: **[UPDATED]** Now includes "Non-Interactive Contract".
-- `specs/backlog/`: **[NEW]** Holding area for unimplemented ideas.
-- `specs/archived/`: Repository of completed work.
+| File | Status | Description |
+|:-----|:-------|:------------|
+| `specs/feature-process-hardening/` | 🔴 Priority | Guardrails for verification and search hygiene |
+| `AGENTS.md` | ✅ Updated | Strict naming conventions added |
+| `DESIGN.md` | ✅ Created | Root-level architecture and conventions |
+| `prompts/roles/` | ⚪ Pending | Awaiting process hardening updates |
 
 ---
-*   **Previous:** Spec Hygiene & Reflection Sprint.
-*   **Last Updated:** 2025-12-21 16:30
-**Previous:** Spec Audit & Cleanup
+**Last Updated:** 2025-12-22 14:34  
+**Previous:** Naming Conventions Refactor

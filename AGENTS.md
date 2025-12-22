@@ -30,14 +30,13 @@ Standard roles automatically detect and adapt to project documentation:
 - `@_ENTRYPOINT.md` - (Mandatory) The current project state and context handover
 - `@_ENTRYPOINT.md` - Iteration Dashboard and status
 - `@README.md` - Workflows and procedures
-- `@design.md` - Technical architecture, workflows, dependencies
-- `@requirements.md` - Constraints, validation rules, quality gates
-- `@tasks.md` - Current work items and priorities (if used)
-- `@tasks.md` - Current work items and priorities (if used)
-- `@specs/` - Feature specifications (nested `specs/<name>/`)
+- `@DESIGN.md` - Technical architecture, workflows, dependencies
+- `@REQUIREMENTS.md` - Constraints, validation rules, quality gates
+- `@_INBOX/` - Intake buffer for loose notes and requests
+- `@specs/` - Feature specs (`feature-*` or `bug-*`)
 - `@specs/_ARCHIVE/` - Deprecated/Legacy specs (Reference only)
 
-**Create these files to define project-specific behavior.** The roles will execute validation rules from requirements.md, follow workflows from design.md, and track progress in tasks.md.
+**Create these files to define project-specific behavior.** The roles will execute validation rules from REQUIREMENTS.md, follow workflows from DESIGN.md, and track progress in _ENTRYPOINT.md.
 
 ## Universal Standards (CRITICAL)
 
@@ -65,7 +64,10 @@ These high-level constraints apply to ALL agents (Mise, Menu, Taste, Wrap) and A
     *   **No Emojis:** Do NOT use emojis in filenames, code comments, commit messages, or technical documentation (except where explicitly part of a user-facing UI).
 
 2.  **Naming Conventions:**
-    *   **Descriptive:** Use clear, descriptive names (e.g., `user-authentication-service`).
+    *   **Descriptive:** Use clear, descriptive names.
+    *   **Strict Prefixes:** Feature specs MUST start with `feature-`. Bug specs MUST start with `bug-`.
+    *   **Special Files:** Use `_UNDERSCORE` prefix for special system files (`_ENTRYPOINT`, `_INBOX`, `_RAW`, `_ARCHIVE`). Only ONE per level.
+    *   **Capitalization:** Use ALL CAPS for meta-documents (`README`, `LICENSE`, `DESIGN`, `REQUIREMENTS`, `AGENTS`).
     *   **No Inventions:** Do NOT invent acronyms, "cute" project names, or abbreviations unless the user explicitly provides them.
     *   **Inference:** If a name is needed and none is provided, derive it strictly from the functional purpose.
 

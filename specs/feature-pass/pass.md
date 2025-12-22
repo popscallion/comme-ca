@@ -12,8 +12,8 @@ Before committing anything, you MUST ensure the documentation reflects reality.
 
 *   **Scan Modified Files:** Look at `git status`.
 *   **Update Sources of Truth:**
-    *   If code changed, does `design.md` match?
-    *   If a feature finished, is `tasks.md` updated?
+    *   If code changed, does `DESIGN.md` match?
+    *   If a feature finished, is `_ENTRYPOINT.md` updated?
 *   **Consolidate & Prune:**
     *   **Rule:** Prefer fewer files.
     *   Identify outdated information. Mark it as legacy or move to `specs/archive/`.
@@ -23,7 +23,7 @@ Before committing anything, you MUST ensure the documentation reflects reality.
 You are responsible for the `_ENTRYPOINT.md` file.
 
 *   **Recent Actions:** Summarize what was just done (technical high-level).
-*   **Next Orders:** Based on `tasks.md` and current state, what is the *immediate* next step?
+*   **Next Orders:** Based on `_ENTRYPOINT.md` and current state, what is the *immediate* next step?
 *   **Context:** Note any specific tools, patterns, or constraints used in this session.
 
 ### 3. The Commit

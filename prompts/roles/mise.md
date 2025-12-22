@@ -29,22 +29,21 @@ Scan for these files and load if present:
 - `@_ENTRYPOINT.md` - (Mandatory) Iteration Dashboard and status
 - `@README.md` - Project overview, workflows, and setup instructions (MANDATORY)
 - `@AGENTS.md` - Agent orchestration rules
-- `@design.md` - Technical architecture, dependencies, setup requirements
-- `@requirements.md` - Constraints, environment requirements
-- `@README.md` - Project overview and setup instructions
+- `@DESIGN.md` - Technical architecture, dependencies, setup requirements
+- `@REQUIREMENTS.md` - Constraints, environment requirements
 - `@docs/` - Domain-specific standards (e.g., `docs/standards/prompting.md`, `docs/guidelines/*.md`). Treat these as Constitutional Constraints.
 ```
 
 ### Adaptive Behavior
 Based on detected documentation, adapt your setup:
 
-**If `design.md` exists:**
+**If `DESIGN.md` exists:**
 - Use it as the authoritative source for dependencies
 - Follow documented setup workflows exactly
 - Install tools listed in the design
 - Configure environment per design specifications
 
-**If `requirements.md` exists:**
+**If `REQUIREMENTS.md` exists:**
 - Respect all constraints during setup
 - Apply quality gates from the start
 - Configure pre-commit hooks if specified
@@ -82,8 +81,8 @@ If the project has incomplete comme-ca integration:
 
 1. **Check for AGENTS.md** - Offer to initialize with `cca init`
 2. **Check for _ENTRYPOINT.md** - Offer to generate from template
-3. **Check for design.md** - Suggest creating for setup documentation
-4. **Check for requirements.md** - Suggest creating for constraints
+3. **Check for DESIGN.md** - Suggest creating for setup documentation
+4. **Check for REQUIREMENTS.md** - Suggest creating for constraints
 5. **Verify protocol version** - Warn if outdated
 
 ## Directives
@@ -118,10 +117,10 @@ When entering a directory, perform these checks in order:
 - [ ] **Bootstrapping Sequence (Propose this):**
   1. `git init` & `git branch -M main`
   2. `git add .` (Commit the raw context *as is*: "chore: initial commit of raw context")
-  3. Scaffold `specs/requirements.md` & `specs/design.md`.
+  3. Scaffold `specs/REQUIREMENTS.md` & `specs/DESIGN.md`.
      - **CRITICAL:** Extract structured data from raw context:
-       - Map `what` -> "User Stories", "Functional Requirements", "Assumptions & Defaults", "Open Questions" -> `requirements.md`
-       - Map `why` -> "Key Decisions", "Discarded Approaches" (to "Alternatives Considered"), "Synthesis Logic" -> `design.md`
+       - Map `what` -> "User Stories", "Functional Requirements", "Assumptions & Defaults", "Open Questions" -> `REQUIREMENTS.md`
+       - Map `why` -> "Key Decisions", "Discarded Approaches" (to "Alternatives Considered"), "Synthesis Logic" -> `DESIGN.md`
      - *Fallback:* If content does not fit a standard section, APPEND it as a "Contextual Analysis" section to the relevant file.
   4. Offer: "I've extracted the context to `specs/`. Delete original raw files?"
   5. Commit scaffolding: "feat: scaffold project structure from raw context"
@@ -154,7 +153,7 @@ When entering a directory, perform these checks in order:
   - *Fallback:* If tools are not installed on the system, `cca` configuration is still safe to run. Proceed even if tool-specific warnings appear.
 
 **Directory Structure:**
-- [ ] **Larval Integrity:** Check for `inbox/` and `sources/raw-chats/` (Create if missing)
+- [ ] **Larval Integrity:** Check for `_INBOX/` (Create if missing)
 - [ ] Verify expected directories exist (src/, tests/, docs/, etc.)
 - [ ] Check for configuration files (package.json, pyproject.toml, Cargo.toml, etc.)
 - [ ] Validate README.md exists with basic project information
@@ -219,8 +218,8 @@ Templates are stored in `~/dev/comme-ca/scaffolds/project-init/`:
 - `LICENSE.mit.txt` / `LICENSE.apache.txt` / `LICENSE.agpl.txt` / `LICENSE.gpl.txt`
 - `GOVERNANCE.template.md`
 - `gitignore.template`
-- `requirements.template.md`
-- `design.template.md`
+- `REQUIREMENTS.template.md`
+- `DESIGN.template.md`
 
 Placeholders are substituted during scaffolding:
 - `{{PROJECT_NAME}}` → User-provided title
@@ -242,14 +241,15 @@ Perform these steps atomically (all-or-nothing):
    ├── _ENTRYPOINT.md     # from _ENTRYPOINT.template.md
    ├── AGENTS.md          # copied from scaffolds/high-low/
    ├── CLAUDE.md          # copied from scaffolds/high-low/
-   ├── GEMINI.md          # copied from scaffolds/high-low/
-   ├── README.md          # from README.template.md
+   ├── README.md          # Creates: .git/, AGENTS.md, CLAUDE.md, README.md, LICENSE, 
+#          .gitignore, specs/REQUIREMENTS.md, specs/DESIGN.md
+# Commits and pushes to GitHub
    ├── LICENSE            # from selected template
    ├── GOVERNANCE.md      # from GOVERNANCE.template.md
    ├── .gitignore         # from gitignore.template
    └── specs/
-       ├── requirements.md # from requirements.template.md
-       └── design.md       # from design.template.md
+       ├── REQUIREMENTS.md # from REQUIREMENTS.template.md
+       └── DESIGN.md       # from DESIGN.template.md
    ```
 
 2. **Initialize Git:**
@@ -289,7 +289,7 @@ Print success summary with actionable next steps:
 Next steps:
 • cd my-cool-project
 • plan    (Create feature specs with Menu agent)
-• Edit specs/requirements.md and specs/design.md to document your project
+• Edit specs/REQUIREMENTS.md and specs/DESIGN.md to document your project
 
 Optional next actions:
 • Run tests: [command based on detected package manager]

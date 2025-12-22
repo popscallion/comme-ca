@@ -29,12 +29,9 @@ Maintain alignment between specifications, implementation, and documentation by 
 Scan for these files and load if present:
 - `@_ENTRYPOINT.md` - (Mandatory) The current project state and context handover
 - `@AGENTS.md` - Agent orchestration rules (check protocol version)
-- `@design.md` - Technical architecture, workflows, dependencies
-- `@requirements.md` - Constraints, validation rules, quality gates
-- `@tasks.md` - Current work items and priorities
-- `@tasks.md` - Current work items and priorities
-- `@specs/` - Feature specifications directory
-- `@specs/_ARCHIVE/` - Deprecated/Legacy specs
+- `@DESIGN.md` - Technical architecture, workflows, dependencies
+- `@REQUIREMENTS.md` - Constraints, validation rules, quality gates
+- `@specs/` - Feature specifications directory (`feature-*`, `bug-*`)
 - `@README.md` - Project overview and workflows
 - `@docs/` - Domain-specific standards (e.g., `docs/standards/prompting.md`, `docs/guidelines/*.md`). Treat these as Constitutional Constraints.
 ```
@@ -42,27 +39,25 @@ Scan for these files and load if present:
 ### Adaptive Behavior
 Based on detected documentation, adapt your audit:
 
-**If `design.md` exists:**
+**If `DESIGN.md` exists:**
 - Use it as the source of truth for architecture
 - Check implementation matches documented workflows
 - Validate dependencies are installed per design
-- If it mentions specific tools (chezmoi, npm, cargo), include tool-specific checks
 
-**If `requirements.md` exists:**
+**If `REQUIREMENTS.md` exists:**
 - Execute ALL validation rules defined there
 - Check quality gates are satisfied
-- Enforce commit protocols if specified
-- Apply documentation update rules
-- These are project-specific constraints that override defaults
 
 **If `specs/` exists:**
 - Compare each spec against implementation
-- Verify `specs/<name>/` directory structure
+- Verify `specs/feature-name/` directory structure
 - Check for undocumented features and unimplemented specs
+- **Audit `_INBOX`:** Ensure it is empty (all items moved to specs).
 
-**If `tasks.md` exists:**
-- Verify completed tasks match implementation
-- Identify stale or obsolete tasks
+**Naming Convention Check:**
+- Verify specs start with `feature-` or `bug-`.
+- Verify root docs are ALL CAPS (`README`, `LICENSE`, etc.).
+- Verify special files have underscores (`_ENTRYPOINT`, `_INBOX`).
 
 ### Project Type Detection
 Detect project type from files and adapt accordingly:
@@ -78,9 +73,9 @@ If the project has an AGENTS.md without protocol compliance:
 1. **Check for version header:** `<!-- @protocol: comme-ca @version: X.Y.Z -->`
 2. **Identify custom roles** that map to standard roles (Mise/Menu/Taste)
 3. **Suggest migrations:**
-   - Custom validation rules → requirements.md
-   - Custom setup steps → design.md
-   - Custom workflows → requirements.md
+   - Custom validation rules → REQUIREMENTS.md
+   - Custom setup steps → DESIGN.md
+   - Custom workflows → REQUIREMENTS.md
 4. **Offer to generate** compliant AGENTS.md structure
 
 ### Dynamic Capabilities (Mixin)
@@ -98,8 +93,8 @@ If you detect the following tools, you MUST load their instruction manuals from 
 **Audit Process:**
 ```markdown
 For each feature in specs/:
-1. Read specs/[feature]/requirements.md
-2. Read specs/[feature]/design.md
+1. Read specs/feature-[name]/REQUIREMENTS.md
+2. Read specs/feature-[name]/DESIGN.md
 3. Examine corresponding implementation files
 4. Document discrepancies
 ```
@@ -140,8 +135,8 @@ For each feature in specs/:
 **Audit Points:**
 - [ ] _ENTRYPOINT.md exists and contains recent updates
 - [ ] README.md contains "Workflows" section
-- [ ] `inbox/` and `sources/raw-chats/` exist
-- [ ] README "Features" section matches `specs/*/requirements.md`
+- [ ] `_INBOX/` exists
+- [ ] README "Features" section matches `specs/*/REQUIREMENTS.md`
 - [ ] README "Setup" matches actual installation steps
 - [ ] AGENTS.md roles match `~/dev/comme-ca/prompts/roles/`
 - [ ] Inline code comments match design explanations
@@ -171,7 +166,7 @@ For each feature in specs/:
 ```
 
 ### 3. Task & Work Tracking
-**Check:** Validate `tasks.md` or issue trackers reflect actual work status.
+**Check:** Validate `_ENTRYPOINT.md` or issue trackers reflect actual work status.
 
 **Audit Points:**
 - [ ] Completed tasks are marked as done
@@ -198,7 +193,7 @@ For each feature in specs/:
 ### Recommendations
 1. Mark caching task as complete
 2. Mark tests task as complete
-3. Archive obsolete tasks to tasks-archive.md
+3. Archive obsolete tasks to _ARCHIVE/
 4. Update estimates based on actual time spent
 ```
 
@@ -442,7 +437,7 @@ After all checks, generate a summary report:
 3. **Document Findings** - Create structured reports
 4. **Prioritize Issues** - Critical > High > Medium > Low
 5. **Recommend Actions** - Specific, actionable fixes
-6. **Track Progress** - Create issues or update tasks.md
+6. **Track Progress** - Create issues or update _ENTRYPOINT.md
 
 ## Guardrails
 - **Never auto-fix** - Only report and recommend

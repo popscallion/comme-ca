@@ -6,6 +6,11 @@ RepRap inspired, recursive repository for behavioral holons: AI agent prompts, C
 
 Lean, single source of truth for agent intelligence. Self-documenting, easy iteration, general purpose with automation guardrails against user error. Intelligence (prompts/roles) is decoupled from infrastructure (dotfiles/env).
 
+**"Roles not finding project context"**
+- Create `DESIGN.md` for architecture documentation
+- Create `REQUIREMENTS.md` for validation rules
+- Roles automatically detect and use these files
+
 ---
 
 ## Installation
@@ -65,7 +70,7 @@ cca search --resume                                # Resume last session
 All work is tracked in `_ENTRYPOINT.md`.
 - **Check Status:** `cat _ENTRYPOINT.md` to see the "Iteration Dashboard".
 - **Handoff:** Run `wrap` to update the dashboard and save context before ending a session.
-- **Inbox:** Use `inbox/` for raw notes and parallel work streams.
+- **Inbox:** Use `_INBOX/` for raw notes and parallel work streams.
 
 ### Agents (High-Lift)
 ```bash
@@ -97,12 +102,11 @@ Copies `AGENTS.md`, `CLAUDE.md`, and `GEMINI.md` to current directory.
 ### 1. Spec Workflow
 
 #### Creating a New Spec
-1.  **Create Folder:** `specs/<feature-name>/`
+1.  **Create Folder/File:** `specs/feature-<name>/` or `specs/bug-<name>.md`
 2.  **Initialize Files:**
     -   `_ENTRYPOINT.md`: Dashboard and status.
-    -   `requirements.md`: "What" we are building.
-    -   `design.md`: "How" we are building it.
-    -   `tasks.md`: "When" and "Who" (Implementation Plan).
+    -   `REQUIREMENTS.md`: "What" we are building.
+    -   `DESIGN.md`: "How" we are building it.
 3.  **Register:** Add the new spec to the Iteration Dashboard in the root `_ENTRYPOINT.md`.
 
 #### Spec Disposition
@@ -110,24 +114,23 @@ Copies `AGENTS.md`, `CLAUDE.md`, and `GEMINI.md` to current directory.
 - **_ARCHIVE:** Only for specs that were implemented but are now deprecated, or research spikes that are explicitly closed. Do not archive unimplemented ideas; keep them in the root context.
 
 #### Working on a Spec
-1.  **Context Loading:** Always read the spec's `requirements.md` and `design.md` before starting work.
+1.  **Context Loading:** Always read the spec's `REQUIREMENTS.md` and `DESIGN.md` before starting work.
 2.  **Task Tracking:**
-    -   Mark tasks as `[ ]`, `[/]`, or `[x]` in `tasks.md`.
-    -   Update the local `_ENTRYPOINT.md` dashboard.
-3.  **Verification:** Verify changes against the requirements before marking complete.
+    -   Update the local `_ENTRYPOINT.md` dashbaord.
+3.  **Verification:** Verify changes against the REQUIREMENTS before marking complete.
 
 #### Archiving a Spec (Deprecated/Dead Code Only)
 1.  **Verify:** Ensure no active code depends on this spec. Run `git log` to confirm implementation status.
 2.  **Move:** Move the folder to `specs/_ARCHIVE/`.
-3.  **Consolidate:** Update root `requirements.md` or `design.md` if the feature introduced permanent system changes.
+3.  **Consolidate:** Update root `REQUIREMENTS.md` or `DESIGN.md` if the feature introduced permanent system changes.
 
 ### 2. Inbox Workflow (Parallel Iteration)
 
-Use `inbox/` to isolate context and prevent pollution of the main source tree.
+Use `_INBOX/` to isolate context and prevent pollution of the main source tree.
 
 #### Structure
 ```
-inbox/
+_INBOX/
 └── <topic-key>/          # e.g., "deadlock-debugging"
     └── <date-tag>/       # e.g., "2025-12-21"
         ├── evidence/     # Screenshots, logs, dumps
@@ -161,20 +164,20 @@ When modifying `prompts/roles/`:
 ```
 comme-ca/
 ├── _ENTRYPOINT.md      # Iteration Dashboard & Context Handoff
+├── _INBOX/             # Intake Buffer
 ├── README.md           # Documentation & Workflows
-├── requirements.md     # PRD & Product Rules
+├── REQUIREMENTS.md     # PRD & Product Rules
+├── DESIGN.md           # Architecture & Patterns
 ├── bin/
 │   ├── cca             # CLI wrapper (renamed from ca)
 │   └── install         # Bootstrap installer
-├── inbox/              # Parallel Iteration Buffer
-│   └── <topic>/<date>/ # Context isolation
-├── sources/
-│   └── raw-chats/      # Verbatim LLM conversation logs
 ├── specs/              # Feature Specifications
-│   └── <name>/         # Spec-specific context
-│       ├── _ENTRYPOINT.md
-│       ├── requirements.md
-│       └── design.md
+│   ├── feature-<name>/ # Feature context
+│   │   ├── _ENTRYPOINT.md
+│   │   ├── _RAW/       # Raw context (logs, chats)
+│   │   ├── REQUIREMENTS.md
+│   │   └── DESIGN.md
+│   └── bug-<name>.md   # Self-contained bug spec
 ├── prompts/
 │   ├── pipe/              # Single-shot prompts
 │   │   ├── _template.md
@@ -275,7 +278,7 @@ prep                                 # Detects no .git, offers scaffolding
 # - License: [GPL-3.0]
 # 
 # Creates: .git/, AGENTS.md, CLAUDE.md, README.md, LICENSE, 
-#          .gitignore, specs/requirements.md, specs/design.md
+#          .gitignore, specs/REQUIREMENTS.md, specs/DESIGN.md
 # Commits and pushes to GitHub
 
 plan                                 # Create feature specs

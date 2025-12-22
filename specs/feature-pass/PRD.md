@@ -23,8 +23,8 @@ AI agents often leave repositories in a "messy" state at the end of a session:
 *   **Trigger:** Before any commit.
 *   **Action:**
     *   Scan `git status` for modified files.
-    *   Update `design.md` if architecture changed.
-    *   Update `tasks.md` if items were completed.
+    *   Update `DESIGN.md` if architecture changed.
+    *   Update `_ENTRYPOINT.md` if items were completed.
     *   **Prune:** Mark outdated info as legacy or archive it. Avoid "split brain" (conflicting info).
 
 ### B. The Handoff (`_ENTRYPOINT.md`)

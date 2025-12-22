@@ -38,10 +38,8 @@ comme-ca/
 ├── bin/
 │   ├── cca             # The executable wrapper script (Bash)
 │   └── install         # Bootstrap installer script
-├── inbox/              # Parallel Iteration Buffer (strict structure)
+├── _INBOX/             # Parallel Iteration Buffer (strict structure)
 │   └── <key>/<date>/   # Context isolation
-├── sources/
-│   └── raw-chats/      # Verbatim LLM conversation logs
 ├── prompts/
 │   ├── pipe/           # LOW-LIFT: Single-shot, fast prompts
 │   │   ├── _template.md
@@ -53,10 +51,11 @@ comme-ca/
 └── scaffolds/          # Distributable configurations for other repos
     └── high-low/
         ├── AGENTS.md      # Constitution (Router)
-        ├── CLAUDE.md      # Model config
+        ├── CLAUDE.md      # Model config (Context)
         ├── GEMINI.md      # Model config (Context)
         ├── _ENTRYPOINT.md # Dashboard Template
-        └── design.md      # Architecture Template
+        └── DESIGN.md      # Architecture Template
+        └── REQUIREMENTS.md # Constraints Template
 ```
 
 ## 4. Project Anatomy (Larval Pattern)
@@ -65,9 +64,9 @@ To ensure interoperability, `comme-ca` enforces the **Larval Incubator** structu
 
 1.  **The Soul (`_ENTRYPOINT.md`)**: Every project MUST have a root `_ENTRYPOINT.md` containing an "Iteration Dashboard" table.
 2.  **The Body**: Source code, specs, and docs.
-    *   **Specs**: Must live in `specs/<feature-name>/` with their own `_ENTRYPOINT.md`, `design.md`, and `requirements.md`.
-3.  **The Buffer (`inbox/`)**: A dedicated zone for parallel troubleshooting, namespaced by topic and date.
-4.  **The Memory (`sources/raw-chats/`)**: A mandatory folder for verbatim LLM logs.
+    *   **Specs**: Must live in `specs/feature-<name>/` with their own `_ENTRYPOINT.md`, `DESIGN.md`, and `REQUIREMENTS.md`.
+3.  **The Buffer (`_INBOX/`)**: A dedicated zone for parallel troubleshooting.
+4.  **Special Files**: Use `_UNDERSCORE` for special files (`_ENTRYPOINT`, `_INBOX`, `_RAW`). Use ALL CAPS for meta-docs (`DESIGN`, `REQUIREMENTS`).
 
 ### A. The CLI Wrapper (`bin/cca`)
 A Bash script serving as the bridge between the user's terminal and the Markdown prompts.
@@ -121,10 +120,10 @@ These are "Personas" used by autonomous agents (Claude/Goose) when running in lo
     *   **Directives:** Check for git initialization, check for `AGENTS.md`, ensure `cca` is in PATH, validate directory structure.
 2.  **`menu.md` (Alias: `plan`)**:
     *   **Role:** Architect and Requirements gatherer.
-    *   **Directives:** Interactively interview user, create `specs/[feature]/requirements.md`, generate `design.md` and `tasks.md`. Never write code; only write specs.
+    *   **Directives:** Interactively interview user, create `specs/feature-[slug]/REQUIREMENTS.md`, generate `DESIGN.md`. Never write code; only write specs.
 3.  **`taste.md` (Alias: `audit`)**:
     *   **Role:** Quality Assurance and Drift Detector.
-    *   **Directives:** Compare `specs/` vs `src/`. Check `README.md` vs `AGENTS.md`. Identify obsolete tasks. Output a "Drift Report."
+    *   **Directives:** Compare `specs/` vs `src/`. Check `README.md` vs `AGENTS.md`. Identify undocumented drift. Output a "Drift Report."
 
 ### D. Scaffolding (`scaffolds/`)
 Artifacts that allow *other* repositories to inherit intelligence from `comme-ca`.

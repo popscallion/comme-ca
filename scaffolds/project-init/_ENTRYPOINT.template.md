@@ -19,8 +19,8 @@
 *   [Immediate Next Step 2]
 
 ## 4. Key References
-*   `@tasks.md` - Master checklist.
-*   `@design.md` - Architecture source of truth.
+*   `@_ENTRYPOINT.md` - Iteration Dashboard (Checklist).
+*   `@DESIGN.md` - Architecture source of truth.
 *   `@AGENTS.md` - Role definitions.
 
 ---

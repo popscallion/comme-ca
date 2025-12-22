@@ -16,7 +16,8 @@ We don't need to rewrite your system. We just need to map your new infrastructur
 2.  **`menu` (plan) -> The Architect**
     *   *Current Role:* Requirements & Specs.
     *   *New Responsibility:* Decides *which* mode a task requires.
-    *   *Update:* When `plan` creates `tasks.md`, it should tag tasks as `[Low Touch]` (CLI/Backend) or `[High Touch]` (Visual/Frontend). This tells the human (or future orchestration agent) where to run them.
+    *   **Update:** When `plan` creates tasks in `_ENTRYPOINT.md`, it should explicitly link them to strict requirements.
+*   **Traceability:** It should be possible to look at a task in `_ENTRYPOINT.md` and know exactly which Requirement ID it satisfies.
 
 3.  **`cca` (pipe) -> The Bridge**
     *   *Current Role:* CLI Translator.
@@ -61,7 +62,7 @@ We will implement a **Hybrid Infrastructure** on a single headless host, integra
 2.  **Integration with `comme-ca`:**
     *   **`mise` (prep):** Will be updated to validate the presence of Daytona/Dagger and health-check the headless host connection.
     *   **`cca` (pipe):** Will gain new prompts to control these tools (e.g., `cca sand "new visual env"`).
-    *   **`menu` (plan):** Will explicitly tag tasks in `tasks.md` as `[HEADLESS]` or `[VISUAL]` to guide execution.
+    *   **`menu` (plan):** Will explicitly tag tasks in `_ENTRYPOINT.md` as `[HEADLESS]` or `[VISUAL]` to guide execution.
 
 3.  **Future Proofing:**
     *   **Browserbase:** We acknowledge the need for anti-bot measures (shopping/scraping). We will strictly use **Daytona + OpenHands** for generic web tasks for now, and only plug in **Browserbase** via API if residential proxies become strictly necessary.
