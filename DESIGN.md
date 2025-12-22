@@ -1,6 +1,6 @@
 <!--
 @id: design
-@version: 1.1.0
+@version: 1.2.0
 @model: gemini-2.0-flash
 -->
 # DESIGN
@@ -11,7 +11,14 @@
 
 ## Architecture & Patterns
 
-### 1. The Wrapper Architecture (`bin/cca`)
+### 1. The Agentic Architecture
+The system defines four core abstractions that apply across all AI engines:
+- **Agents:** Long-running, stateful roles (e.g., `prep`, `plan`, `audit`) responsible for high-level goals.
+- **Subagents:** Specialist workers delegated specific tasks with their own context (e.g., `code-reviewer`).
+- **Skills:** Named, reusable procedures ("how to do X") loaded into the agent's context (e.g., `serena` for surgical editing).
+- **Tools:** Deterministic capabilities (e.g., git, MCP tools).
+
+### 2. The Wrapper Architecture (`bin/cca`)
 The `cca` binary serves as the "Shim Layer" between static Markdown prompts and the execution engine.
 - **Shim Layer:** Intercepts commands and performs **Placeholder Replacement** (Raycast-style) before sending text to the AI.
   - Replaces `{clipboard}` with actual system clipboard content.
@@ -23,7 +30,7 @@ The `cca` binary serves as the "Shim Layer" between static Markdown prompts and 
   - **Codex:** Pipes prompt content directly to stdin.
 - **Dual-Model Routing:** The wrapper implements hardcoded logic to route queries to either a "Fast" model (Cerebras 120b) or a "Smart" model (Haiku 4.5) based on user flags or query type.
 
-### 2. The Spec Pattern (Unit of Work)
+### 3. The Spec Pattern (Unit of Work)
 The system rejects loose tasks in favor of structured, encapsulated contexts.
 - **Encapsulation:** Every feature or bug lives in its own directory: `specs/feature-[slug]/` or `specs/bug-[slug].md`.
 - **Mandatory Artifacts:** A spec is not valid without:
@@ -31,7 +38,7 @@ The system rejects loose tasks in favor of structured, encapsulated contexts.
   - `DESIGN.md` ("How"): Architecture, data models, dependency changes.
   - `_ENTRYPOINT.md`: A localized dashboard tracking the specific status of *that* feature.
 
-### 3. The Inbox Pattern (Buffer)
+### 4. The Inbox Pattern (Buffer)
 To prevent context window pollution and "messy" thoughts from entering the main codebase, the system uses a designated `_INBOX/` directory.
 - **Raw Dump:** Users dump logs, stream-of-consciousness notes, or vague requests here.
 - **Sanitization:** The `clarify` and `what` tools synthesize this chaos into structured `REQUIREMENTS.md`.

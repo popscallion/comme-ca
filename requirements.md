@@ -6,7 +6,7 @@
 
 It unifies two distinct modes of development into a single library:
 1.  **Low-Lift ("Pipe"):** Stateless, single-purpose, low-latency CLI tools (e.g., "Translate this sentence into a Git command").
-2.  **High-Lift ("Kitchen"):** Stateful, multi-step autonomous agent workflows for planning, maintenance, and bootstrapping.
+2.  **High-Lift ("Agents"):** Stateful, multi-step autonomous agent workflows for planning, maintenance, and bootstrapping.
 
 **Core Philosophy:**
 *   **Separation of Concerns:** Intelligence (prompts/roles) is decoupled from Infrastructure (dotfiles/env).
@@ -15,15 +15,15 @@ It unifies two distinct modes of development into a single library:
 
 ---
 
-## 2. The "Culinary" Metaphor & Naming
-To distinguish agent capabilities, this system uses specific naming conventions based on a professional kitchen workflow.
+## 2. The Agentic Architecture
+To distinguish agent capabilities, this system uses specific naming conventions based on a professional kitchen workflow, implemented as **Agents**.
 
-| Internal Name | User Alias | Former Name | Responsibility | Scope |
-| :--- | :--- | :--- | :--- | :--- |
-| **`cca`** | N/A | `ca` | **The Wrapper** | The CLI tool that executes Pipe prompts. |
-| **`mise`** | `prep` | Initializer | **Setup** | Bootstrapping repos, ensuring tools/env are ready. |
-| **`menu`** | `plan` | Clarifier | **Planning** | Requirements gathering, spec generation, architecting. |
-| **`taste`** | `audit` | Maintainer | **QA/Sync** | Drift detection, code cleanup, doc synchronization. |
+| Internal Name | User Alias | Responsibilities | Agentic Features |
+| :--- | :--- | :--- | :--- |
+| **`cca`** | N/A | **The Wrapper** | CLI Bridge, Shim Layer |
+| **`mise`** | `prep` | **Setup Agent** | Uses `Serena` Skill for edits |
+| **`menu`** | `plan` | **Planning Agent** | Delegates to `code-reviewer` Subagent |
+| **`taste`** | `audit` | **QA Agent** | Uses `Serena` Skill for fixes |
 
 ---
 
@@ -44,15 +44,20 @@ comme-ca/
 │   ├── pipe/           # LOW-LIFT: Single-shot, fast prompts
 │   │   ├── _template.md
 │   │   └── ...
-│   └── roles/          # HIGH-LIFT: Persistent Agent Personas
-│       ├── mise.md     # System prompt for 'prep'
-│       ├── menu.md     # System prompt for 'plan'
-│       └── taste.md    # System prompt for 'audit'
+│   ├── roles/          # AGENTS: Persistent Agent Personas
+│   │   ├── mise.md     # System prompt for 'prep'
+│   │   ├── menu.md     # System prompt for 'plan'
+│   │   └── taste.md    # System prompt for 'audit'
+│   ├── skills/         # SKILLS: Reusable Procedures
+│   │   └── serena.md   # Surgical editing skill
+│   └── subagents/      # SUBAGENTS: Specialist Workers
+│       └── code-reviewer.md
 └── scaffolds/          # Distributable configurations for other repos
     └── high-low/
         ├── AGENTS.md      # Constitution (Router)
         ├── CLAUDE.md      # Model config (Context)
         ├── GEMINI.md      # Model config (Context)
+        ├── CODEX.md       # Model config (Context)
         ├── _ENTRYPOINT.md # Dashboard Template
         ├── DESIGN.md      # Architecture Template
         └── REQUIREMENTS.md # Constraints Template
@@ -66,7 +71,7 @@ All agents and tools must adhere to the following strict policies:
 - **Policy:** Agents are expected to be autonomous but safe.
 - **READ (Auto-Execute):** Agents MUST execute read-only tools (`ls`, `cat`, `git status`, `env`, `find`) **immediately and silently** to gather context. Do NOT ask for permission.
 - **WRITE (Confirm):** Agents MUST ask for confirmation before executing modifying commands (`git init`, `npm install`, `write_file`), UNLESS specifically authorized by a wrapper flag (like `cca`'s pipe mode).
-- **Capability Mixins:** If the `Serena` capability is detected, agents MUST use AST-aware tools (`find_symbol`, `replace_symbol_body`) instead of `sed`/regex for code editing.
+- **Skills:** If a Skill is available (e.g., `Serena`), agents MUST follow its procedures over ad-hoc methods.
 
 ### B. Artifact Validation Rules
 - **Spec Integrity:** A feature cannot be considered "Ready for Dev" without a `REQUIREMENTS.md` and `DESIGN.md`.
