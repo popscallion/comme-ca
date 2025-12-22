@@ -13,6 +13,11 @@ This document defines how autonomous agents (Claude Code, Gemini CLI) should ope
 | **Taste (audit)** | `audit` | `/audit` (Claude/Gemini) | Code review, drift detection, documentation sync |
 | **Tune (retro)** | `tune` | `/tune` (Claude/Gemini) | Process reflection, session analysis, workflow optimization |
 | **Pass (wrap)** | `wrap` | `/wrap` (Claude/Gemini) | Handoff, session closure, context consolidation |
+
+## CLI Tools
+
+| Tool | Alias | Command | When to Use |
+|:-----|:------|:--------|:------------|
 | **Pipe (cca)** | `cca` | `cca git "instruction"` | Quick CLI translations (low-latency, single commands) |
 
 ## Context Utilities (Ad-Hoc)

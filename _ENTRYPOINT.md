@@ -20,6 +20,7 @@ Two active specs: (1) Process hardening to prevent verification blind spots, (2)
 
 | File | Status | Description |
 |:-----|:-------|:------------|
+| `specs/feature-bootstrap-hardening/` | 🔴 P1 | Installer safety checks (chezmoi/secrets) |
 | `specs/feature-process-hardening/` | 🔴 P1 | Guardrails for verification and search hygiene |
 | `specs/feature-agent-abstraction-research/` | 🟡 P2 | Anthropic Skills + Gemini CLI integration research |
 | `AGENTS.md` | ✅ Updated | Strict naming conventions added |
