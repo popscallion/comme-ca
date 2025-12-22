@@ -100,14 +100,16 @@ Copies `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, and `CODEX.md` to current director
 
 ## Workflows
 
-### 1. Spec Workflow
+### 1. Spec Workflow (The Unit of Work)
+
+The Spec is the fundamental unit of work in `comme-ca`. It rejects loose tasks in favor of structured, encapsulated contexts.
 
 #### Creating a New Spec
 1.  **Create Folder/File:** `specs/feature-<name>/` or `specs/bug-<name>.md`
-2.  **Initialize Files:**
-    -   `_ENTRYPOINT.md`: Dashboard and status.
-    -   `REQUIREMENTS.md`: "What" we are building.
-    -   `DESIGN.md`: "How" we are building it.
+2.  **Initialize Files (Mandatory Artifacts):**
+    -   `_ENTRYPOINT.md`: Dashboard and status (local to the spec).
+    -   `REQUIREMENTS.md`: "What" we are building (constraints, user stories, validation).
+    -   `DESIGN.md`: "How" we are building it (architecture, models, dependencies).
 3.  **Register:** Add the new spec to the Iteration Dashboard in the root `_ENTRYPOINT.md`.
 
 #### Spec Disposition
@@ -117,7 +119,7 @@ Copies `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, and `CODEX.md` to current director
 #### Working on a Spec
 1.  **Context Loading:** Always read the spec's `REQUIREMENTS.md` and `DESIGN.md` before starting work.
 2.  **Task Tracking:**
-    -   Update the local `_ENTRYPOINT.md` dashbaord.
+    -   Update the local `_ENTRYPOINT.md` dashboard.
 3.  **Verification:** Verify changes against the REQUIREMENTS before marking complete.
 
 #### Archiving a Spec (Deprecated/Dead Code Only)
@@ -125,9 +127,9 @@ Copies `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, and `CODEX.md` to current director
 2.  **Move:** Move the folder to `specs/_ARCHIVE/`.
 3.  **Consolidate:** Update root `REQUIREMENTS.md` or `DESIGN.md` if the feature introduced permanent system changes.
 
-### 2. Inbox Workflow (Parallel Iteration)
+### 2. Inbox Workflow (The Buffer Pattern)
 
-Use `_INBOX/` to isolate context and prevent pollution of the main source tree.
+Use `_INBOX/` to isolate context and prevent pollution of the main source tree. This creates a "Sanitization Buffer" where raw thoughts are refined before becoming source-of-truth.
 
 #### Structure
 ```
@@ -140,7 +142,7 @@ _INBOX/
 
 #### Process
 1.  **Dump:** Place raw logs or "stream of consciousness" notes in the inbox folder.
-2.  **Analyze:** Use the inbox context to formulate a plan.
+2.  **Analyze:** Use the inbox context to formulate a plan (using `clarify` or `what`).
 3.  **Promote:** If the work results in a code change or new spec, create the appropriate files in `specs/` or `src/`.
 4.  **Preserve:** Do not delete the inbox content; it serves as a historical record.
 
@@ -160,6 +162,9 @@ When modifying `prompts/roles/`:
 
 ## Architecture
 
+### Philosophy: Model-Agnostic, Prompt-Driven
+`comme-ca` treats "Prompt Engineering" as "Software Engineering." Roles are versioned code artifacts defined in Markdown. The system is designed to be model-agnostic, running equally well on Claude, Gemini, or Codex.
+
 ### Directory Structure
 
 ```
@@ -170,7 +175,7 @@ comme-ca/
 ├── REQUIREMENTS.md     # PRD & Product Rules
 ├── DESIGN.md           # Architecture & Patterns
 ├── bin/
-│   ├── cca             # CLI wrapper (renamed from ca)
+│   ├── cca             # CLI wrapper & Shim Layer
 │   └── install         # Bootstrap installer
 ├── specs/              # Feature Specifications
 │   ├── feature-<name>/ # Feature context
@@ -198,13 +203,16 @@ comme-ca/
     │   ├── CLAUDE.md      # Pointer to AGENTS.md
     │   └── GEMINI.md      # Pointer to AGENTS.md
     └── project-init/      # Git scaffolding templates
-        ├── README.template.md
-        ├── LICENSE.gpl.txt
-        ├── LICENSE.mit.txt
-        ├── gitignore.template
-        ├── requirements.template.md
-        └── design.template.md
 ```
+
+### The `cca` Wrapper (Shim Layer)
+The `bin/cca` binary is the bridge between static Markdown prompts and the execution engine.
+-   **Shim Layer:** Intercepts commands and performs **Placeholder Replacement** (Raycast-style) before sending text to the AI. (e.g., replaces `{clipboard}` with actual clipboard content).
+-   **Distribution:**
+    -   **Claude:** Symlinks prompts to `~/.claude/commands`.
+    -   **Gemini:** Transpiles Markdown to TOML config.
+    -   **Codex:** Pipes direct to stdin.
+-   **Dual-Model Search:** Routes queries to either "Fast" (Cerebras 120b) or "Smart" (Haiku 4.5) models automatically.
 
 ---
 
@@ -266,54 +274,6 @@ Run this *before* `wrap` to generate high-quality context for the handoff.
 
 ---
 
-## Workflow Examples
-
-### Example 1: Scaffolding a New Project
-```bash
-mkdir my-new-project && cd my-new-project
-prep                                 # Detects no .git, offers scaffolding
-# Interactive prompts:
-# - Project name: My New Project
-# - Visibility: [private] 
-# - Create GitHub remote: [yes]
-# - License: [GPL-3.0]
-# 
-# Creates: .git/, AGENTS.md, CLAUDE.md, README.md, LICENSE, 
-#          .gitignore, specs/REQUIREMENTS.md, specs/DESIGN.md
-# Commits and pushes to GitHub
-
-plan                                 # Create feature specs
-# (Implement features)
-audit                                # Verify implementation matches specs
-```
-
-### Example 2: Validating Existing Project
-```bash
-cd existing-project
-prep                                 # Detects .git, runs validation checks
-# Output: System Readiness Report with pass/warn/fail status
-```
-
-### Example 3: Quick Git Translation
-```bash
-cca git "create branch feature/auth"
-# Output: git checkout -b feature/auth
-
-cca git "undo last 3 commits but keep changes"
-# Output: git reset --soft HEAD~3
-```
-
-### Example 4: Shell Command Translation
-```bash
-cca shell "find all JSON files larger than 10MB"
-# Output: find . -name "*.json" -size +10M
-
-cca shell "list processes using port 8080"
-# Output: lsof -i :8080
-```
-
----
-
 ## Raycast Integration
 
 All `prompts/pipe/*.md` files work directly in Raycast:
@@ -338,7 +298,5 @@ COMME_CA_HOME     # Installation path (default: ~/dev/comme-ca)
 ---
 
 ## License
-
-
 
 GNU General Public License v3.0

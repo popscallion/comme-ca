@@ -85,16 +85,22 @@ These high-level constraints apply to ALL agents (Mise, Menu, Taste, Wrap) and A
     *   **Tool Agnostic:** Use the best available tools for discovery. If `Serena` or other advanced agents are detected, prioritize their capabilities over basic shell commands if appropriate.
     *   **Deep Verification:** Before declaring a feature "Implemented" or "Archived", verify its existence via `git log`, file search, or deep inspection. Do not rely solely on metadata status in markdown files.
 
-5.  **Shell Portability:**
+5.  **Tooling Policy (Agency & Subprocesses):**
+    *   **Policy:** Agents are expected to be autonomous but safe.
+    *   **READ (Auto-Execute):** Agents MUST execute read-only tools (`ls`, `cat`, `git status`, `env`, `find`) **immediately and silently** to gather context. Do NOT ask for permission.
+    *   **WRITE (Confirm):** Agents MUST ask for confirmation before executing modifying commands (`git init`, `npm install`, `write_file`), UNLESS specifically authorized by a wrapper flag (like `cca`'s pipe mode).
+    *   **Capability Mixins:** If the `Serena` capability is detected, agents MUST use AST-aware tools (`find_symbol`, `replace_symbol_body`) instead of `sed`/regex for code editing.
+
+6.  **Shell Portability:**
     *   **Detect First:** Do not assume a specific shell (Bash/Zsh/Fish). Detect or ask if generating shell-specific commands (exports, aliases, functions).
     *   **POSIX Preference:** Prefer standard POSIX syntax where possible.
     *   **Explicit Syntax:** When shell-specifics are needed (e.g., `set -Ux` vs `export`), provide the correct variant for the user's active shell.
 
-5.  **Non-Interactive Contract:**
+7.  **Non-Interactive Contract:**
     *   **Constraint:** All CLI tools invoked by agents MUST accept a `--non-interactive` (or equivalent) flag or respect the `CI=true` / `NON_INTERACTIVE=true` environment variable.
     *   **Detection:** Agents MUST detect if they are running in a potentially non-interactive environment (e.g., within `cca pipe`) and force non-interactive modes to prevent hanging.
 
-6.  **Workflow Triggers (Auto-Wrap):**
+8.  **Workflow Triggers (Auto-Wrap):**
     *   **Trigger:** When the user signals completion (e.g., "we're done", "commit and push", "handoff"), ALL agents MUST initiate the `wrap` protocol.
     *   **Action:** Do not just exit. Run the hygiene checks, update `_ENTRYPOINT.md`, and perform the git commit sequence defined in `prompts/roles/pass.md`.
 

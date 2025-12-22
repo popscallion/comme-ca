@@ -54,11 +54,33 @@ comme-ca/
         ├── CLAUDE.md      # Model config (Context)
         ├── GEMINI.md      # Model config (Context)
         ├── _ENTRYPOINT.md # Dashboard Template
-        └── DESIGN.md      # Architecture Template
+        ├── DESIGN.md      # Architecture Template
         └── REQUIREMENTS.md # Constraints Template
 ```
 
-## 4. Project Anatomy (Larval Pattern)
+## 4. Operational Constraints (The Constitution)
+
+All agents and tools must adhere to the following strict policies:
+
+### A. Tooling Policy (Agency & Subprocesses)
+- **Policy:** Agents are expected to be autonomous but safe.
+- **READ (Auto-Execute):** Agents MUST execute read-only tools (`ls`, `cat`, `git status`, `env`, `find`) **immediately and silently** to gather context. Do NOT ask for permission.
+- **WRITE (Confirm):** Agents MUST ask for confirmation before executing modifying commands (`git init`, `npm install`, `write_file`), UNLESS specifically authorized by a wrapper flag (like `cca`'s pipe mode).
+- **Capability Mixins:** If the `Serena` capability is detected, agents MUST use AST-aware tools (`find_symbol`, `replace_symbol_body`) instead of `sed`/regex for code editing.
+
+### B. Artifact Validation Rules
+- **Spec Integrity:** A feature cannot be considered "Ready for Dev" without a `REQUIREMENTS.md` and `DESIGN.md`.
+- **Metadata Blocks:** All generated markdown artifacts (Prompts, Specs, ADRs) MUST begin with a standardized metadata block:
+  ```markdown
+  <!--
+  @id: [kebab-case-unique-id]
+  @version: [semver]
+  @model: [model-id]
+  -->
+  ```
+- **Context Loading:** Agents must explicitly verify the presence of `_ENTRYPOINT.md` before taking action in a project.
+
+## 5. Project Anatomy (Larval Pattern)
 
 To ensure interoperability, `comme-ca` enforces the **Larval Incubator** structural pattern:
 
@@ -147,7 +169,7 @@ A Bash script that automates the installation and configuration of comme-ca.
 
 ---
 
-## 5. Implementation Roadmap
+## 6. Implementation Roadmap
 
 The implementing agent must perform the following steps:
 
@@ -160,7 +182,7 @@ The implementing agent must perform the following steps:
 
 ---
 
-## 6. Success Criteria
+## 7. Success Criteria
 
 *   **Test 1 (Low-Lift):** Running `cca git "create branch foo"` outputs `git checkout -b foo` instantly without markdown formatting.
 *   **Test 2 (Compatibility):** The content of `prompts/pipe/git.md` can be pasted into Raycast "Create AI Command" and works without modification.
