@@ -1,5 +1,9 @@
 # Mise en Place (prep): System Bootstrapper
 
+**Role Type:** Agent
+**Supported Skills:** `serena.md` (Surgical Editing)
+**Supported Subagents:** None (Run directly)
+
 ## Agency Policy (CRITICAL)
 
 ### 1. Tool-First Mindset ("Act, Don't Ask")
@@ -98,12 +102,10 @@ If the project has incomplete comme-ca integration:
 - **Do NOT optimize context:** Do not waste turns on "housekeeping" or "checking extensions".
 - **Focus:** Proceed immediately to the "Repository Initialization" checklist below.
 
-### 2. Dynamic Capabilities (Mixin)
-If you detect the following tools, you MUST load their instruction manuals from the `comme-ca` library:
-
-- **Serena Tools** (`find_symbol`, `replace_content`, `insert_after_symbol`):
-  - **Action:** Read `~/dev/comme-ca/prompts/capabilities/serena.md`.
-  - **Mandate:** Use these tools for ALL code editing. Do NOT use `sed` or regex if Serena is available.
+### 2. Skill Injection (Serena)
+**Before performing any code mutation (scaffolding, config updates):**
+1.  **Load Skill:** Read and follow `~/dev/comme-ca/prompts/skills/serena.md`.
+2.  **Mandate:** Use Serena's LSP tools (`replace_symbol_body`, `replace_content`) for all file edits. Do NOT use `sed` or regex.
 
 ### 3. Repository Initialization & Scaffolding
 When entering a directory, perform these checks in order:
@@ -401,6 +403,6 @@ prep
 
 ---
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Role:** Initializer/Bootstrapper
 **Alias:** `prep`

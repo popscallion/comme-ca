@@ -1,63 +1,39 @@
-<!-- @protocol: comme-ca @version: 1.2.0 -->
+<!-- @protocol: comme-ca @version: 1.3.0 -->
 # Agent Orchestration
 **Powered by comme-ca Intelligence System**
 
-This document defines how autonomous agents (Claude Code, Gemini CLI) should operate within this repository.
+This document defines how autonomous agents (Claude Code, Gemini CLI, Codex) should operate within this repository.
 
-## Standard Roles
+## The Agentic Architecture
 
-| Role | Alias | Command | When to Use |
-|:-----|:------|:--------|:------------|
-| **Mise (prep)** | `prep` | `/prep` (Claude/Gemini) | New project scaffolding, environment setup, dependency checks |
-| **Menu (plan)** | `plan` | `/plan` (Claude/Gemini) | Requirements gathering, architecture planning, spec writing |
-| **Taste (audit)** | `audit` | `/audit` (Claude/Gemini) | Code review, drift detection, documentation sync |
-| **Tune (retro)** | `tune` | `/tune` (Claude/Gemini) | Process reflection, session analysis, workflow optimization |
-| **Pass (wrap)** | `wrap` | `/wrap` (Claude/Gemini) | Handoff, session closure, context consolidation |
+comme-ca defines four core abstractions that apply across all AI engines. Agents must respect these logical categories, even if the implementation differs per provider.
 
-## CLI Tools
+| Concept | Definition | Claude Implementation | Gemini/Codex Implementation |
+| :--- | :--- | :--- | :--- |
+| **Agent** | A long-running, stateful role (e.g., `prep`, `plan`, `audit`) responsible for high-level goals. | Native Session / Agent SDK | CLI Loop / Assistant Thread |
+| **Subagent** | A specialist worker delegated a specific task with its own context. | Native `Subagent` API | Recursive CLI Call (`gemini -c`) or Thread |
+| **Skill** | A named, reusable procedure ("how to do X") loaded into the agent's context. | Native `Skill` | Prompt Context Injection |
+| **Tool** | A deterministic capability (e.g., git, MCP tools). | MCP Tool | Function Call / MCP |
 
-| Tool | Alias | Command | When to Use |
-|:-----|:------|:--------|:------------|
-| **Pipe (cca)** | `cca` | `cca git "instruction"` | Quick CLI translations (low-latency, single commands) |
+## Standard Roles (Agents)
 
-## Context Utilities (Ad-Hoc)
+| Role | Alias | Command | Responsibilities |
+|:-----|:------|:--------|:-----------------|
+| **Mise (prep)** | `prep` | `/prep` | **Agent.** Scaffolding & Setup. Uses `Serena` Skill for edits. |
+| **Menu (plan)** | `plan` | `/plan` | **Agent.** Architecture & Specs. Delegates to `code-reviewer` Subagent. |
+| **Taste (audit)** | `audit` | `/audit` | **Agent.** QA & Drift. Uses `Serena` Skill for fixes. |
+| **Tune (retro)** | `tune` | `/tune` | **Agent.** Process Reflection. |
+| **Pass (wrap)** | `wrap` | `/wrap` | **Agent.** Handoff & Closure. |
 
-| Tool | Alias | Command | When to Use |
-|:-----|:------|:--------|:------------|
-| **Clarify** | `clarify` | `cca clarify` | Pre-planning exploration & ambiguity resolution |
-| **What** | `what` | `cca what` | Generate PRD/Research Synthesis from context |
-| **Why** | `why` | `cca why` | Generate Decision Record/Commit Context |
+## Subagent Contract
 
-## Context Detection
+**When to Delegate:**
+1.  **Context Isolation:** The task requires reading massive logs or files that would pollute the main context.
+2.  **Specialization:** The task requires a distinct persona (e.g., "Red Team Security Audit").
 
-Standard roles automatically detect and adapt to project documentation:
-
-- `@_ENTRYPOINT.md` - (Mandatory) The current project state and context handover
-- `@_ENTRYPOINT.md` - Iteration Dashboard and status
-- `@README.md` - Workflows and procedures
-- `@DESIGN.md` - Technical architecture, workflows, dependencies
-- `@REQUIREMENTS.md` - Constraints, validation rules, quality gates
-- `@_INBOX/` - Intake buffer for loose notes and requests
-- `@specs/` - Feature specs (`feature-*` or `bug-*`)
-- `@specs/_ARCHIVE/` - Deprecated/Legacy specs (Reference only)
-
-**Create these files to define project-specific behavior.** The roles will execute validation rules from REQUIREMENTS.md, follow workflows from DESIGN.md, and track progress in _ENTRYPOINT.md.
-
-## Universal Standards (CRITICAL)
-
-All generated markdown artifacts (Prompts, Specs, ADRs, PRDs) MUST begin with a standardized metadata block to ensure version control compatibility:
-
-```markdown
-<!--
-@id: [kebab-case-unique-id]
-@version: [semver]
-@model: [model-id]
--->
-```
-
-- **@id:** Unique identifier for the artifact (file-system safe)
-- **@version:** Semantic versioning (start at 1.0.0, increment on iterations)
-- **@model:** The model used to generate the artifact
+**Invocation Convention:**
+- Use the CLI pattern: `cca subagent:<name> "<task>"`
+- Example: `cca subagent:code-reviewer "Analyze src/auth.ts for leaks"`
 
 ## Universal Directives
 
@@ -89,7 +65,7 @@ These high-level constraints apply to ALL agents (Mise, Menu, Taste, Wrap) and A
     *   **Policy:** Agents are expected to be autonomous but safe.
     *   **READ (Auto-Execute):** Agents MUST execute read-only tools (`ls`, `cat`, `git status`, `env`, `find`) **immediately and silently** to gather context. Do NOT ask for permission.
     *   **WRITE (Confirm):** Agents MUST ask for confirmation before executing modifying commands (`git init`, `npm install`, `write_file`), UNLESS specifically authorized by a wrapper flag (like `cca`'s pipe mode).
-    *   **Capability Mixins:** If the `Serena` capability is detected, agents MUST use AST-aware tools (`find_symbol`, `replace_symbol_body`) instead of `sed`/regex for code editing.
+    *   **Skills:** If a Skill is available (e.g., `Serena`), agents MUST follow its procedures over ad-hoc methods.
 
 6.  **Shell Portability:**
     *   **Detect First:** Do not assume a specific shell (Bash/Zsh/Fish). Detect or ask if generating shell-specific commands (exports, aliases, functions).
@@ -206,6 +182,6 @@ For full documentation: `~/dev/comme-ca/README.md`
 
 ---
 
-**Version:** 1.2.0
+**Version:** 1.3.0
 **Source:** comme-ca Intelligence System
-**Last Updated:** 2025-11-23
+**Last Updated:** 2025-12-22
