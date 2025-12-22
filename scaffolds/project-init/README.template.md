@@ -37,7 +37,9 @@ audit  # Check for drift between specs and implementation
 │   ├── requirements.md
 │   └── design.md
 ├── AGENTS.md        # Agent orchestration rules
-└── CLAUDE.md        # AI assistant configuration
+├── CLAUDE.md        # AI assistant configuration (Claude)
+├── GEMINI.md        # AI assistant configuration (Gemini)
+└── CODEX.md         # AI assistant configuration (Codex)
 ```
 
 ## Contributing

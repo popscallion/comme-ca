@@ -315,8 +315,8 @@ For significant architectural choices, document in `decisions.md`:
 
 ## Example Usage
 ```bash
-# Via Goose
-goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md
+# Via Codex
+codex exec --stdin < ~/dev/comme-ca/prompts/roles/menu.md
 
 # Via alias
 alias plan="goose run --instructions ~/dev/comme-ca/prompts/roles/menu.md"

@@ -66,8 +66,8 @@ You are picking up development on this repository.
 
 ## Example Usage
 ```bash
-# Via Goose
-goose run --instructions ~/dev/comme-ca/prompts/roles/pass.md
+# Via Codex
+codex exec --stdin < ~/dev/comme-ca/prompts/roles/pass.md
 
 # Via alias
 wrap

@@ -35,6 +35,7 @@ cca setup:list
 
 ### Dependencies
 - **Claude Code**: `npm i -g @anthropic-ai/claude-code` (Required for `cca` pipe commands)
+- **OpenAI Codex**: `npm i -g @openai/codex` (Supported engine)
 - **Gemini CLI**: (Optional, for interactive agent sessions)
 - **Git** & **GitHub CLI (`gh`)**
 - **Ripgrep (`rg`)** (for fast context searching)
@@ -93,7 +94,7 @@ why      # Decision record/commit message generator
 cd <project>
 cca init
 ```
-Copies `AGENTS.md`, `CLAUDE.md`, and `GEMINI.md` to current directory.
+Copies `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, and `CODEX.md` to current directory.
 
 ---
 
@@ -330,7 +331,7 @@ The `cca` wrapper implements a "Raycast Shim" that parses placeholders (`{argume
 ### Environment Variables
 
 ```bash
-COMME_CA_ENGINE   # AI engine: goose (default) or claude
+COMME_CA_ENGINE   # AI engine: claude (default), codex
 COMME_CA_HOME     # Installation path (default: ~/dev/comme-ca)
 ```
 

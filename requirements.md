@@ -10,7 +10,7 @@ It unifies two distinct modes of development into a single library:
 
 **Core Philosophy:**
 *   **Separation of Concerns:** Intelligence (prompts/roles) is decoupled from Infrastructure (dotfiles/env).
-*   **Cross-Compatibility:** Prompts must work identically in a GUI (Raycast) and the Terminal (Goose/Claude via a wrapper).
+*   **Cross-Compatibility:** Prompts must work identically in a GUI (Raycast) and the Terminal (Claude/Gemini/Codex via a wrapper).
 *   **Single Source of Truth:** One repo defines how agents behave across all projects.
 
 ---
@@ -113,7 +113,7 @@ Translate this into a valid {OUTPUT_LABEL} command:
 ```
 
 ### C. High-Lift Roles (`prompts/roles/`)
-These are "Personas" used by autonomous agents (Claude/Goose) when running in long-context modes.
+These are "Personas" used by autonomous agents (Claude/Gemini/Codex) when running in long-context modes.
 
 1.  **`mise.md` (Alias: `prep`)**:
     *   **Role:** System bootstrapper.

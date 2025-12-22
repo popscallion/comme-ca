@@ -21,6 +21,7 @@ Usage: cca <prompt-name> [input]
        cca update
        cca setup:list
        cca setup:all
+       cca setup:codex
        cca drift
 
 Commands:
@@ -199,8 +200,8 @@ process_turn() {
 
 # Init: Bootstrap agent orchestration in current directory
 init() {
-    if [[ -f "AGENTS.md" ]] || [[ -f "CLAUDE.md" ]] || [[ -f "GEMINI.md" ]]; then
-        echo "Error: AGENTS.md, CLAUDE.md, or GEMINI.md already exists in $(pwd)" >&2
+    if [[ -f "AGENTS.md" ]] || [[ -f "CLAUDE.md" ]] || [[ -f "GEMINI.md" ]] || [[ -f "CODEX.md" ]]; then
+        echo "Error: AGENTS.md, CLAUDE.md, GEMINI.md, or CODEX.md already exists in $(pwd)" >&2
         exit 1
     fi
 
@@ -215,6 +216,7 @@ init() {
     cp "${scaffold_dir}/AGENTS.md" . || { echo "Error: Failed to copy AGENTS.md" >&2; exit 1; }
     cp "${scaffold_dir}/CLAUDE.md" . || { echo "Error: Failed to copy CLAUDE.md" >&2; exit 1; }
     cp "${scaffold_dir}/GEMINI.md" . || { echo "Error: Failed to copy GEMINI.md" >&2; exit 1; }
+    cp "${scaffold_dir}/CODEX.md" . || { echo "Error: Failed to copy CODEX.md" >&2; exit 1; }
     cp "${COMME_CA_HOME}/scaffolds/project-init/_ENTRYPOINT.template.md" ./_ENTRYPOINT.md || { echo "Error: Failed to copy _ENTRYPOINT.md" >&2; exit 1; }
 
     echo "Initialized agent orchestration in $(pwd)."
@@ -267,6 +269,13 @@ setup_list() {
         echo "  ○ gemini   - Custom commands not configured (run: cca setup:gemini)"
     fi
 
+    # Check OpenAI Codex
+    if command -v codex &> /dev/null; then
+        echo "  ✓ codex    - Installed and available"
+    else
+        echo "  ○ codex    - Not installed (run: npm i -g @openai/codex)"
+    fi
+
     echo ""
     echo "Prompt source: ${ROLES_DIR}"
 }
@@ -313,10 +322,34 @@ setup_gemini() {
     echo "  Commands: /prep, /plan, /audit"
 }
 
+setup_codex() {
+    echo "Setting up OpenAI Codex CLI..."
+    
+    if ! command -v codex &> /dev/null; then
+        echo "Error: 'codex' binary not found." >&2
+        echo "Install via npm: npm install -g @openai/codex" >&2
+        return 1
+    fi
+
+    # Ensure config directory exists
+    local dest="${HOME}/.codex"
+    mkdir -p "${dest}"
+    if [[ ! -f "${dest}/config.toml" ]]; then
+        echo "Creating default config at ${dest}/config.toml..."
+        touch "${dest}/config.toml"
+    fi
+    
+    store_setup_metadata "codex"
+    echo ""
+    echo "✓ OpenAI Codex CLI configured."
+    echo "  Config: ${dest}/config.toml"
+}
+
 setup_all() {
     echo "Configuring all tools..."
     setup_claude
     setup_gemini
+    setup_codex
     echo "✓ All tools configured"
 }
 
@@ -326,6 +359,7 @@ store_setup_metadata() {
     case "$tool" in
         claude) metadata_file="${HOME}/.claude/.comme-ca-setup" ;; 
         gemini) metadata_file="${HOME}/.gemini/.comme-ca-setup" ;; 
+        codex) metadata_file="${HOME}/.codex/.comme-ca-setup" ;;
         *) return ;; 
     esac
     mkdir -p "$(dirname "$metadata_file")"
@@ -402,6 +436,12 @@ execute_engine() {
             # since we are running in a trusted wrapper context
             echo "$prompt" | claude -p --dangerously-skip-permissions
             ;; 
+        codex)
+            # OpenAI Codex CLI execution
+            # Assuming 'exec' command accepts prompt as argument or stdin
+            # Based on research: codex exec "prompt"
+            echo "$prompt" | codex exec --stdin
+            ;;
         *)
             echo "Error: Unknown engine '$ENGINE'. Only 'claude' is supported." >&2
             exit 1
@@ -440,6 +480,9 @@ main() {
         setup:gemini)
             setup_gemini
             ;; 
+        setup:codex)
+            setup_codex
+            ;;
         setup:all)
             setup_all
             ;; 

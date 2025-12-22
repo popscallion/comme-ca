@@ -36,8 +36,8 @@ Generate a **Session Reflection** artifact (or update `session_reflection.md`) c
 
 ## Example Usage
 ```bash
-# Via Goose
-goose run --instructions ~/dev/comme-ca/prompts/roles/tune.md
+# Via Codex
+codex exec --stdin < ~/dev/comme-ca/prompts/roles/tune.md
 
 # Manual
 /tune

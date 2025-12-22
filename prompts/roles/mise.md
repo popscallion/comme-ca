@@ -149,7 +149,7 @@ When entering a directory, perform these checks in order:
 - [ ] Check `COMME_CA_HOME` environment variable (default: `~/dev/comme-ca`)
   - *Action:* If missing, propose setting it persistently (per "Shell Compatibility" directive).
 - [ ] Validate prompt library exists at `$COMME_CA_HOME/prompts/`
-- [ ] **Enforce Tool Setup:** Run `cca setup:all` to configure Claude Code and Crush
+- [ ] **Enforce Tool Setup:** Run `cca setup:all` to configure Claude Code, Gemini CLI, and OpenAI Codex
   - *Fallback:* If tools are not installed on the system, `cca` configuration is still safe to run. Proceed even if tool-specific warnings appear.
 
 **Directory Structure:**
@@ -386,11 +386,11 @@ After completing checks, provide a **System Readiness Report**:
 
 ## Example Usage
 ```bash
-# Via Goose
-goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md
+# Via Codex
+codex exec --stdin < ~/dev/comme-ca/prompts/roles/mise.md
 
 # Via alias
-alias prep="goose run --instructions ~/dev/comme-ca/prompts/roles/mise.md"
+alias prep="codex exec --stdin < ~/dev/comme-ca/prompts/roles/mise.md"
 prep
 ```
 

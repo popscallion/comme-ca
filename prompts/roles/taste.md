@@ -461,8 +461,8 @@ After all checks, generate a summary report:
 
 ## Example Usage
 ```bash
-# Via Goose
-goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md
+# Via Codex
+codex exec --stdin < ~/dev/comme-ca/prompts/roles/taste.md
 
 # Via alias
 alias audit="goose run --instructions ~/dev/comme-ca/prompts/roles/taste.md"
