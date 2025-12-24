@@ -1,3 +1,12 @@
+# ⚠️ SUPERSEDED ⚠️
+
+**Notice:** This specification has been superseded by the **Zellij + OpenCode + YubiKey** migration plan in the `comme-ci` repository and the **Agentic Abstractions** work in `comme-ca`.
+
+**Reason:** Implementation details for OpenAI Codex are being moved into the core `cca` shim as a first-class citizen, and remote/persistent session logic is being unified under the OpenCode/Zellij workspace model.
+
+---
+Original content follows:
+
 <!--
 @id: feature-openai-codex-entrypoint
 @version: 1.1.0

@@ -1,18 +1,18 @@
-<!-- @protocol: comme-ca @version: 1.2.0 -->
+<!-- @protocol: comme-ca @version: 1.3.0 -->
 # Agent Orchestration
 **Powered by comme-ca Intelligence System**
 
-This document defines how autonomous agents (Claude Code, Gemini CLI, OpenAI Codex) should operate within this repository.
+This document defines how autonomous agents (Claude Code, Gemini CLI, OpenAI Codex, OpenCode) should operate within this repository.
 
 ## Standard Roles
 
 | Role | Alias | Command | When to Use |
 |:-----|:------|:--------|:------------|
-| **Mise (prep)** | `prep` | `/prep` (Claude/Gemini/Codex) | New project scaffolding, environment setup, dependency checks |
-| **Menu (plan)** | `plan` | `/plan` (Claude/Gemini/Codex) | Requirements gathering, architecture planning, spec writing |
-| **Taste (audit)** | `audit` | `/audit` (Claude/Gemini/Codex) | Code review, drift detection, documentation sync |
-| **Tune (retro)** | `tune` | `/tune` (Claude/Gemini/Codex) | Process reflection, session analysis, workflow optimization |
-| **Pass (wrap)** | `wrap` | `/wrap` (Claude/Gemini/Codex) | Handoff, session closure, context consolidation |
+| **Mise (prep)** | `prep` | `/prep` (Claude/Gemini/Codex/OpenCode) | New project scaffolding, environment setup, dependency checks |
+| **Menu (plan)** | `plan` | `/plan` (Claude/Gemini/Codex/OpenCode) | Requirements gathering, architecture planning, spec writing |
+| **Taste (audit)** | `audit` | `/audit` (Claude/Gemini/Codex/OpenCode) | Code review, drift detection, documentation sync |
+| **Tune (retro)** | `tune` | `/tune` (Claude/Gemini/Codex/OpenCode) | Process reflection, session analysis, workflow optimization |
+| **Pass (wrap)** | `wrap` | `/wrap` (Claude/Gemini/Codex/OpenCode) | Handoff, session closure, context consolidation |
 
 ## CLI Tools
 
@@ -101,7 +101,7 @@ abbr -a , "cca search --resume"
 
 Then configure your tools:
 ```bash
-cca setup:all      # Configures both Claude Code and Gemini CLI
+cca setup:all      # Configures all engines
 ```
 
 ## Multi-Tool Integration
@@ -111,6 +111,7 @@ Comme-ca prompts work with multiple AI CLI tools.
 | Tool | Setup Command | Config Location |
 |:-----|:--------------|:----------------|
 | **Claude Code** | `cca setup:claude` | `~/.claude/commands/` |
+| **OpenCode** | `cca setup:opencode` | `~/.config/opencode/` |
 | **Gemini CLI** | `cca setup:gemini` | `~/.gemini/commands/` |
 | **OpenAI Codex** | `cca setup:codex` | `~/.codex/config.toml` |
 
@@ -121,6 +122,7 @@ cca setup:list
 # Configure tools
 cca setup:all        # All tools at once
 cca setup:claude     # Individual tool
+cca setup:opencode   # Individual tool
 cca setup:gemini     # Individual tool
 cca setup:codex      # Individual tool
 
@@ -138,6 +140,15 @@ cca setup:sync       # Update drifted tools
 /wrap   # Consolidate docs, commit, and generate handoff
 cca git "command"  # Quick CLI translations
 ```
+
+## Provider Mapping (Agentic Architecture)
+
+| Concept | Claude Code | OpenCode | Gemini CLI | Codex |
+| :--- | :--- | :--- | :--- | :--- |
+| **Agent** | Session | TUI Session | CLI Loop | Assistant Thread |
+| **Subagent** | Native `Subagent` | Sub-session | `gemini -c` | New Thread |
+| **Skill** | Native `Skill` | Prompt Context | Context Inject | Instruction Set |
+| **Tool** | MCP | MCP | MCP | Function Call |
 
 ## Project Extensions
 
@@ -190,6 +201,6 @@ For full documentation: `~/dev/comme-ca/README.md`
 
 ---
 
-**Version:** 1.2.0
+**Version:** 1.3.0
 **Source:** comme-ca Intelligence System
-**Last Updated:** 2025-11-23
+**Last Updated:** 2025-12-23

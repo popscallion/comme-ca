@@ -1,12 +1,18 @@
 <!--
 @title: Serena Coding Skill
-@desc: Surgical editing procedures using LSP tools.
+@desc: Surgical editing procedures and shared memory continuity.
 -->
-# SKILL: Serena Surgical Editor
+# SKILL: Serena Surgical Editor & Memory
 
-**This is a SKILL.** It defines a procedure you must follow when editing code.
+**This is a SKILL.** It defines a procedure you must follow when editing code and maintaining session continuity.
 
-## The "LSP-First" Policy
+## 1. The "Memory-First" Handshake
+Before performing any task, you MUST establish context by reading the shared brain.
+1.  **List:** `list_memories()` to see what context is available.
+2.  **Read:** `read_memory("active_context")` (or the most relevant memory) to understand the current project state, recent changes, and next steps.
+3.  **Sync:** At the end of a session, or after a major milestone, `write_memory("active_context", "...")` to record your progress for the next agent.
+
+## 2. The "LSP-First" Editing Policy
 1.  **Stop Guessing:** Do NOT use `sed`, `awk`, or regex-based replacement tools for code editing.
 2.  **Stop Hallucinating:** Do NOT try to edit a file without first confirming the symbol's location.
 3.  **Start Navigating:** Use `find_symbol` to locate the *exact* definition you want to modify.
@@ -16,7 +22,7 @@
 
 ## The Toolset (How to use the Tools)
 
-### 1. Navigation & Location
+### A. Navigation & Location
 
 #### `find_symbol`
 **Purpose:** The Compass. Locates the exact file, line, and character range of a symbol.
@@ -28,7 +34,7 @@
 
 ---
 
-### 2. Surgical Insertion (Safe)
+### B. Surgical Insertion (Safe)
 
 #### `insert_after_symbol`
 **Purpose:** Inject code *around* an existing symbol without touching the symbol itself.
@@ -42,7 +48,7 @@
 
 ---
 
-### 3. Modification (Precise)
+### C. Modification (Precise)
 
 #### `replace_symbol_body`
 **Purpose:** Rewrite the *entire* internals of a function/class.
@@ -50,29 +56,25 @@
 ```javascript
 {
   "symbol_name": "calculateTotal",
-  "new_body": "{\n  return items.reduce((a, b) => a + b, 0);\n}"
-}
-```
-
-#### `replace_content`
-**Purpose:** The scalpel. Replaces an *exact* string match with new content.
-**Usage:**
-```javascript
-{
-  "path": "/src/config.ts",
-  "target": "const MAX_RETRIES = 3;",
-  "replacement": "const MAX_RETRIES = 5;"
+  "new_body": "{\n  return items.reduce((a, b) => a + b, 0);
+}"
 }
 ```
 
 ---
 
+### D. Continuity & Context
+
+#### `read_memory` / `write_memory`
+**Purpose:** Shared state across different AI engines (Claude, Gemini, Codex, OpenCode).
+**Policy:** Always prefer `active_context` for high-level status.
+
+---
+
 ## Workflow: The "Locate-Verify-Edit" Loop
 
-**Wrong (Lazy):**
-> "I'll just try to rewrite `src/utils.py` assuming I know the lines."
-
-**Right (Serena):**
-1.  **Locate:** `find_symbol("validate_email")` → Finds it in `src/validators/email.py`.
-2.  **Verify:** (Optional) `read_file` to check the context if `find_symbol` was ambiguous.
-3.  **Edit:** `replace_symbol_body("validate_email", "{ ... new code ... }")`.
+1.  **Handshake:** Read memory.
+2.  **Locate:** `find_symbol("validate_email")` → Finds it in `src/validators/email.py`.
+3.  **Verify:** (Optional) `read_file` to check context.
+4.  **Edit:** `replace_symbol_body("validate_email", "{ ... new code ... }")`.
+5.  **Handoff:** Write memory.

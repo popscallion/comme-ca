@@ -11,6 +11,7 @@ ROLES_DIR="${COMME_CA_HOME}/prompts/roles"
 SEARCH_AGENTS_DIR="${COMME_CA_HOME}/prompts/search_agents"
 SESSIONS_DIR="${HOME}/.cca/sessions"
 ENGINE="${COMME_CA_ENGINE:-claude}"  # Default: claude
+PROFILE="${COMME_CA_PROFILE:-flash}" # Default: flash (used by opencode)
 
 # Usage
 usage() {
@@ -22,6 +23,7 @@ Usage: cca <prompt-name> [input]
        cca setup:list
        cca setup:all
        cca setup:codex
+       cca setup:opencode
        cca drift
 
 Commands:
@@ -42,7 +44,7 @@ Prompts:
 
 Environment:
   COMME_CA_HOME   - Path to comme-ca repo (default: ~/dev/comme-ca)
-  COMME_CA_ENGINE - AI engine: claude (default)
+  COMME_CA_ENGINE - AI engine: claude, opencode, codex (default: claude)
 EOF
     exit 1
 }
@@ -200,8 +202,8 @@ process_turn() {
 
 # Init: Bootstrap agent orchestration in current directory
 init() {
-    if [[ -f "AGENTS.md" ]] || [[ -f "CLAUDE.md" ]] || [[ -f "GEMINI.md" ]] || [[ -f "CODEX.md" ]]; then
-        echo "Error: AGENTS.md, CLAUDE.md, GEMINI.md, or CODEX.md already exists in $(pwd)" >&2
+    if [[ -f "AGENTS.md" ]] || [[ -f "CLAUDE.md" ]] || [[ -f "GEMINI.md" ]] || [[ -f "CODEX.md" ]] || [[ -f "OPENCODE.md" ]]; then
+        echo "Error: AGENTS.md, CLAUDE.md, GEMINI.md, CODEX.md, or OPENCODE.md already exists in $(pwd)" >&2
         exit 1
     fi
 
@@ -217,6 +219,7 @@ init() {
     cp "${scaffold_dir}/CLAUDE.md" . || { echo "Error: Failed to copy CLAUDE.md" >&2; exit 1; }
     cp "${scaffold_dir}/GEMINI.md" . || { echo "Error: Failed to copy GEMINI.md" >&2; exit 1; }
     cp "${scaffold_dir}/CODEX.md" . || { echo "Error: Failed to copy CODEX.md" >&2; exit 1; }
+    cp "${scaffold_dir}/OPENCODE.md" . || { echo "Error: Failed to copy OPENCODE.md" >&2; exit 1; }
     cp "${COMME_CA_HOME}/scaffolds/project-init/_ENTRYPOINT.template.md" ./_ENTRYPOINT.md || { echo "Error: Failed to copy _ENTRYPOINT.md" >&2; exit 1; }
 
     echo "Initialized agent orchestration in $(pwd)."
@@ -274,6 +277,13 @@ setup_list() {
         echo "  ✓ codex    - Installed and available"
     else
         echo "  ○ codex    - Not installed (run: npm i -g @openai/codex)"
+    fi
+
+    # Check OpenCode
+    if command -v opencode &> /dev/null; then
+        echo "  ✓ opencode - Installed and available"
+    else
+        echo "  ○ opencode - Not installed"
     fi
 
     echo ""
@@ -345,11 +355,23 @@ setup_codex() {
     echo "  Config: ${dest}/config.toml"
 }
 
+setup_opencode() {
+    echo "Setting up OpenCode..."
+    if ! command -v opencode &> /dev/null; then
+        echo "Error: 'opencode' binary not found." >&2
+        return 1
+    fi
+    # OpenCode is configured via ~/.config/opencode/ (handled by chezmoi)
+    store_setup_metadata "opencode"
+    echo "✓ OpenCode configured."
+}
+
 setup_all() {
     echo "Configuring all tools..."
     setup_claude
     setup_gemini
     setup_codex
+    setup_opencode
     echo "✓ All tools configured"
 }
 
@@ -359,7 +381,8 @@ store_setup_metadata() {
     case "$tool" in
         claude) metadata_file="${HOME}/.claude/.comme-ca-setup" ;; 
         gemini) metadata_file="${HOME}/.gemini/.comme-ca-setup" ;; 
-        codex) metadata_file="${HOME}/.codex/.comme-ca-setup" ;;
+        codex) metadata_file="${HOME}/.codex/.comme-ca-setup" ;; 
+        opencode) metadata_file="${HOME}/.config/opencode/.comme-ca-setup" ;; 
         *) return ;; 
     esac
     mkdir -p "$(dirname "$metadata_file")"
@@ -441,9 +464,15 @@ execute_engine() {
             # Assuming 'exec' command accepts prompt as argument or stdin
             # Based on research: codex exec "prompt"
             echo "$prompt" | codex exec --stdin
-            ;;
+            ;; 
+        opencode)
+            # OpenCode CLI execution
+            # Use --agent to select profile (flash/pro)
+            # Use positional arg for input
+            opencode run --agent "$PROFILE" "$prompt"
+            ;; 
         *)
-            echo "Error: Unknown engine '$ENGINE'. Only 'claude' is supported." >&2
+            echo "Error: Unknown engine '$ENGINE'. Supported: claude, opencode, codex." >&2
             exit 1
             ;; 
     esac
@@ -482,7 +511,10 @@ main() {
             ;; 
         setup:codex)
             setup_codex
-            ;;
+            ;; 
+        setup:opencode)
+            setup_opencode
+            ;; 
         setup:all)
             setup_all
             ;; 

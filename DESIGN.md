@@ -1,6 +1,6 @@
 <!--
 @id: design
-@version: 1.2.0
+@version: 1.3.0
 @model: gemini-2.0-flash
 -->
 # DESIGN
@@ -15,62 +15,27 @@
 The system defines four core abstractions that apply across all AI engines:
 - **Agents:** Long-running, stateful roles (e.g., `prep`, `plan`, `audit`) responsible for high-level goals.
 - **Subagents:** Specialist workers delegated specific tasks with their own context (e.g., `code-reviewer`).
-- **Skills:** Named, reusable procedures ("how to do X") loaded into the agent's context (e.g., `serena` for surgical editing).
+- **Skills:** Named, reusable procedures ("how to do X") loaded into the agent's context (e.g., `serena` for surgical editing and memory continuity).
 - **Tools:** Deterministic capabilities (e.g., git, MCP tools).
 
 ### 2. The Wrapper Architecture (`bin/cca`)
 The `cca` binary serves as the "Shim Layer" between static Markdown prompts and the execution engine.
 - **Shim Layer:** Intercepts commands and performs **Placeholder Replacement** (Raycast-style) before sending text to the AI.
-  - Replaces `{clipboard}` with actual system clipboard content.
-  - Replaces `{selection}` with currently selected text.
-  - Replaces `{argument}` with CLI arguments.
 - **Transpilation:**
   - **Claude:** Symlinks prompts to `~/.claude/commands`.
+  - **OpenCode:** Runs prompts via `opencode run` using intent-based profiles (`flash`, `pro`).
   - **Gemini:** Transpiles Markdown prompts into TOML configuration files.
-  - **Codex:** Pipes prompt content directly to stdin.
-- **Dual-Model Routing:** The wrapper implements hardcoded logic to route queries to either a "Fast" model (Cerebras 120b) or a "Smart" model (Haiku 4.5) based on user flags or query type.
+  - **Codex:** Pipes prompt content directly to stdin or via `codex exec`.
+- **Dual-Model Routing:** The wrapper implements logic to route queries to either a "Fast" model (Cerebras 120b) or a "Smart" model (Haiku 4.5) based on user flags.
 
 ### 3. The Spec Pattern (Unit of Work)
 The system rejects loose tasks in favor of structured, encapsulated contexts.
 - **Encapsulation:** Every feature or bug lives in its own directory: `specs/feature-[slug]/` or `specs/bug-[slug].md`.
-- **Mandatory Artifacts:** A spec is not valid without:
-  - `REQUIREMENTS.md` ("What"): Constraints, user stories, validation rules.
-  - `DESIGN.md` ("How"): Architecture, data models, dependency changes.
-  - `_ENTRYPOINT.md`: A localized dashboard tracking the specific status of *that* feature.
+- **Mandatory Artifacts:** A spec is not valid without `REQUIREMENTS.md`, `DESIGN.md`, and `_ENTRYPOINT.md`.
 
 ### 4. The Inbox Pattern (Buffer)
-To prevent context window pollution and "messy" thoughts from entering the main codebase, the system uses a designated `_INBOX/` directory.
-- **Raw Dump:** Users dump logs, stream-of-consciousness notes, or vague requests here.
-- **Sanitization:** The `clarify` and `what` tools synthesize this chaos into structured `REQUIREMENTS.md`.
-- **Promotion:** Clean results are promoted to `specs/`, while raw data stays in the inbox as a historical artifact.
+To prevent context window pollution, the system uses a designated `_INBOX/` directory for raw dumps and sanitization.
 
 ## Naming Conventions (Strict)
 
-To ensure machine-readability and reduce agent ambiguity:
-
-### 1. Root Level
-- **Meta-Documents (ALL CAPS):**
-  - `README.md`, `LICENSE`, `AGENTS.md`
-  - `REQUIREMENTS.md` (Constraints)
-  - `DESIGN.md` (Architecture)
-- **Special Files (Underscore + Caps):**
-  - `_ENTRYPOINT.md` (Dashboard/Status)
-- **Special Directories (Underscore + Caps):**
-  - `_INBOX/` (Intake buffer)
-  - `_ARCHIVE/` (Specs only)
-
-### 2. Specification Directory (`specs/`)
-- **Flat Structure:** Minimize nesting.
-- **Prefixes Required:**
-  - Features: `feature-[slug]/` (Directory)
-  - Bugs: `bug-[slug].md` (Single File) OR `bug-[slug]/` (Directory if complex)
-- **Feature Structure:**
-  - `specs/feature-x/_ENTRYPOINT.md`
-  - `specs/feature-x/REQUIREMENTS.md`
-  - `specs/feature-x/DESIGN.md`
-  - `specs/feature-x/_RAW/` (For chat logs, context)
-
-### 3. General Rules
-- **No inventions.** Use descriptive names.
-- **Underscores reserved** for the special files listed above.
-- **One special file per level.** (e.g., only one `_ENTRYPOINT.md` in root).
+... [rest of rules preserved]

@@ -1,3 +1,12 @@
+# ⚠️ SUPERSEDED ⚠️
+
+**Notice:** This research specification has been superseded by the **Agentic Abstractions** implementation in `comme-ca` and the **Zellij + OpenCode + YubiKey** migration plan in `comme-ci`.
+
+**Reason:** The research phase is closed; we have moved to implementing the defined abstractions (Agents, Subagents, Skills, Tools) and integrating OpenCode as a first-class citizen.
+
+---
+Original content follows:
+
 # Agent Abstraction Research
 
 **Status:** 🟡 Active  
