@@ -2,38 +2,60 @@
 # Agent Orchestration
 **Powered by comme-ca Intelligence System**
 
-This document defines how autonomous agents (Claude Code, Gemini CLI, Codex) should operate within this repository.
+This document defines how autonomous agents (Claude Code, Gemini CLI, OpenAI Codex, OpenCode) should operate within this repository.
 
-## The Agentic Architecture
+## Standard Roles
 
-comme-ca defines four core abstractions that apply across all AI engines. Agents must respect these logical categories, even if the implementation differs per provider.
+| Role | Alias | Command | When to Use |
+|:-----|:------|:--------|:------------|
+| **Mise (prep)** | `prep` | `/prep` (Claude/Gemini/Codex/OpenCode) | New project scaffolding, environment setup, dependency checks |
+| **Menu (plan)** | `plan` | `/plan` (Claude/Gemini/Codex/OpenCode) | Requirements gathering, architecture planning, spec writing |
+| **Taste (audit)** | `audit` | `/audit` (Claude/Gemini/Codex/OpenCode) | Code review, drift detection, documentation sync |
+| **Tune (retro)** | `tune` | `/tune` (Claude/Gemini/Codex/OpenCode) | Process reflection, session analysis, workflow optimization |
+| **Pass (wrap)** | `wrap` | `/wrap` (Claude/Gemini/Codex/OpenCode) | Handoff, session closure, context consolidation |
 
-| Concept | Definition | Claude Implementation | Gemini/Codex Implementation |
-| :--- | :--- | :--- | :--- |
-| **Agent** | A long-running, stateful role (e.g., `prep`, `plan`, `audit`) responsible for high-level goals. | Native Session / Agent SDK | CLI Loop / Assistant Thread |
-| **Subagent** | A specialist worker delegated a specific task with its own context. | Native `Subagent` API | Recursive CLI Call (`gemini -c`) or Thread |
-| **Skill** | A named, reusable procedure ("how to do X") loaded into the agent's context. | Native `Skill` | Prompt Context Injection |
-| **Tool** | A deterministic capability (e.g., git, MCP tools). | MCP Tool | Function Call / MCP |
+## CLI Tools
 
-## Standard Roles (Agents)
+| Tool | Alias | Command | When to Use |
+|:-----|:------|:--------|:------------|
+| **Pipe (cca)** | `cca` | `cca git "instruction"` | Quick CLI translations (low-latency, single commands) |
 
-| Role | Alias | Command | Responsibilities |
-|:-----|:------|:--------|:-----------------|
-| **Mise (prep)** | `prep` | `/prep` | **Agent.** Scaffolding & Setup. Uses `Serena` Skill for edits. |
-| **Menu (plan)** | `plan` | `/plan` | **Agent.** Architecture & Specs. Delegates to `code-reviewer` Subagent. |
-| **Taste (audit)** | `audit` | `/audit` | **Agent.** QA & Drift. Uses `Serena` Skill for fixes. |
-| **Tune (retro)** | `tune` | `/tune` | **Agent.** Process Reflection. |
-| **Pass (wrap)** | `wrap` | `/wrap` | **Agent.** Handoff & Closure. |
+## Context Utilities (Ad-Hoc)
 
-## Subagent Contract
+| Tool | Alias | Command | When to Use |
+|:-----|:------|:--------|:------------|
+| **Clarify** | `clarify` | `cca clarify` | Pre-planning exploration & ambiguity resolution |
+| **What** | `what` | `cca what` | Generate PRD/Research Synthesis from context |
+| **Why** | `why` | `cca why` | Generate Decision Record/Commit Context |
 
-**When to Delegate:**
-1.  **Context Isolation:** The task requires reading massive logs or files that would pollute the main context.
-2.  **Specialization:** The task requires a distinct persona (e.g., "Red Team Security Audit").
+## Context Detection
 
-**Invocation Convention:**
-- Use the CLI pattern: `cca subagent:<name> "<task>"`
-- Example: `cca subagent:code-reviewer "Analyze src/auth.ts for leaks"`
+Standard roles automatically detect and adapt to project documentation:
+
+- `@_ENTRYPOINT.md` - (Mandatory) The current project state and context handover
+- `@_ENTRYPOINT.md` - Iteration Dashboard and status
+- `@README.md` - Workflows and procedures
+- `@DESIGN.md` - Technical architecture, workflows, dependencies
+- `@REQUIREMENTS.md` - Constraints, validation rules, quality gates
+- `@specs/` - Feature specs (`feature-*`)
+
+**Create these files to define project-specific behavior.** The roles will execute validation rules from REQUIREMENTS.md, follow workflows from DESIGN.md, and track progress in _ENTRYPOINT.md.
+
+## Universal Standards (CRITICAL)
+
+All generated markdown artifacts (Prompts, Specs, ADRs, PRDs) MUST begin with a standardized metadata block to ensure version control compatibility:
+
+```markdown
+<!--
+@id: [kebab-case-unique-id]
+@version: [semver]
+@model: [model-id]
+-->
+```
+
+- **@id:** Unique identifier for the artifact (file-system safe)
+- **@version:** Semantic versioning (start at 1.0.0, increment on iterations)
+- **@model:** The model used to generate the artifact
 
 ## Universal Directives
 
@@ -47,8 +69,7 @@ These high-level constraints apply to ALL agents (Mise, Menu, Taste, Wrap) and A
 2.  **Naming Conventions:**
     *   **Descriptive:** Use clear, descriptive names.
     *   **Strict Prefixes:** Feature specs MUST start with `feature-`. Bug specs MUST start with `bug-`.
-    *   **Special Files:** Use `_UNDERSCORE` prefix for special system files (`_ENTRYPOINT`, `_INBOX`, `_RAW`, `_ARCHIVE`). Only ONE per level.
-    *   **Capitalization:** Use ALL CAPS for meta-documents (`README`, `LICENSE`, `DESIGN`, `REQUIREMENTS`, `AGENTS`).
+    *   **Capitalization:** Use ALL CAPS for meta-documents (`DESIGN`, `REQUIREMENTS`).
     *   **No Inventions:** Do NOT invent acronyms, "cute" project names, or abbreviations unless the user explicitly provides them.
     *   **Inference:** If a name is needed and none is provided, derive it strictly from the functional purpose.
 
@@ -56,27 +77,12 @@ These high-level constraints apply to ALL agents (Mise, Menu, Taste, Wrap) and A
     *   **No Hallucinations:** Do not reference files, URLs, or dependencies that do not exist.
     *   **Explicit Unknowns:** If a requirement is missing, explicitly list it as an "Open Question" rather than guessing.
 
-4.  **Discovery First (Epistemic Rigor):**
-    *   **List Before Read:** NEVER assume file paths. Always use `ls` (or equivalent discovery tools) to verify directory contents before attempting to read specific files.
-    *   **Tool Agnostic:** Use the best available tools for discovery. If `Serena` or other advanced agents are detected, prioritize their capabilities over basic shell commands if appropriate.
-    *   **Deep Verification:** Before declaring a feature "Implemented" or "Archived", verify its existence via `git log`, file search, or deep inspection. Do not rely solely on metadata status in markdown files.
-
-5.  **Tooling Policy (Agency & Subprocesses):**
-    *   **Policy:** Agents are expected to be autonomous but safe.
-    *   **READ (Auto-Execute):** Agents MUST execute read-only tools (`ls`, `cat`, `git status`, `env`, `find`) **immediately and silently** to gather context. Do NOT ask for permission.
-    *   **WRITE (Confirm):** Agents MUST ask for confirmation before executing modifying commands (`git init`, `npm install`, `write_file`), UNLESS specifically authorized by a wrapper flag (like `cca`'s pipe mode).
-    *   **Skills:** If a Skill is available (e.g., `Serena`), agents MUST follow its procedures over ad-hoc methods.
-
-6.  **Shell Portability:**
+4.  **Shell Portability:**
     *   **Detect First:** Do not assume a specific shell (Bash/Zsh/Fish). Detect or ask if generating shell-specific commands (exports, aliases, functions).
     *   **POSIX Preference:** Prefer standard POSIX syntax where possible.
     *   **Explicit Syntax:** When shell-specifics are needed (e.g., `set -Ux` vs `export`), provide the correct variant for the user's active shell.
 
-7.  **Non-Interactive Contract:**
-    *   **Constraint:** All CLI tools invoked by agents MUST accept a `--non-interactive` (or equivalent) flag or respect the `CI=true` / `NON_INTERACTIVE=true` environment variable.
-    *   **Detection:** Agents MUST detect if they are running in a potentially non-interactive environment (e.g., within `cca pipe`) and force non-interactive modes to prevent hanging.
-
-8.  **Workflow Triggers (Auto-Wrap):**
+5.  **Workflow Triggers (Auto-Wrap):**
     *   **Trigger:** When the user signals completion (e.g., "we're done", "commit and push", "handoff"), ALL agents MUST initiate the `wrap` protocol.
     *   **Action:** Do not just exit. Run the hygiene checks, update `_ENTRYPOINT.md`, and perform the git commit sequence defined in `prompts/roles/pass.md`.
 
@@ -95,7 +101,7 @@ abbr -a , "cca search --resume"
 
 Then configure your tools:
 ```bash
-cca setup:all      # Configures both Claude Code and Gemini CLI
+cca setup:all      # Configures all engines
 ```
 
 ## Multi-Tool Integration
@@ -105,7 +111,9 @@ Comme-ca prompts work with multiple AI CLI tools.
 | Tool | Setup Command | Config Location |
 |:-----|:--------------|:----------------|
 | **Claude Code** | `cca setup:claude` | `~/.claude/commands/` |
+| **OpenCode** | `cca setup:opencode` | `~/.config/opencode/` |
 | **Gemini CLI** | `cca setup:gemini` | `~/.gemini/commands/` |
+| **OpenAI Codex** | `cca setup:codex` | `~/.codex/config.toml` |
 
 ```bash
 # Check tool status
@@ -114,7 +122,9 @@ cca setup:list
 # Configure tools
 cca setup:all        # All tools at once
 cca setup:claude     # Individual tool
+cca setup:opencode   # Individual tool
 cca setup:gemini     # Individual tool
+cca setup:codex      # Individual tool
 
 # Maintenance
 cca drift            # Check for prompt updates
@@ -130,6 +140,15 @@ cca setup:sync       # Update drifted tools
 /wrap   # Consolidate docs, commit, and generate handoff
 cca git "command"  # Quick CLI translations
 ```
+
+## Provider Mapping (Agentic Architecture)
+
+| Concept | Claude Code | OpenCode | Gemini CLI | Codex |
+| :--- | :--- | :--- | :--- | :--- |
+| **Agent** | Session | TUI Session | CLI Loop | Assistant Thread |
+| **Subagent** | Native `Subagent` | Sub-session | `gemini -c` | New Thread |
+| **Skill** | Native `Skill` | Prompt Context | Context Inject | Instruction Set |
+| **Tool** | MCP | MCP | MCP | Function Call |
 
 ## Project Extensions
 
@@ -184,4 +203,4 @@ For full documentation: `~/dev/comme-ca/README.md`
 
 **Version:** 1.3.0
 **Source:** comme-ca Intelligence System
-**Last Updated:** 2025-12-22
+**Last Updated:** 2025-12-23
