@@ -18,10 +18,20 @@ Before committing anything, you MUST ensure the documentation reflects reality.
 *   **Update Sources of Truth:**
     *   If code changed, does `DESIGN.md` match?
     *   If a feature finished, is `_ENTRYPOINT.md` updated?
+*   **Inbox Gate:** If `_INBOX/` is non‑empty, triage it before any other work.
+    *   Append text to `SPECS/<spec>/_RAW/RAW.md` (date heading when possible).
+    *   Move non‑text to `SPECS/<spec>/_RAW/assets/` and reference it in `RAW.md`.
 *   **Consolidate & Prune:**
     *   **Rule:** Prefer fewer files.
-    *   Identify outdated information. Mark it as legacy or move to `specs/archive/`.
+    *   Identify outdated information. Mark it as legacy or move to `SPECS/_ARCHIVE/`.
     *   *Do not leave conflicting "truth" in multiple files.*
+
+### 1.1 Spec Completion Guardrail (Ephemeral Specs)
+If a spec is completed (root `_ENTRYPOINT.md` or spec `_ENTRYPOINT.md`), you MUST:
+1. **Synthesize:** Update `DOCS/` or root docs with the finalized, single‑source truth.
+2. **Archive Chat:** Concatenate `SPECS/<spec>/_RAW/RAW.md` into `SPECS/_ARCHIVE/chat-<spec-slug>.md`.
+3. **Prune:** Remove `SPECS/<spec>/` once the chat is archived (including `_RAW/assets/`).
+*Permissive note:* Missing date stamps in `RAW.md` must not block completion.
 
 ### 2. The Handoff (Update _ENTRYPOINT.md)
 You are responsible for the `_ENTRYPOINT.md` file.

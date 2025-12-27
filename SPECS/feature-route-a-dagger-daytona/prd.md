@@ -31,12 +31,12 @@ We don't need to rewrite your system. We just need to map your new infrastructur
 I will now generate the **ADR** and **PRD** specifically for the **Hybrid Agent Platform**, but I will write them *as if they are being added to your `comme-ca` repository*.
 
 This means:
-*   The **ADR** will live in `specs/ADR-001-hybrid-infrastructure.md` (inside your specs repo or `comme-ca`).
+*   The **ADR** will live in `SPECS/ADR-001-hybrid-infrastructure.md` (inside your specs repo or `comme-ca`).
 *   The **PRD** will reference your existing `comme-ca` roles (`mise`, `plan`, `audit`).
 
 ***
 
-### `specs/ADR-001-hybrid-agent-infrastructure.md`
+### `SPECS/ADR-001-hybrid-agent-infrastructure.md`
 
 ```markdown
 # ADR 001: Hybrid Agent Infrastructure (Container Use + Daytona)
@@ -78,7 +78,7 @@ We will implement a **Hybrid Infrastructure** on a single headless host, integra
 
 ***
 
-### `specs/PRD-001-hybrid-sandbox-platform.md`
+### `SPECS/PRD-001-hybrid-sandbox-platform.md`
 
 ```markdown
 # PRD: Hybrid Agent Sandbox Platform
@@ -153,7 +153,7 @@ To extend the `comme-ca` prompt orchestration system with a physical runtime env
 
 ### Next Steps for You
 
-1.  **Copy the ADR and PRD** above into your specs folder (or `comme-ca/specs/`).
+1.  **Copy the ADR and PRD** above into your specs folder (or `comme-ca/SPECS/`).
 2.  **Update `comme-ca`:**
     *   Add `prompts/pipe/sandbox.md` to wrap the `daytona` and `container-use` commands.
     *   Update `prompts/roles/mise.md` to include checks for Docker and Daytona.

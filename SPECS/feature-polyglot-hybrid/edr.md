@@ -53,7 +53,7 @@ my‑project/
 │   ├─ lint.sh
 │   └─ release.sh
 │
-└─ docs/
+└─ DOCS/
     └─ mkdocs.yml
 ```
 

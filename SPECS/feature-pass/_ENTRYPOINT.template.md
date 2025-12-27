@@ -15,7 +15,7 @@
 
 ## 4. Key References
 *   `@_ENTRYPOINT.md` - Master checklist.
-*   `@design.md` - Architecture source of truth.
+*   `@DESIGN.md` - Architecture source of truth.
 *   `@AGENTS.md` - Role definitions.
 
 ---

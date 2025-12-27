@@ -222,6 +222,8 @@ init() {
     cp "${scaffold_dir}/OPENCODE.md" . || { echo "Error: Failed to copy OPENCODE.md" >&2; exit 1; }
     cp "${COMME_CA_HOME}/scaffolds/project-init/_ENTRYPOINT.template.md" ./_ENTRYPOINT.md || { echo "Error: Failed to copy _ENTRYPOINT.md" >&2; exit 1; }
 
+    mkdir -p _INBOX DOCS SPECS SPECS/_ARCHIVE || { echo "Error: Failed to create base directories" >&2; exit 1; }
+
     echo "Initialized agent orchestration in $(pwd)."
 }
 

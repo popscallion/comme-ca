@@ -12,7 +12,7 @@ We are currently in the `comme-ca` repository, which serves as the source of tru
 1.  **Analyze the EDR:** Read the "Evolutionary Decision Record" provided below to understand the required architecture (Shared Infrastructure, Justfile, Polyglot directory layout, LLM-first workflow).
 2.  **Investigate Existing Patterns:** Explore the `scaffolds/` directory (specifically `scaffolds/high-low`) to understand how we currently structure templates (e.g., how `AGENTS.md` is distributed, where dotfiles live).
 3.  **Gap Analysis:** Identify what files are missing from our current `high-low` scaffold that are required for this new Polyglot architecture (e.g., `Justfile`, `.pre-commit-config.yaml`, `packages/` directory structure).
-4.  **Deliverable:** Create a `specs/polyglot-scaffold/design.md` file that outlines:
+4.  **Deliverable:** Create a `SPECS/polyglot-scaffold/DESIGN.md` file that outlines:
     *   The proposed directory structure for the new scaffold.
     *   The contents of the shared `Justfile` (abstracting `cargo`, `npm`, `swift`, etc.).
     *   How the `AGENTS.md` should be modified (if at all) to support this workflow.

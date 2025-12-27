@@ -35,9 +35,9 @@ Scan for these files and load if present:
 - `@AGENTS.md` - Agent orchestration rules (check protocol version)
 - `@DESIGN.md` - Technical architecture, workflows, dependencies
 - `@REQUIREMENTS.md` - Constraints, validation rules, quality gates
-- `@specs/` - Feature specifications directory (`feature-*`, `bug-*`)
+- `@SPECS/` - Feature specifications directory (`feature-*`, `bug-*`)
 - `@README.md` - Project overview and workflows
-- `@docs/` - Domain-specific standards (e.g., `docs/standards/prompting.md`, `docs/guidelines/*.md`). Treat these as Constitutional Constraints.
+- `@DOCS/` - Domain-specific standards (e.g., `DOCS/standards/prompting.md`, `DOCS/guidelines/*.md`). Treat these as Constitutional Constraints.
 ```
 
 ### Adaptive Behavior
@@ -52,11 +52,11 @@ Based on detected documentation, adapt your audit:
 - Execute ALL validation rules defined there
 - Check quality gates are satisfied
 
-**If `specs/` exists:**
+**If `SPECS/` exists:**
 - Compare each spec against implementation
-- Verify `specs/feature-name/` directory structure
+- Verify `SPECS/feature-name/` directory structure
 - Check for undocumented features and unimplemented specs
-- **Audit `_INBOX`:** Ensure it is empty (all items moved to specs).
+- **Audit `_INBOX`:** Ensure it is empty (all items moved into `SPECS/<spec>/_RAW/RAW.md` and `SPECS/<spec>/_RAW/assets/`).
 
 **Naming Convention Check:**
 - Verify specs start with `feature-` or `bug-`.
@@ -90,13 +90,13 @@ If the project has an AGENTS.md without protocol compliance:
 ## Directives
 
 ### 1. Specification vs Implementation Drift
-**Primary Check:** Compare `specs/` directory against actual implementation in `src/`.
+**Primary Check:** Compare `SPECS/` directory against actual implementation in `src/`.
 
 **Audit Process:**
 ```markdown
-For each feature in specs/:
-1. Read specs/feature-[name]/REQUIREMENTS.md
-2. Read specs/feature-[name]/DESIGN.md
+For each feature in SPECS/:
+1. Read SPECS/feature-[name]/REQUIREMENTS.md
+2. Read SPECS/feature-[name]/DESIGN.md
 3. Examine corresponding implementation files
 4. Document discrepancies
 ```
@@ -141,7 +141,8 @@ For each feature in specs/:
 - [ ] _ENTRYPOINT.md exists and contains recent updates
 - [ ] README.md contains "Workflows" section
 - [ ] `_INBOX/` exists
-- [ ] README "Features" section matches `specs/*/REQUIREMENTS.md`
+- [ ] `DOCS/` exists and contains durable project documentation
+- [ ] README "Features" section matches `SPECS/*/REQUIREMENTS.md`
 - [ ] README "Setup" matches actual installation steps
 - [ ] AGENTS.md roles match `~/dev/comme-ca/prompts/roles/`
 - [ ] Inline code comments match design explanations
@@ -170,7 +171,13 @@ For each feature in specs/:
 4. Clean up deprecated comments in src/api/
 ```
 
-### 3. Task & Work Tracking
+### 3. Spec Completion Guardrail (Light Touch)
+If a spec is marked completed (root `_ENTRYPOINT.md` or spec `_ENTRYPOINT.md`) but remains in `SPECS/`:
+- **Flag:** `SPECS/<spec>/_RAW/RAW.md` still present.
+- **Recommend:** Synthesize outcomes into `DOCS/` or root docs, archive chat to `SPECS/_ARCHIVE/chat-<spec-slug>.md`, and remove the spec directory.
+- **Permission:** Do not delete artifacts automatically; prompt for confirmation.
+
+### 4. Task & Work Tracking
 **Check:** Validate `_ENTRYPOINT.md` or issue trackers reflect actual work status.
 
 **Audit Points:**
@@ -231,7 +238,7 @@ For each feature in specs/:
 - Logging uses `console.log` instead of Winston per spec
 
 ### Recommendations
-1. **High Priority:** Add retry logic to payment API per design.md
+1. **High Priority:** Add retry logic to payment API per DESIGN.md
 2. **Medium Priority:** Replace console.log with Winston logger
 3. **Low Priority:** Clean up commented code, update minor deps
 ```
@@ -376,7 +383,7 @@ THEN → STOP and prompt user:
    (or)
 ❌ Found 3 references to deprecated `ca` command:
    - ecosystem/lab/README.md:55
-   - ecosystem/distro/docs/old-guide.md:12
+   - ecosystem/distro/DOCS/old-guide.md:12
 
 ### Semantic Collisions
 ⚠️ AGENTS.md serves different purposes:

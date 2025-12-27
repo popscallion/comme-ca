@@ -36,7 +36,7 @@ The system MUST handle these specific state transitions gracefully:
 | **D** | **Brownfield Bootstrap** | Existing code, No `comme-ca`. | Install `comme-ca` -> `prep` detects code -> "Intelligent Triage" maps code to specs -> Adds `AGENTS.md`. |
 | **E** | **Adoption** | Existing code, System Ready. | `prep` detects code + `.git` -> Skips git init -> "Intelligent Triage" -> Adds `AGENTS.md`. |
 | **F** | **Drift/Upgrade** | Project has `AGENTS.md` v1.0, System is v1.2. | `audit` detects version mismatch -> Warns "Protocol Version Drift" -> Offers `cca setup:sync` or update instructions. |
-| **G** | **Broken State** | `.git` exists but corrupt, or `specs/` empty. | `prep` detects anomaly -> Offers repair (re-init git or re-scaffold specs from context). |
+| **G** | **Broken State** | `.git` exists but corrupt, or `SPECS/` empty. | `prep` detects anomaly -> Offers repair (re-init git or re-scaffold specs from context). |
 | **H** | **Detached** | Project moved to machine w/o `comme-ca`. | Project remains readable (Standard Markdown). `prep` command fails (command not found), but no data loss. |
 | **I** | **Nested/Monorepo** | Project inside another `comme-ca` project. | `prep` detects parent `.git` -> Asks: "Init new sub-project or treat as folder?" |
 
@@ -46,7 +46,7 @@ The system MUST handle these specific state transitions gracefully:
 The agent should be able to verify these behaviors autonomously using temporary directories:
 
 *   **Test A (Scaffold):** `mkdir tmp/a && cd tmp/a && prep` -> Verify `AGENTS.md` created.
-*   **Test E (Triage):** `mkdir tmp/e && touch tmp/e/notes.txt && cd tmp/e && prep` -> Verify `specs/requirements.md` created from notes.
+*   **Test E (Triage):** `mkdir tmp/e && touch tmp/e/notes.txt && cd tmp/e && prep` -> Verify `REQUIREMENTS.md` created from notes.
 *   **Test F (Drift):** `mkdir tmp/f && echo "<!-- @version: 0.0.1 -->" > tmp/f/AGENTS.md && cd tmp/f && audit` -> Verify "Drift" warning in output.
 
 ### 2. Documentation Pull List (MCP)
@@ -54,15 +54,15 @@ When debugging or validating, the agent MUST pull these files:
 - `bin/install` (Bootstrap logic)
 - `prompts/roles/mise.md` (Scaffolding logic)
 - `prompts/roles/taste.md` (Audit logic)
-- `docs/SYNC_STRATEGY.md` (Architectural intent)
+- `DOCS/SYNC_STRATEGY.md` (Architectural intent)
 - `AGENTS.md` (Current versioning rules)
 
 ### 3. Manual Checklist (User)
 1.  [ ] **Install:** Run `bin/install` on a fresh terminal session.
 2.  [ ] **Verify Path:** Run `which cca` and `echo $COMME_CA_HOME`.
-3.  [ ] **Scaffold:** Create `~/test-project`, run `prep`. Check `specs/` generated.
+3.  [ ] **Scaffold:** Create `~/test-project`, run `prep`. Check `SPECS/` generated.
 4.  [ ] **Triage:** Create `~/raw-project`, add `dump.txt`, run `prep`. Check `dump.txt` moved to `context/`.
-5.  [ ] **Audit:** In `~/test-project`, change `src/` but not `specs/`. Run `audit`. Check for "Drift".
+5.  [ ] **Audit:** In `~/test-project`, change `src/` but not `SPECS/`. Run `audit`. Check for "Drift".
 
 ### 4. Debugging Prompt Template
 Use this prompt when analyzing failures in the flow:
@@ -81,7 +81,7 @@ I am analyzing a failure in the `comme-ca` lifecycle flow.
 
 **Docs to Reference:**
 - `@prompts/roles/mise.md` (Expected behavior)
-- `@specs/flow-audit/flow-audit.md` (This spec)
+- `@SPECS/flow-audit/flow-audit.md` (This spec)
 
 **Goal:** Identify if this is a Logic Error (Agent), a Script Error (Bash), or a User Error.
 ```

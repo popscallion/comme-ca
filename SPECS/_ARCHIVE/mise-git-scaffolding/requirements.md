@@ -71,7 +71,7 @@ Mise SHALL perform the following actions in order:
    ├── README.md
    ├── LICENSE
    ├── .gitignore
-   └── specs/
+   └── SPECS/
        ├── requirements.md
        └── design.md
    ```
@@ -82,7 +82,7 @@ Mise SHALL perform the following actions in order:
 
 3. **Populate files:**
    - Copy and process templates with placeholder substitution
-   - Add concise header comments to `specs/requirements.md` and `specs/design.md` explaining their purpose
+   - Add concise header comments to `SPECS/requirements.md` and `SPECS/design.md` explaining their purpose
 
 4. **Create initial commit:**
    - Commit message format: `Initialize <project-name>`
@@ -93,7 +93,7 @@ Mise SHALL perform the following actions in order:
    - Push initial commit to remote
 
 ### 6. Spec File Templates
-The scaffolded `specs/requirements.md` SHALL contain:
+The scaffolded `SPECS/requirements.md` SHALL contain:
 ```markdown
 <!--
 This file defines WHAT needs to be built.
@@ -119,7 +119,7 @@ See: ~/dev/comme-ca/prompts/roles/menu.md for guidance.
 - [Measurable outcome]
 ```
 
-The scaffolded `specs/design.md` SHALL contain:
+The scaffolded `SPECS/design.md` SHALL contain:
 ```markdown
 <!--
 This file defines HOW it will be built.
@@ -181,7 +181,7 @@ After successful scaffolding, Mise SHALL:
    Next steps:
    • cd my-cool-project
    • plan    (Create feature specs)
-   • Edit specs/requirements.md and specs/design.md to document your project
+   • Edit SPECS/requirements.md and SPECS/design.md to document your project
    ```
 
 2. Offer optional next steps (user confirms yes/no):

@@ -35,7 +35,7 @@ Scan for these files and load if present:
 - `@AGENTS.md` - Agent orchestration rules
 - `@DESIGN.md` - Technical architecture, dependencies, setup requirements
 - `@REQUIREMENTS.md` - Constraints, environment requirements
-- `@docs/` - Domain-specific standards (e.g., `docs/standards/prompting.md`, `docs/guidelines/*.md`). Treat these as Constitutional Constraints.
+- `@DOCS/` - Domain-specific standards (e.g., `DOCS/standards/prompting.md`, `DOCS/guidelines/*.md`). Treat these as Constitutional Constraints.
 ```
 
 ### Adaptive Behavior
@@ -111,7 +111,7 @@ If the project has incomplete comme-ca integration:
 When entering a directory, perform these checks in order:
 
 **Fresh Project Bootstrapping (Raw Context Mode):**
-- [ ] **Detect Freshness:** If directory has `cca init` files (`AGENTS.md`) but NO `.git` and NO `specs/`, check for "napkin sketch" files.
+- [ ] **Detect Freshness:** If directory has `cca init` files (`AGENTS.md`) but NO `.git` and NO `SPECS/`, check for "napkin sketch" files.
 - [ ] **Scan Context:** Read any present `.md` or `.txt` files (e.g., `brain dump.txt`, `notes.md`, `what-output.md`).
 - [ ] **Analyze Source:** Determine if files are outputs from `what` (PRD) or `why` (Decision Record) prompts.
 - [ ] **Infer Goal:** Synthesize project name, tech stack, and core purpose.
@@ -119,12 +119,12 @@ When entering a directory, perform these checks in order:
 - [ ] **Bootstrapping Sequence (Propose this):**
   1. `git init` & `git branch -M main`
   2. `git add .` (Commit the raw context *as is*: "chore: initial commit of raw context")
-  3. Scaffold `specs/REQUIREMENTS.md` & `specs/DESIGN.md`.
+  3. Scaffold `REQUIREMENTS.md` & `DESIGN.md` at the project root.
      - **CRITICAL:** Extract structured data from raw context:
        - Map `what` -> "User Stories", "Functional Requirements", "Assumptions & Defaults", "Open Questions" -> `REQUIREMENTS.md`
        - Map `why` -> "Key Decisions", "Discarded Approaches" (to "Alternatives Considered"), "Synthesis Logic" -> `DESIGN.md`
      - *Fallback:* If content does not fit a standard section, APPEND it as a "Contextual Analysis" section to the relevant file.
-  4. Offer: "I've extracted the context to `specs/`. Delete original raw files?"
+  4. Offer: "I've extracted the context to `SPECS/<spec>/_RAW/RAW.md`. Delete original raw files?"
   5. Commit scaffolding: "feat: scaffold project structure from raw context"
 
 **Git Status:**
@@ -156,7 +156,8 @@ When entering a directory, perform these checks in order:
 
 **Directory Structure:**
 - [ ] **Larval Integrity:** Check for `_INBOX/` (Create if missing)
-- [ ] Verify expected directories exist (src/, tests/, docs/, etc.)
+- [ ] Ensure `SPECS/`, `SPECS/_ARCHIVE/`, and `DOCS/` exist (create if missing)
+- [ ] Verify expected directories exist (src/, tests/, etc.)
 - [ ] Check for configuration files (package.json, pyproject.toml, Cargo.toml, etc.)
 - [ ] Validate README.md exists with basic project information
 
@@ -244,7 +245,7 @@ Perform these steps atomically (all-or-nothing):
    ├── AGENTS.md          # copied from scaffolds/high-low/
    ├── CLAUDE.md          # copied from scaffolds/high-low/
    ├── README.md          # Creates: .git/, AGENTS.md, CLAUDE.md, README.md, LICENSE, 
-#          .gitignore, specs/REQUIREMENTS.md, specs/DESIGN.md
+#          .gitignore, REQUIREMENTS.md, DESIGN.md
 # Commits and pushes to GitHub
    ├── LICENSE            # from selected template
    ├── GOVERNANCE.md      # from GOVERNANCE.template.md
@@ -290,7 +291,7 @@ Print success summary with actionable next steps:
 Next steps:
 • cd my-cool-project
 • plan    (Create feature specs with Menu agent)
-• Edit specs/REQUIREMENTS.md and specs/DESIGN.md to document your project
+• Edit REQUIREMENTS.md and DESIGN.md to document your project
 
 Optional next actions:
 • Run tests: [command based on detected package manager]

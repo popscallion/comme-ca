@@ -1,6 +1,6 @@
 <!--
 @id: design
-@version: 1.4.0
+@version: git-tag
 @model: gemini-2.0-flash
 -->
 # DESIGN
@@ -39,13 +39,18 @@ To decouple Distro intent from Governor implementation:
 
 ### 4. The Spec Pattern (Unit of Work)
 The system rejects loose tasks in favor of structured, encapsulated contexts.
-- **Encapsulation:** Every feature or bug lives in its own directory: `specs/feature-[slug]/` or `specs/bug-[slug].md`.
+- **Encapsulation:** Every feature or bug lives in its own directory: `SPECS/feature-[slug]/` or `SPECS/bug-[slug].md`.
 - **Mandatory Artifacts:** A spec is not valid without `REQUIREMENTS.md`, `DESIGN.md`, and `_ENTRYPOINT.md`.
+ - **Ephemeral:** Completed specs are rolled into durable project docs, then removed from `SPECS/` (see Archiving below).
 
 ### 5. The Inbox Pattern (Buffer)
 To prevent context window pollution, the system uses a designated `_INBOX/` directory for raw dumps and sanitization.
+All `_INBOX/` contents must be triaged into `SPECS/` before any other work proceeds.
 
-### 6. Protocol Synchronization (Shim Pattern)
+### 6. The Docs Pattern (Durable)
+`DOCS/` is the durable, long‑term documentation layer. Completed spec outcomes must be synthesized into `DOCS/` (or root docs) so `SPECS/` can remain ephemeral.
+
+### 7. Protocol Synchronization (Shim Pattern)
 To handle the lifecycle of `comme-ca` as both a Distro and a Living Protocol:
 - **Registry:** `~/.comme-ca/protocol/[version]` stores the canonical artifacts.
 - **Shim:** Project-level `AGENTS.md` files are lightweight pointers (`@import`) to the Registry, preventing drift.
@@ -60,22 +65,33 @@ To handle the lifecycle of `comme-ca` as both a Distro and a Living Protocol:
   - `DESIGN.md` (Architecture)
 - **Special Files (Underscore + Caps):**
   - `_ENTRYPOINT.md` (Dashboard/Status)
-- **Special Directories (Underscore + Caps):**
+- **Special Directories:**
   - `_INBOX/` (Intake buffer)
-  - `_ARCHIVE/` (Specs only)
+  - `DOCS/` (Durable documentation)
+  - `SPECS/` (Ephemeral specifications)
 
-### 2. Specification Directory (`specs/`)
+### 2. Specification Directory (`SPECS/`)
 - **Flat Structure:** Minimize nesting.
 - **Prefixes Required:**
   - Features: `feature-[slug]/` (Directory)
   - Bugs: `bug-[slug].md` (Single File) OR `bug-[slug]/` (Directory if complex)
 - **Feature Structure:**
-  - `specs/feature-x/_ENTRYPOINT.md`
-  - `specs/feature-x/REQUIREMENTS.md`
-  - `specs/feature-x/DESIGN.md`
-  - `specs/feature-x/_RAW/` (For chat logs, context)
+  - `SPECS/feature-x/_ENTRYPOINT.md`
+  - `SPECS/feature-x/REQUIREMENTS.md`
+  - `SPECS/feature-x/DESIGN.md`
+  - `SPECS/feature-x/_RAW/RAW.md` (Primary raw transcript, append‑only)
+  - `SPECS/feature-x/_RAW/assets/` (Non‑text artifacts referenced from RAW.md)
 
-### 3. General Rules
+### 3. Archiving (Specs are Ephemeral)
+- **When a spec is completed:**
+  1. Synthesize the outcome into `DOCS/` or root docs (single source of truth).
+  2. Concatenate the raw transcript into `SPECS/_ARCHIVE/chat-<spec-slug>.md`.
+  3. Remove the spec directory from `SPECS/` (no enclosing archive folder).
+- **Assets:** Non‑text artifacts in `_RAW/assets/` may be deleted after completion; rely on git history for retrieval.
+- **Permissive guardrail:** If raw entries are missing date stamps, do not block completion; append with best‑effort headings going forward.
+- **Legacy Note:** Existing archived folders may remain under `SPECS/_ARCHIVE/`. Do not reorganize unless explicitly requested.
+
+### 4. General Rules
 - **No inventions.** Use descriptive names.
 - **Underscores reserved** for the special files listed above.
 - **One special file per level.** (e.g., only one `_ENTRYPOINT.md` in root).

@@ -16,10 +16,10 @@
 ## 2. Requirements (The "What")
 
 ### Functional
-1.  **The "Plan" Trigger:** The `plan` (Menu) agent SHALL automatically detect "loose" context files in the `specs/` root, `bugs/` directory, or (for new projects) the Project Root.
+1.  **The "Plan" Trigger:** The `plan` (Menu) agent SHALL automatically detect "loose" context files in the `SPECS/` root, `bugs/` directory, or (for new projects) the Project Root.
 2.  **Forensic Ingestion:** Upon detection (or chat paste), the system SHALL:
-    *   Create a named directory: `specs/[type]-[slug]/` (e.g., `specs/bug-login-crash/` or `specs/feat-dark-mode/`).
-    *   Create a subdirectory: `specs/[type]-[slug]/context/`.
+    *   Create a named directory: `SPECS/[type]-[slug]/` (e.g., `SPECS/bug-login-crash/` or `SPECS/feat-dark-mode/`).
+    *   Create a subdirectory: `SPECS/[type]-[slug]/context/`.
     *   **MOVE** the raw files into `context/`.
     *   **WRITE** chat logs/transcripts to `context/chat-dump-[timestamp].md`.
 3.  **Analysis & Scaffolding:** The system SHALL read the `context/` folder to generate:
@@ -29,7 +29,7 @@
 4.  **Bootstrapping Parity:** The `prep` (Mise) agent SHALL use this same logic when initializing a new project from a folder of raw notes (Raw Context Mode).
 
 ### User Stories
-- As a developer, I want to drag a `crash.log` and `screenshot.png` into `specs/` and run `plan`, so that the agent automatically sets up a bug-fixing workspace for me.
+- As a developer, I want to drag a `crash.log` and `screenshot.png` into `SPECS/` and run `plan`, so that the agent automatically sets up a bug-fixing workspace for me.
 - As a user, I want to paste a long error trace into the chat, so that the agent saves it to a file before I lose it and uses it to diagnose the issue.
 
 ### Non-Functional
@@ -40,7 +40,7 @@
 
 ### Directory Structure Standard
 ```text
-specs/
+SPECS/
 ├── active/               # (Optional organization)
 ├── bug-login-crash/      # The Unit of Work
 │   ├── context/          # THE TRUTH (Raw inputs)

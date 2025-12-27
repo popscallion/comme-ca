@@ -1,4 +1,4 @@
-<!-- @protocol: comme-ca @version: 1.3.0 -->
+<!-- @protocol: comme-ca @version: git-tag -->
 # Agent Orchestration
 **Powered by comme-ca Intelligence System**
 
@@ -37,7 +37,8 @@ Standard roles automatically detect and adapt to project documentation:
 - `@README.md` - Workflows and procedures
 - `@DESIGN.md` - Technical architecture, workflows, dependencies
 - `@REQUIREMENTS.md` - Constraints, validation rules, quality gates
-- `@specs/` - Feature specs (`feature-*`)
+- `@DOCS/` - Durable documentation and domain-specific guidance
+- `@SPECS/` - Feature specs (`feature-*`)
 
 **Create these files to define project-specific behavior.** The roles will execute validation rules from REQUIREMENTS.md, follow workflows from DESIGN.md, and track progress in _ENTRYPOINT.md.
 
@@ -56,6 +57,7 @@ All generated markdown artifacts (Prompts, Specs, ADRs, PRDs) MUST begin with a 
 - **@id:** Unique identifier for the artifact (file-system safe)
 - **@version:** Semantic versioning (start at 1.0.0, increment on iterations)
 - **@model:** The model used to generate the artifact
+- **Protocol Authority:** For core protocol documents, set `@version: git-tag` and use git tags/log as the authoritative version source.
 
 ## Universal Directives
 
@@ -69,7 +71,7 @@ These high-level constraints apply to ALL agents (Mise, Menu, Taste, Wrap) and A
 2.  **Naming Conventions:**
     *   **Descriptive:** Use clear, descriptive names.
     *   **Strict Prefixes:** Feature specs MUST start with `feature-`. Bug specs MUST start with `bug-`.
-    *   **Capitalization:** Use ALL CAPS for meta-documents (`DESIGN`, `REQUIREMENTS`).
+    *   **Capitalization:** Use ALL CAPS for meta-documents (`DESIGN`, `REQUIREMENTS`) and root directories (`DOCS`, `SPECS`).
     *   **No Inventions:** Do NOT invent acronyms, "cute" project names, or abbreviations unless the user explicitly provides them.
     *   **Inference:** If a name is needed and none is provided, derive it strictly from the functional purpose.
 
@@ -157,7 +159,7 @@ Only create custom roles when standard roles genuinely cannot cover your use cas
 - **Different output types** (e.g., a Trainer creating learning materials)
 - **Different interaction patterns** (e.g., interactive debugging)
 
-Most project-specific behavior should go in `requirements.md` (constraints/rules) or `design.md` (architecture/workflows), not custom roles.
+Most project-specific behavior should go in `REQUIREMENTS.md` (constraints/rules) or `DESIGN.md` (architecture/workflows), not custom roles.
 
 ### Example: Adding a Custom Role
 
@@ -184,8 +186,8 @@ Most project-specific behavior should go in `requirements.md` (constraints/rules
 - Verify executable: `chmod +x ~/dev/comme-ca/bin/cca`
 
 **"Roles not finding project context"**
-- Create `design.md` for architecture documentation
-- Create `requirements.md` for validation rules
+- Create `DESIGN.md` for architecture documentation
+- Create `REQUIREMENTS.md` for validation rules
 - Roles automatically detect and use these files
 
 **"Need to update from comme-ca"**
@@ -201,12 +203,13 @@ For full documentation: `~/dev/comme-ca/README.md`
 
 ---
 
-**Version:** 1.3.0
+**Version:** See git tag
 **Source:** comme-ca Intelligence System
-**Last Updated:** 2025-12-23
+**Last Updated:** See git log
 
 ## Status & History
 
 - **Source of Truth:** Use `git log` and `git status` to determine recent activity.
+- **Protocol Versioning:** Use git tags (`git tag` / `git describe --tags --abbrev=0`) as the authoritative protocol version. In-file version strings are non-authoritative.
 - **No Manual Logs:** Do not maintain manual "Recent Activity" logs in markdown files (conflicts with parallel work).
 - **Status Dashboard:** Only update high-level status tables (e.g. in `_ENTRYPOINT.md`) when changing major phase states.

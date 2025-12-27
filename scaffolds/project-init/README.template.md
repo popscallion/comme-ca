@@ -26,14 +26,16 @@ This project uses [comme-ca](https://github.com/popscallion/comme-ca) for agent 
 ```bash
 prep   # Validate environment and dependencies
 plan   # Create feature specifications
-audit  # Check for drift between specs and implementation
+audit  # Check for drift between SPECS and implementation
 ```
 
 ### Project Structure
 
 ```
 {{PROJECT_SLUG}}/
-├── specs/           # Feature specifications (feature-*)
+├── SPECS/           # Feature specifications (feature-*)
+├── DOCS/            # Durable documentation
+├── _INBOX/          # Intake buffer (triage first)
 ├── REQUIREMENTS.md  # Project constraints and requirements
 ├── DESIGN.md        # Technical architecture
 ├── AGENTS.md        # Agent orchestration rules

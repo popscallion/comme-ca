@@ -21,8 +21,9 @@ cca setup:sync
 3.  **Verify:**
     *   `AGENTS.md` should be small (< 20 lines).
     *   It should contain `<!-- @import: ~/.comme-ca/protocol/dev/AGENTS.core.md -->`.
-    *   `specs/REQUIREMENTS.md` and `specs/DESIGN.md` should NOT exist (should be at root).
+    *   `SPECS/REQUIREMENTS.md` and `SPECS/DESIGN.md` should NOT exist (should be at root).
     *   `REQUIREMENTS.md` and `DESIGN.md` should be at the root.
+    *   `SPECS/`, `DOCS/`, and `_INBOX/` should exist.
 
 ### Case B: Protocol Maintenance (Mise)
 **Goal:** Verify `mise` detects outdated protocols.

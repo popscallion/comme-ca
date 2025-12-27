@@ -38,8 +38,8 @@ Scan for these files and load if present:
 - `@AGENTS.md` - Agent orchestration rules
 - `@DESIGN.md` - Existing technical architecture
 - `@REQUIREMENTS.md` - Existing constraints and rules
-- `@specs/` - Existing feature specifications (`feature-*` or `bug-*`)
-- `@docs/` - Domain-specific standards (e.g., `docs/standards/prompting.md`, `docs/guidelines/*.md`). Treat these as Constitutional Constraints.
+- `@SPECS/` - Existing feature specifications (`feature-*` or `bug-*`)
+- `@DOCS/` - Domain-specific standards (e.g., `DOCS/standards/prompting.md`, `DOCS/guidelines/*.md`). Treat these as Constitutional Constraints.
 ```
 
 ### Adaptive Behavior
@@ -57,7 +57,7 @@ Based on detected documentation, adapt your planning:
 - Follow established quality gates
 - Use existing terminology and patterns
 
-**If `specs/` exists:**
+**If `SPECS/` exists:**
 - Review existing specs for consistency
 - Follow established spec format
 - Reference related features
@@ -114,34 +114,39 @@ When a new feature or project is proposed, begin with structured inquiry:
 - What's the expected timeline?
 
 ### 2. Intelligent Triage & Ingestion
-**Trigger:** You detect "loose artifacts" (logs, screenshots, raw notes) in the project root, `_INBOX/`, or `specs/`.
+**Trigger:** You detect "loose artifacts" (logs, screenshots, raw notes) in the project root, `_INBOX/`, or `SPECS/`.
 
 **Protocol:**
 1.  **Detection:** Identify the intent (Bug Report vs. New Feature).
 2.  **Organization:**
-    - Create directory: `specs/feature-[slug]/` or `specs/bug-[slug]/`.
-    - Create context subfolder: `specs/feature-[slug]/_RAW/`.
-    - **Action:** MOVE the loose files into `_RAW/`.
-    - **Action:** WRITE chat dumps to `_RAW/chat-transcript-[timestamp].md`.
-3.  **Preservation:** Treat `_RAW/` as Read-Only Evidence. Do not modify these files.
-4.  **Analysis:** Read the `_RAW/` files to scaffold `REQUIREMENTS.md` and `DESIGN.md`.
+    - Create directory: `SPECS/feature-[slug]/` or `SPECS/bug-[slug]/`.
+    - Create context subfolder: `SPECS/feature-[slug]/_RAW/` and `SPECS/feature-[slug]/_RAW/assets/`.
+    - **Action (Text):** Append raw text to `SPECS/<spec>/_RAW/RAW.md`.
+      - Use a `YYYY-MM-DD` heading when possible.
+      - If no date is available, append anyway (do not block).
+    - **Action (Non‑Text):** Move binaries/images to `_RAW/assets/` and add a reference line in `RAW.md`.
+    - **Action (Ambiguous):** Ask the user where each item should go before moving.
+3.  **Preservation:** Treat `RAW.md` as append‑only evidence. Do not rewrite prior entries.
+4.  **Analysis:** Read `RAW.md` to scaffold `REQUIREMENTS.md` and `DESIGN.md`.
 
 ### 3. Documentation Structure
 Create specifications in a standardized format:
 
 **Directory Layout (Feature):**
 ```
-specs/
+SPECS/
 └── feature-[name]/
     ├── _ENTRYPOINT.md     # Dashboard & Status
     ├── REQUIREMENTS.md    # What needs to be built
     ├── DESIGN.md          # How it will be built
-    └── _RAW/              # Context buffer
+    └── _RAW/
+        ├── RAW.md         # Append‑only raw intake
+        └── assets/        # Non‑text artifacts referenced in RAW.md
 ```
 
 **Directory Layout (Bug):**
 ```
-specs/
+SPECS/
 └── bug-[name].md          # Self-contained bug report and plan
 ```
 
@@ -193,7 +198,7 @@ specs/
 - ...
 ```
 
-**design.md Template:**
+**DESIGN.md Template:**
 ```markdown
 # [Feature Name] Design
 
@@ -239,16 +244,16 @@ Follow this workflow:
    - Confirm understanding
 
 2. **Requirements Gathering**
-   - Create `specs/feature-[slug]/REQUIREMENTS.md`
+   - Create `SPECS/feature-[slug]/REQUIREMENTS.md`
    - Review with user, iterate until approved
 
 3. **Architecture Design**
-   - Create `specs/feature-[slug]/DESIGN.md`
+   - Create `SPECS/feature-[slug]/DESIGN.md`
    - Include diagrams (ASCII art for text compatibility)
    - Review with user, iterate until approved
 
 4. **Task Breakdown**
-   - Update `specs/feature-[slug]/_ENTRYPOINT.md` with tasks.
+   - Update `SPECS/feature-[slug]/_ENTRYPOINT.md` with tasks.
    - **Subagent Delegation:** If a task involves deep review or large-scale analysis, specify `task_type: subagent:code-reviewer`.
    - Estimate effort for each task
    - Identify dependencies and critical path
@@ -352,9 +357,9 @@ Menu: Great! Let me gather some details to create a comprehensive spec.
 [After gathering answers...]
 
 I'll create:
-- specs/feature-authentication/REQUIREMENTS.md
-- specs/feature-authentication/DESIGN.md
-- specs/feature-authentication/_ENTRYPOINT.md
+- SPECS/feature-authentication/REQUIREMENTS.md
+- SPECS/feature-authentication/DESIGN.md
+- SPECS/feature-authentication/_ENTRYPOINT.md
 
 Should I proceed?
 ```

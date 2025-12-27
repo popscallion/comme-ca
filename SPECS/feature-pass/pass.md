@@ -16,7 +16,7 @@ Before committing anything, you MUST ensure the documentation reflects reality.
     *   If a feature finished, is `_ENTRYPOINT.md` updated?
 *   **Consolidate & Prune:**
     *   **Rule:** Prefer fewer files.
-    *   Identify outdated information. Mark it as legacy or move to `specs/archive/`.
+*   Identify outdated information. Mark it as legacy or move to `SPECS/_ARCHIVE/`.
     *   *Do not leave conflicting "truth" in multiple files.*
 
 ### 2. The Handoff (Update _ENTRYPOINT.md)

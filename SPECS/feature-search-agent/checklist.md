@@ -1,8 +1,8 @@
 # Search Agent Implementation Checklist
 
 - [ ] **Organization**
-    - [x] Consolidate specs into `specs/search-agent/`
-    - [x] Move raw context to `specs/search-agent/context/`
+    - [x] Consolidate specs into `SPECS/search-agent/`
+    - [x] Move raw context to `SPECS/search-agent/context/`
 
 - [ ] **Guardrails (Lab)**
     - [ ] Create `pre-commit` hook in `comment-dit-on` to warn about unsynced prompts.
