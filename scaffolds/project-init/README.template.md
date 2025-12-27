@@ -33,9 +33,9 @@ audit  # Check for drift between specs and implementation
 
 ```
 {{PROJECT_SLUG}}/
-├── specs/           # Feature specifications
-│   ├── requirements.md
-│   └── design.md
+├── specs/           # Feature specifications (feature-*)
+├── REQUIREMENTS.md  # Project constraints and requirements
+├── DESIGN.md        # Technical architecture
 ├── AGENTS.md        # Agent orchestration rules
 ├── CLAUDE.md        # AI assistant configuration (Claude)
 ├── GEMINI.md        # AI assistant configuration (Gemini)

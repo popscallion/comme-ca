@@ -366,13 +366,23 @@ setup_opencode() {
     echo "✓ OpenCode configured."
 }
 
-setup_all() {
-    echo "Configuring all tools..."
+setup_sync() {
+    echo "Syncing Protocol Registry..."
+    local proto_dir="${HOME}/.comme-ca/protocol/dev"
+    mkdir -p "$proto_dir"
+    
+    echo "  → Copying core artifacts to $proto_dir"
+    cp "${COMME_CA_HOME}/AGENTS.md" "${proto_dir}/AGENTS.core.md"
+    cp -r "${COMME_CA_HOME}/prompts" "${proto_dir}/"
+    cp -r "${COMME_CA_HOME}/scaffolds" "${proto_dir}/"
+    
+    echo "✓ Protocol Registry synced."
+    
+    echo "Configuring tools..."
     setup_claude
     setup_gemini
     setup_codex
     setup_opencode
-    echo "✓ All tools configured"
 }
 
 store_setup_metadata() {
@@ -516,7 +526,10 @@ main() {
             setup_opencode
             ;; 
         setup:all)
-            setup_all
+            setup_sync
+            ;; 
+        setup:sync)
+            setup_sync
             ;; 
         drift)
             drift

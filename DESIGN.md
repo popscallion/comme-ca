@@ -21,6 +21,9 @@ The system defines four core abstractions that apply across all AI engines:
 ### 2. The Wrapper Architecture (`bin/cca`)
 The `cca` binary serves as the "Shim Layer" between static Markdown prompts and the execution engine.
 - **Shim Layer:** Intercepts commands and performs **Placeholder Replacement** (Raycast-style) before sending text to the AI.
+  - Replaces `{clipboard}` with actual system clipboard content.
+  - Replaces `{selection}` with currently selected text.
+  - Replaces `{argument}` with CLI arguments.
 - **Transpilation:**
   - **Claude:** Symlinks prompts to `~/.claude/commands`.
   - **OpenCode:** Runs prompts via `opencode run` using intent-based profiles (`flash`, `pro`).
@@ -28,14 +31,45 @@ The `cca` binary serves as the "Shim Layer" between static Markdown prompts and 
   - **Codex:** Pipes prompt content directly to stdin or via `codex exec`.
 - **Dual-Model Routing:** The wrapper implements logic to route queries to either a "Fast" model (Cerebras 120b) or a "Smart" model (Haiku 4.5) based on user flags.
 
-### 3. The Spec Pattern (Unit of Work)
+### 3. The "Template vs. Instance" Profile Pattern
+To decouple Distro intent from Governor implementation:
+*   **Distro (`comme-ca`):** Defines the *Intent* (e.g., `intent: cheap-fast`, `intent: deep-reasoning`) via `COMME_CA_PROFILE` flags.
+*   **Governor (`comme-ci`):** Defines the *Backend* (e.g., `flash` maps to Gemini 3 via OpenCode Zen, `pro` maps to Sonnet 4.5).
+*   **Benefit:** `comme-ca` remains agnostic to specific API keys and provider choices.
+
+### 4. The Spec Pattern (Unit of Work)
 The system rejects loose tasks in favor of structured, encapsulated contexts.
 - **Encapsulation:** Every feature or bug lives in its own directory: `specs/feature-[slug]/` or `specs/bug-[slug].md`.
 - **Mandatory Artifacts:** A spec is not valid without `REQUIREMENTS.md`, `DESIGN.md`, and `_ENTRYPOINT.md`.
 
-### 4. The Inbox Pattern (Buffer)
+### 5. The Inbox Pattern (Buffer)
 To prevent context window pollution, the system uses a designated `_INBOX/` directory for raw dumps and sanitization.
 
 ## Naming Conventions (Strict)
 
-... [rest of rules preserved]
+### 1. Root Level
+- **Meta-Documents (ALL CAPS):**
+  - `README.md`, `LICENSE`, `AGENTS.md`
+  - `REQUIREMENTS.md` (Constraints)
+  - `DESIGN.md` (Architecture)
+- **Special Files (Underscore + Caps):**
+  - `_ENTRYPOINT.md` (Dashboard/Status)
+- **Special Directories (Underscore + Caps):**
+  - `_INBOX/` (Intake buffer)
+  - `_ARCHIVE/` (Specs only)
+
+### 2. Specification Directory (`specs/`)
+- **Flat Structure:** Minimize nesting.
+- **Prefixes Required:**
+  - Features: `feature-[slug]/` (Directory)
+  - Bugs: `bug-[slug].md` (Single File) OR `bug-[slug]/` (Directory if complex)
+- **Feature Structure:**
+  - `specs/feature-x/_ENTRYPOINT.md`
+  - `specs/feature-x/REQUIREMENTS.md`
+  - `specs/feature-x/DESIGN.md`
+  - `specs/feature-x/_RAW/` (For chat logs, context)
+
+### 3. General Rules
+- **No inventions.** Use descriptive names.
+- **Underscores reserved** for the special files listed above.
+- **One special file per level.** (e.g., only one `_ENTRYPOINT.md` in root).

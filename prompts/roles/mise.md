@@ -249,9 +249,8 @@ Perform these steps atomically (all-or-nothing):
    ├── LICENSE            # from selected template
    ├── GOVERNANCE.md      # from GOVERNANCE.template.md
    ├── .gitignore         # from gitignore.template
-   └── specs/
-       ├── REQUIREMENTS.md # from REQUIREMENTS.template.md
-       └── DESIGN.md       # from DESIGN.template.md
+   ├── REQUIREMENTS.md    # from REQUIREMENTS.template.md
+   └── DESIGN.md          # from DESIGN.template.md
    ```
 
 2. **Initialize Git:**
@@ -339,7 +338,15 @@ Fix: gh auth login
 - Check for CI/CD configuration (.github/workflows/, .gitlab-ci.yml)
 - Validate linting and formatting tools (ESLint, Prettier, Ruff, etc.)
 
-### 4. Documentation Check
+### 4. Protocol Maintenance
+**On Startup (`prep`):**
+- **Check Version:** Read `@AGENTS.md` header for `@version`.
+- **Compare:** Check against `~/.comme-ca/protocol/latest` (or `dev`).
+- **Drift Action:**
+  - If `Project < System`: "Protocol update available (vX -> vY). Run `cca setup:sync`?"
+  - If `Project` is "Shim" (imports core): Ensure the import path exists.
+
+### 5. Documentation Check
 - [ ] _ENTRYPOINT.md exists (Handoff)
 - [ ] README.md exists and is up-to-date
 - [ ] AGENTS.md or orchestration documentation present
