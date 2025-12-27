@@ -83,15 +83,16 @@ cat AGENTS.md  # Should show @import directive
 Stop and prompt the user:
 > “We need to run the required tests before continuing. Run them now, or explicitly defer?”
 
+### Testing Status
+Deferred (2025-12-27 14:26). Do not proceed with new work until tests are run or explicitly deferred again.
+
 ---
 
 ## 3. Active Specs
 | Spec | Status | Focus |
 |:-----|:-------|:------|
-| `feature-protocol-sync` | ✅ Done | Registry, Shim, Harvest logic |
-| `feature-agentic-abstractions` | ✅ Done | Core Agent/Subagent roles |
 | `feature-mcp-redo` | 🟡 Active | Filesystem Discovery logic |
 
 ---
-**Last Updated:** 2025-12-27 13:45
-**Previous:** Agentic Abstractions & Protocol Sync Implementation
+**Last Updated:** 2025-12-27 14:22
+**Previous:** Archived completed specs (protocol sync, search agent, pass, strict conventions)

@@ -1,4 +1,6 @@
-> **NOTE (2025-12-21):** This research is partially superseded by the **Serena** integration (see `prompts/capabilities/serena.md`). The "Surgical Editor" capability implements a form of safe tool execution pattern. Future work on this spec should evaluate if Serena covers the needs or if a full "App Server" pattern is still required.
+> **UPDATE (2025-12-27):** This spec now focuses on filesystem discovery + tool filtering patterns for MCP exposure. The Serena reference lives at `prompts/skills/serena.md`. Older research below is retained for context and may be superseded.
+>
+> **LEGACY NOTE (2025-12-21):** This research is partially superseded by the **Serena** integration (see `prompts/skills/serena.md`). The "Surgical Editor" capability implements a form of safe tool execution pattern. Future work on this spec should evaluate if Serena covers the needs or if a full "App Server" pattern is still required.
 
 Now let me search for specific guidance on MCP tool filtering and migration patterns:
 
