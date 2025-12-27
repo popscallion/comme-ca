@@ -59,19 +59,29 @@ Focus:
 Provide a concise remediation list.
 ```
 
-## 2. Testing Instructions (Verification)
-See `DOCS/TESTING_PROTOCOL_SYNC.md` for detailed test cases.
+## 2. Testing Gate (MANDATORY BEFORE ANY NEW WORK)
+**Status:** Not yet verified since the DOCS/SPECS and inbox workflow changes.  
+**Rule:** Do **not** start new work in `comme-ca` until these tests are run **or** the user explicitly defers them.
 
-### Quick Smoke Test
+### Required Test Run
 ```bash
 # 1. Sync local registry
 cca setup:sync
 
-# 2. Test new scaffolding (Shim)
+# 2. Test new scaffolding (Shim + DOCS/SPECS/_INBOX)
 mkdir -p ~/tmp/shim-test && cd ~/tmp/shim-test
 cca init
+ls -a
 cat AGENTS.md  # Should show @import directive
+
+# 3. Verify structure
+# - DOCS/, SPECS/, _INBOX/ exist
+# - REQUIREMENTS.md and DESIGN.md at root (not inside SPECS/)
 ```
+
+### If Tests Were Not Run
+Stop and prompt the user:
+> “We need to run the required tests before continuing. Run them now, or explicitly defer?”
 
 ---
 
