@@ -1,10 +1,11 @@
 # Requirements
 
-## Protocol: comme-ca v1.3.0
+## Protocol: comme-ca v1.4.0
 
 1.  **Model Agnostic:** All roles and pipe prompts must be written in standard Markdown and executable across Claude, Gemini, Codex, and OpenCode.
 2.  **Wrapper Centric:** The `cca` binary is the authoritative bridge. Manual invocation of underlying engines is discouraged.
-3.  **Discovery First (Epistemic Rigor):**
+3.  **Protocol Sync (Shim):** New projects MUST use the Shim pattern (`@import`) in `AGENTS.md` to reference the canonical Protocol Registry. Manual duplication of core rules is forbidden.
+4.  **Discovery First (Epistemic Rigor):**
     *   **List Before Read:** NEVER assume file paths. Always use `ls` (or equivalent discovery tools) to verify directory contents before attempting to read or move files.
     *   **Bleeding Edge Protocol:** When documentation is stale or absent, agents MUST use CLI introspection (`--help`, error logs) as the source of truth.
 4.  **Unit of Work:** All changes must be encapsulated in a Spec (`specs/feature-*` or `specs/bug-*`).

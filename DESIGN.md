@@ -1,6 +1,6 @@
 <!--
 @id: design
-@version: 1.3.0
+@version: 1.4.0
 @model: gemini-2.0-flash
 -->
 # DESIGN
@@ -44,6 +44,12 @@ The system rejects loose tasks in favor of structured, encapsulated contexts.
 
 ### 5. The Inbox Pattern (Buffer)
 To prevent context window pollution, the system uses a designated `_INBOX/` directory for raw dumps and sanitization.
+
+### 6. Protocol Synchronization (Shim Pattern)
+To handle the lifecycle of `comme-ca` as both a Distro and a Living Protocol:
+- **Registry:** `~/.comme-ca/protocol/[version]` stores the canonical artifacts.
+- **Shim:** Project-level `AGENTS.md` files are lightweight pointers (`@import`) to the Registry, preventing drift.
+- **Harvest:** The `tune` role detects local process improvements and generates feedback for upstream integration.
 
 ## Naming Conventions (Strict)
 

@@ -26,6 +26,7 @@ Lean, single source of truth for agent intelligence. Decouples intelligence (pro
 ### CLI (Pipe)
 ```bash
 cca <tool> "<instruction>"
+cca setup:sync  # Sync local protocol registry and tools
 ```
 
 ### Engines
