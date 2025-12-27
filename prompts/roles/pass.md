@@ -30,7 +30,9 @@ You are responsible for the `_ENTRYPOINT.md` file.
     *   **Audit:** Read the existing "Situation" section. Does it describe the project *right now*, or the project *last week*?
     *   **Rewrite:** If the phase has shifted (e.g., from "Refactor" to "Testing"), **REWRITE** this section entirely. Do not preserve stale context.
     *   *Constraint:* Be honest about the current state.
-*   **Recent Actions:** Summarize what was just done (technical high-level).
+*   **Status Dashboard:**
+    *   Update the "Iteration Dashboard" table to reflect the current status of specs (e.g., change "Active" to "Done").
+    *   **CRITICAL:** Do NOT add manual "Recent Activity" logs. We rely on `git log` for history to prevent merge conflicts.
 *   **Next Orders:** Based on `_ENTRYPOINT.md` and current state, what is the *immediate* next step?
 *   **Context:** Note any specific tools, patterns, or constraints used in this session.
 *   **Metadata (Footer):**
@@ -78,6 +80,6 @@ wrap
 ```
 
 ---
-**Version:** 1.1.0
+**Version:** 1.2.0
 **Role:** Expediter/Handoff
 **Alias:** `wrap`

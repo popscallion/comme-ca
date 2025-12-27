@@ -204,3 +204,9 @@ For full documentation: `~/dev/comme-ca/README.md`
 **Version:** 1.3.0
 **Source:** comme-ca Intelligence System
 **Last Updated:** 2025-12-23
+
+## Status & History
+
+- **Source of Truth:** Use `git log` and `git status` to determine recent activity.
+- **No Manual Logs:** Do not maintain manual "Recent Activity" logs in markdown files (conflicts with parallel work).
+- **Status Dashboard:** Only update high-level status tables (e.g. in `_ENTRYPOINT.md`) when changing major phase states.
