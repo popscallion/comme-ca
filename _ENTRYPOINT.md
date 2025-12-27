@@ -1,52 +1,38 @@
 # ENTRYPOINT (Iteration Dashboard)
 
 ## Current Status
-We are in **Phase 2** (Distribution Hardening). **OpenCode** and **Codex** are now first-class citizens in the `cca` ecosystem.
+We are in **Phase 3** (Protocol Synchronization & Rollout).
+We have successfully implemented **Agentic Abstractions** (Agents/Subagents/Skills) and the **Protocol Sync** architecture (Registry/Shim/Harvest).
 
-## 1. Testing Instructions (Verification)
+## 1. The Situation
+The `comme-ca` system has evolved from a static template generator to a synchronized protocol.
+- **Protocol Registry:** Located at `~/.comme-ca/protocol/dev`.
+- **Shim Pattern:** New projects reference core docs instead of copying them.
+- **Two-Way Sync:** `mise` patches downstream projects; `tune` harvests downstream improvements.
 
-Please run the following tests to verify the new distribution features:
+## 2. Testing Instructions (Verification)
+See `docs/TESTING_PROTOCOL_SYNC.md` for detailed test cases.
 
-### Test 1: OpenCode Engine support
+### Quick Smoke Test
 ```bash
-COMME_CA_ENGINE=opencode cca git "show status"
-```
-**Expected:** The `cca` wrapper should invoke `opencode run` using the `flash` profile.
+# 1. Sync local registry
+cca setup:sync
 
-### Test 2: Profile Switching
-```bash
-COMME_CA_PROFILE=pro cca shell "echo hello"
-```
-**Expected:** The wrapper should use the `pro` profile (Opus 4.5).
-
-### Test 3: Project Scaffolding
-```bash
-mkdir -p /tmp/test-project && cd /tmp/test-project
+# 2. Test new scaffolding (Shim)
+mkdir -p ~/tmp/shim-test && cd ~/tmp/shim-test
 cca init
+cat AGENTS.md  # Should show @import directive
 ```
-**Expected:** The directory should contain `OPENCODE.md`, `CODEX.md`, and `AGENTS.md` (v1.3.0).
-
-### Test 4: Serena Continuity
-Read `prompts/skills/serena.md`.
-**Expected:** Verify Section 1 "The Memory-First Handshake" is present.
-
----
-
-## 2. Recent Actions
-*   **WRAPPER:** Updated `bin/cca` to support `opencode` as an execution engine with profile switching (`flash`/`pro`).
-*   **SKILLS:** Enhanced `serena.md` with "Memory-First" Handshake protocol for shared session continuity across Claude, Gemini, and OpenCode.
-*   **SCAFFOLDS:** Created `OPENCODE.md` pointer and updated `AGENTS.md` to version 1.3.0.
-*   **CODEX:** Stabilized Codex as a first-class citizen in tables and setup commands.
-*   **CLEANUP:** Archived 4 superseded specs and the `agentic-abstractions` research into `specs/_ARCHIVE/`.
 
 ---
 
 ## 3. Active Specs
 | Spec | Status | Focus |
 |:-----|:-------|:------|
+| `feature-protocol-sync` | ✅ Done | Registry, Shim, Harvest logic |
+| `feature-agentic-abstractions` | ✅ Done | Core Agent/Subagent roles |
 | `feature-mcp-redo` | 🟡 Active | Filesystem Discovery logic |
-| `feature-pass` | 🟢 Active | Wrap/Pass protocol hardening |
 
 ---
-**Last Updated:** 2025-12-23 23:20
-**Source:** comme-ca Intelligence System
+**Last Updated:** 2025-12-27 13:45
+**Previous:** Agentic Abstractions & Protocol Sync Implementation
