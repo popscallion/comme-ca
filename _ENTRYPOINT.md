@@ -92,6 +92,16 @@ Deferred (2025-12-27 14:26). Do not proceed with new work until tests are run or
 | Spec | Status | Focus |
 |:-----|:-------|:------|
 | `feature-mcp-redo` | 🟡 Active | Filesystem Discovery logic |
+| `feature-cca-devpod-scaffold` | 🟡 Pinned | Default-on `cca init` DevPod/Ona scaffold |
+
+## 4. Recent Changes
+- Added default-on DevPod/Ona container scaffold to `cca init` with opt-out flag `--no-container`.
+- Added flags `--init-git` (initialize repo and install hooks) and `--force` (apply scaffold on conflict).
+- Added flow documentation at `DOCS/CCA_INIT.md` and pinned spec at `SPECS/feature-cca-devpod-scaffold/`.
+- Dry run verified on 2025-12-31 in `~/tmp/cca-init-test`.
+
+## 5. Roadmap (Short-Term)
+- See `SPECS/feature-cca-devpod-scaffold/_ENTRYPOINT.md` → “Refinements Roadmap”.
 
 ---
 **Last Updated:** 2025-12-27 14:22

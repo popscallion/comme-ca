@@ -4,6 +4,13 @@ RepRap inspired, recursive repository for behavioral holons: AI agent prompts, C
 
 ## Rationale
 
+## Scope
+
+comme-ca is the public distro: tooling, prompts, and scaffolding only. It must not contain user-specific hosts, secrets, or machine workflows; those belong in comme-ci/chezmoi and project repos.
+
+## Remote DevPod (Portable)
+See `DOCS/DEVPOD_REMOTE_PLAYBOOK.md` for host-agnostic DevPod workflows.
+
 Lean, single source of truth for agent intelligence. Decouples intelligence (prompts/roles) from infrastructure (dotfiles).
 
 ---

@@ -18,7 +18,7 @@ usage() {
     cat <<EOF
 Usage: cca <prompt-name> [input]
        cca search [query] [--interactive] [--resume] [--model] [--json]
-       cca init
+       cca init [--no-container] [--init-git] [--force]
        cca update
        cca setup:list
        cca setup:all
@@ -34,6 +34,9 @@ Commands:
     --json                  Force JSON output mode
 
   init                      Initialize agent orchestration in current dir
+    --no-container           Disable DevPod/Ona container scaffold (default: enabled)
+    --init-git               Run git init if .git is missing (enables hook install)
+    --force                  Apply scaffold even when conflicts are detected
   update                    Pull comme-ca updates and diff AGENTS.md
   setup:all                 Configure/Update all tools (recommended)
   drift                     Check for prompt drift
@@ -197,17 +200,36 @@ process_turn() {
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Existing Tool Setup & Init (Unchanged Logic)
+# Existing Tool Setup & Init
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Init: Bootstrap agent orchestration in current directory
 init() {
-    if [[ -f "AGENTS.md" ]] || [[ -f "CLAUDE.md" ]] || [[ -f "GEMINI.md" ]] || [[ -f "CODEX.md" ]] || [[ -f "OPENCODE.md" ]]; then
-        echo "Error: AGENTS.md, CLAUDE.md, GEMINI.md, CODEX.md, or OPENCODE.md already exists in $(pwd)" >&2
-        exit 1
-    fi
+    local enable_container=true
+    local init_git=false
+    local force=false
+    local arg
+
+    while [[ $# -gt 0 ]]; do
+        arg="$1"
+        case "$arg" in
+            --no-container) enable_container=false ;;
+            --init-git) init_git=true ;;
+            --force) force=true ;;
+            --help|-h)
+                echo "Usage: cca init [--no-container] [--init-git] [--force]"
+                return 0
+                ;;
+            *)
+                echo "Error: Unknown flag '$arg' for init." >&2
+                exit 1
+                ;;
+        esac
+        shift
+    done
 
     local scaffold_dir="${COMME_CA_HOME}/scaffolds/high-low"
+    local hooks_dir="${COMME_CA_HOME}/scaffolds/project-init/hooks"
 
     if [[ ! -d "$scaffold_dir" ]]; then
         echo "Error: Scaffold directory not found at ${scaffold_dir}" >&2
@@ -215,16 +237,191 @@ init() {
         exit 1
     fi
 
-    cp "${scaffold_dir}/AGENTS.md" . || { echo "Error: Failed to copy AGENTS.md" >&2; exit 1; }
-    cp "${scaffold_dir}/CLAUDE.md" . || { echo "Error: Failed to copy CLAUDE.md" >&2; exit 1; }
-    cp "${scaffold_dir}/GEMINI.md" . || { echo "Error: Failed to copy GEMINI.md" >&2; exit 1; }
-    cp "${scaffold_dir}/CODEX.md" . || { echo "Error: Failed to copy CODEX.md" >&2; exit 1; }
-    cp "${scaffold_dir}/OPENCODE.md" . || { echo "Error: Failed to copy OPENCODE.md" >&2; exit 1; }
-    cp "${COMME_CA_HOME}/scaffolds/project-init/_ENTRYPOINT.template.md" ./_ENTRYPOINT.md || { echo "Error: Failed to copy _ENTRYPOINT.md" >&2; exit 1; }
+    if [[ ! -f "AGENTS.md" ]]; then
+        cp "${scaffold_dir}/AGENTS.md" . || { echo "Error: Failed to copy AGENTS.md" >&2; exit 1; }
+    fi
+    if [[ ! -f "CLAUDE.md" ]]; then
+        cp "${scaffold_dir}/CLAUDE.md" . || { echo "Error: Failed to copy CLAUDE.md" >&2; exit 1; }
+    fi
+    if [[ ! -f "GEMINI.md" ]]; then
+        cp "${scaffold_dir}/GEMINI.md" . || { echo "Error: Failed to copy GEMINI.md" >&2; exit 1; }
+    fi
+    if [[ ! -f "CODEX.md" ]]; then
+        cp "${scaffold_dir}/CODEX.md" . || { echo "Error: Failed to copy CODEX.md" >&2; exit 1; }
+    fi
+    if [[ ! -f "OPENCODE.md" ]]; then
+        cp "${scaffold_dir}/OPENCODE.md" . || { echo "Error: Failed to copy OPENCODE.md" >&2; exit 1; }
+    fi
+    if [[ ! -f "_ENTRYPOINT.md" ]]; then
+        cp "${COMME_CA_HOME}/scaffolds/project-init/_ENTRYPOINT.template.md" ./_ENTRYPOINT.md || { echo "Error: Failed to copy _ENTRYPOINT.md" >&2; exit 1; }
+    fi
 
     mkdir -p _INBOX DOCS SPECS SPECS/_ARCHIVE || { echo "Error: Failed to create base directories" >&2; exit 1; }
 
+    if [[ "$init_git" == "true" ]] && [[ ! -d ".git" ]]; then
+        if command -v git >/dev/null 2>&1; then
+            git init >/dev/null 2>&1 || { echo "Error: git init failed." >&2; exit 1; }
+            echo "Initialized git repository."
+        else
+            echo "Warning: git is not available; cannot run git init." >&2
+        fi
+    fi
+
+    local hook_status="skipped"
+    if [[ -d ".git" ]]; then
+        hook_status=$(ensure_commit_hook "$hooks_dir" "$force") || true
+    else
+        echo "Note: .git not found. Re-run with --init-git if you want hooks installed."
+    fi
+
+    local container_status="skipped"
+    if [[ "$enable_container" == "true" ]]; then
+        container_status=$(apply_devpod_scaffold "$force") || true
+    fi
+
     echo "Initialized agent orchestration in $(pwd)."
+    if [[ "$hook_status" == "conflict" ]]; then
+        echo "Hook conflicts detected. Re-run with --force to overwrite."
+    fi
+    if [[ "$container_status" == "conflict" ]]; then
+        echo "Container conflicts detected. Re-run with --force to apply changes."
+    fi
+}
+
+ensure_commit_hook() {
+    local hooks_dir="$1"
+    local force="$2"
+    local hook_src="${hooks_dir}/commit-msg"
+    local hook_dest=".git/hooks/commit-msg"
+
+    if [[ ! -f "$hook_src" ]]; then
+        echo "Warning: commit-msg hook source not found at ${hook_src}" >&2
+        echo "skipped"
+        return 0
+    fi
+
+    if [[ ! -f "$hook_dest" ]]; then
+        cp "$hook_src" "$hook_dest" || { echo "Error: Failed to install commit-msg hook." >&2; echo "conflict"; return 1; }
+        chmod +x "$hook_dest" || true
+        echo "installed"
+        return 0
+    fi
+
+    if ! diff -q "$hook_src" "$hook_dest" >/dev/null 2>&1; then
+        if [[ "$force" == "true" ]]; then
+            cp "$hook_src" "$hook_dest" || { echo "Error: Failed to overwrite commit-msg hook." >&2; echo "conflict"; return 1; }
+            chmod +x "$hook_dest" || true
+            echo "overwritten"
+            return 0
+        fi
+        echo "conflict"
+        return 1
+    fi
+
+    echo "present"
+    return 0
+}
+
+apply_devpod_scaffold() {
+    local force="$1"
+    local dc_dir=".devcontainer"
+    local dc_file="${dc_dir}/devcontainer.json"
+    local symlink_cmd="mkdir -p .ona && ln -sf ../.env .ona/secret_bundle && ln -sf ../.env .ona/secret-bundle.env"
+
+    if [[ ! -d "$dc_dir" ]]; then
+        mkdir -p "$dc_dir" || { echo "Error: Failed to create ${dc_dir}." >&2; echo "conflict"; return 1; }
+    fi
+
+    if [[ ! -f "$dc_file" ]]; then
+        cat > "$dc_file" <<EOF
+{
+  "name": "DevContainer",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "runArgs": ["--env-file", ".env"],
+  "postCreateCommand": "${symlink_cmd}"
+}
+EOF
+        echo "created"
+        return 0
+    fi
+
+    FORCE="$force" SYMLINK_CMD="$symlink_cmd" python3 - "$dc_file" <<'PY'
+import json
+import os
+import sys
+
+path = sys.argv[1]
+force = os.environ.get("FORCE", "false") == "true"
+symlink_cmd = os.environ.get("SYMLINK_CMD", "")
+
+def conflict():
+    print("conflict")
+    sys.exit(2)
+
+try:
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+except Exception:
+    conflict()
+
+changed = False
+
+# runArgs
+run_args = data.get("runArgs")
+if run_args is None:
+    data["runArgs"] = ["--env-file", ".env"]
+    changed = True
+elif isinstance(run_args, list):
+    if "--env-file" not in run_args or ".env" not in run_args:
+        data["runArgs"] = run_args + ["--env-file", ".env"]
+        changed = True
+else:
+    if force:
+        data["runArgs"] = ["--env-file", ".env"]
+        changed = True
+    else:
+        conflict()
+
+# postCreateCommand
+pcc = data.get("postCreateCommand")
+needs_symlink = symlink_cmd and ("secret_bundle" not in (pcc or "")) and ("secret-bundle.env" not in (pcc or ""))
+if pcc is None:
+    data["postCreateCommand"] = symlink_cmd
+    changed = True
+elif isinstance(pcc, str):
+    if needs_symlink:
+        data["postCreateCommand"] = f"{pcc} && {symlink_cmd}"
+        changed = True
+elif isinstance(pcc, list):
+    if needs_symlink:
+        data["postCreateCommand"] = pcc + [symlink_cmd]
+        changed = True
+else:
+    if force:
+        data["postCreateCommand"] = symlink_cmd
+        changed = True
+    else:
+        conflict()
+
+if changed:
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, sort_keys=False)
+        f.write("\n")
+    print("updated")
+else:
+    print("clean")
+PY
+
+    local status=$?
+    if [[ $status -eq 0 ]]; then
+        return 0
+    fi
+    if [[ $status -eq 2 ]]; then
+        echo "conflict"
+        return 1
+    fi
+    echo "conflict"
+    return 1
 }
 
 # Update: Pull comme-ca changes and diff AGENTS.md
@@ -507,8 +704,8 @@ main() {
             search "$@"
             ;; 
         init)
-            init
-            ;; 
+            init "$@"
+            ;;
         update)
             update
             ;; 
