@@ -16,6 +16,9 @@ devpod ssh <repo>-<host> --command "cd /workspaces/<repo>-<host> && git pull --f
 devpod ssh <repo>-<host> -- -L 5173:127.0.0.1:5173
 ```
 
+## Recommended Topology (Always-on Client)
+To keep phone access available when a laptop is offline, run the DevPod CLI on an always-on client (e.g., a host machine). Port forwards and OpenVSCode bind to the machine running the DevPod CLI, so Tailnet sharing should run on that same machine.
+
 ## 1) Provider setup (per host)
 1. Create an SSH alias in `~/.ssh/config` for the remote host.
 2. Add a DevPod provider:

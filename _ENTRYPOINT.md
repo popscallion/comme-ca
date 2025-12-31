@@ -107,6 +107,7 @@ Deferred (2025-12-27 14:26). Do not proceed with new work until tests are run or
 - If you do not want container defaults, re-run with `--no-container`.
 - If `.git/` is missing and you want hooks, re-run with `--init-git`.
 - If `devcontainer.json` is malformed, fix the JSON or delete `.devcontainer/devcontainer.json` and re-run `cca init`.
+- Phone workflows require running the DevPod CLI on an always-on client so ports bind there.
 
 ---
 **Last Updated:** 2025-12-27 14:22
