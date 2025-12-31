@@ -8,6 +8,14 @@
 ## Scope
 This document describes a host-agnostic workflow for DevPod remote sessions. It avoids user-specific hosts, secrets, and hardware details. Those belong in comme-ci/chezmoi or project repos.
 
+## Quickstart (Portable)
+```bash
+devpod provider add ssh --name <provider-name> --option HOST=<ssh-alias>
+devpod up <repo-url> --provider <provider-name> --id <repo>-<host> --ide none
+devpod ssh <repo>-<host> --command "cd /workspaces/<repo>-<host> && git pull --ff-only"
+devpod ssh <repo>-<host> -- -L 5173:127.0.0.1:5173
+```
+
 ## 1) Provider setup (per host)
 1. Create an SSH alias in `~/.ssh/config` for the remote host.
 2. Add a DevPod provider:

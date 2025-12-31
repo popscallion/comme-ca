@@ -79,7 +79,10 @@ These high-level constraints apply to ALL agents (Mise, Menu, Taste, Wrap) and A
     *   **No Hallucinations:** Do not reference files, URLs, or dependencies that do not exist.
     *   **Explicit Unknowns:** If a requirement is missing, explicitly list it as an "Open Question" rather than guessing.
 
-4.  **Shell Portability:**
+4.  **Public Scope:**
+    *   **No Personal Hosts/Secrets:** Do not add user-specific machines, hostnames, or secret workflows to comme-ca. Keep it portable and public-safe.
+
+5.  **Shell Portability:**
     *   **Detect First:** Do not assume a specific shell (Bash/Zsh/Fish). Detect or ask if generating shell-specific commands (exports, aliases, functions).
     *   **POSIX Preference:** Prefer standard POSIX syntax where possible.
     *   **Explicit Syntax:** When shell-specifics are needed (e.g., `set -Ux` vs `export`), provide the correct variant for the user's active shell.

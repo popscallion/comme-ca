@@ -24,3 +24,4 @@
 11. **Documentation:** Root-level documentation must stay in sync with implementation. Aliases (e.g., `prep`, `plan`) must wrap the `cca` command for the active engine.
 12. **Separation of Concerns:** `comme-ca` defines the behavior (DNA); `comme-ci` defines the system state (Governor).
 13. **Sibling Repository Constraints:** When modifying sibling repositories (e.g., `comme-ca` from `comme-ci`), agents MUST use atomic `write_file` operations instead of `replace_content` to avoid sandbox path violation errors.
+14. **Public Scope:** comme-ca must remain portable and public-safe; do not encode user-specific hosts, secrets, or hardware workflows in core docs or prompts.

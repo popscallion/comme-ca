@@ -92,16 +92,21 @@ Deferred (2025-12-27 14:26). Do not proceed with new work until tests are run or
 | Spec | Status | Focus |
 |:-----|:-------|:------|
 | `feature-mcp-redo` | 🟡 Active | Filesystem Discovery logic |
-| `feature-cca-devpod-scaffold` | 🟡 Pinned | Default-on `cca init` DevPod/Ona scaffold |
 
 ## 4. Recent Changes
 - Added default-on DevPod/Ona container scaffold to `cca init` with opt-out flag `--no-container`.
 - Added flags `--init-git` (initialize repo and install hooks) and `--force` (apply scaffold on conflict).
-- Added flow documentation at `DOCS/CCA_INIT.md` and pinned spec at `SPECS/feature-cca-devpod-scaffold/`.
+- Added flow documentation at `DOCS/CCA_INIT.md` and archived the spec at `SPECS/_ARCHIVE/chat-feature-cca-devpod-scaffold.md`.
 - Dry run verified on 2025-12-31 in `~/tmp/cca-init-test`.
 
 ## 5. Roadmap (Short-Term)
-- See `SPECS/feature-cca-devpod-scaffold/_ENTRYPOINT.md` → “Refinements Roadmap”.
+- See `DOCS/CCA_INIT.md` and `DOCS/DEVPOD_REMOTE_PLAYBOOK.md` for current DevPod scaffolding guidance.
+
+## 6. Troubleshooting (Scaffold Iteration)
+- If `cca init` detects conflicts, re-run with `--force` to apply the DevPod scaffold.
+- If you do not want container defaults, re-run with `--no-container`.
+- If `.git/` is missing and you want hooks, re-run with `--init-git`.
+- If `devcontainer.json` is malformed, fix the JSON or delete `.devcontainer/devcontainer.json` and re-run `cca init`.
 
 ---
 **Last Updated:** 2025-12-27 14:22

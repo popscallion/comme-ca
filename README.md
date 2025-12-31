@@ -10,6 +10,7 @@ comme-ca is the public distro: tooling, prompts, and scaffolding only. It must n
 
 ## Remote DevPod (Portable)
 See `DOCS/DEVPOD_REMOTE_PLAYBOOK.md` for host-agnostic DevPod workflows.
+Quickstart lives in the playbook; keep this repo free of personal host details.
 
 Lean, single source of truth for agent intelligence. Decouples intelligence (prompts/roles) from infrastructure (dotfiles).
 

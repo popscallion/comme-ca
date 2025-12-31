@@ -30,6 +30,7 @@ The `cca` binary serves as the "Shim Layer" between static Markdown prompts and 
   - **Gemini:** Transpiles Markdown prompts into TOML configuration files.
   - **Codex:** Pipes prompt content directly to stdin or via `codex exec`.
 - **Dual-Model Routing:** The wrapper implements logic to route queries to either a "Fast" model (Cerebras 120b) or a "Smart" model (Haiku 4.5) based on user flags.
+- **Scaffolding Defaults:** `cca init` applies default scaffolding (including portable DevPod container defaults) and supports opt-out flags for non-container use.
 
 ### 3. The "Template vs. Instance" Profile Pattern
 To decouple Distro intent from Governor implementation:
