@@ -56,7 +56,7 @@ Forward OpenVSCode to localhost, then expose it via Tailscale Serve:
 ```bash
  tailscale serve --bg 18080
 ```
-Use Tailscale Funnel only if you need public access.
+Use Tailscale Funnel only if you need public access. On macOS, the Tailscale app must be running for `tailscale serve`.
 
 ## 7) Cleanup
 ```bash
