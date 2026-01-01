@@ -93,7 +93,17 @@ Deferred (2025-12-27 14:26). Do not proceed with new work until tests are run or
 ## 3. Active Specs
 | Spec | Status | Focus |
 |:-----|:-------|:------|
+| `feature-highpriority-precommit-guardrails` | 🟡 Active | Portable pre-commit QA guardrails (AI sentinel + uv/uvx) |
+| `high-priority-feature-agents-md-hardening-hierarchical` | 🟡 Active | Instruction stack + hierarchical AGENTS patterns |
+| `feature-highpriority-daytona-everywhere` | 🟡 Active | Daytona rollout across scaffolds/workflows |
 | `feature-mcp-redo` | 🟡 Active | Filesystem Discovery logic |
+
+### Lightweight Prompt for Next Agent
+Order of execution: pre-commit guardrails → agents-md hardening hierarchical → daytona everywhere.
+
+Before proceeding:
+- Pull up-to-date docs for the latter two specs (chat may be stale).
+- Clarify any decisions with the user before implementation.
 
 ## 4. Recent Changes
 - Added default-on DevPod/Ona container scaffold to `cca init` with opt-out flag `--no-container`.
