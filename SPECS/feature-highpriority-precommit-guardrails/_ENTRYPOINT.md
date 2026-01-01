@@ -17,6 +17,9 @@ Use `fahn-lai-bun` at commit `ba0be88` as the reference for configuration and sc
 
 ## Upstreaming Note (Bidirectional)
 While active guardrail development is happening in `fahn-lai-bun`, changes should be upstreamed into comme-ca scaffolds. Once comme-ca becomes the active guardrail development site, downstream changes should be mirrored back into `fahn-lai-bun`.
+
+## Sync Awareness
+Before implementing any sync/check tooling, scan existing documentation and specs in comme-ca for planned synchronization mechanisms (e.g., `DOCS/SYNC_STRATEGY.md` and any related specs) to avoid duplicating or conflicting flows.
 - Prefer `uv`/`uvx` for installation and usage.
 - Ensure portability across Codex, Claude, Gemini, and OpenCode.
 
