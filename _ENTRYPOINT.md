@@ -1,5 +1,7 @@
 # ENTRYPOINT (Iteration Dashboard)
 
+**New Active Handoff:** `SPECS/bug-tailscale-serve-devpod/_ENTRYPOINT.md` (Serve endpoint TLS failure)
+
 ## Current Status
 We are in **Phase 3** (Protocol Synchronization & Rollout).
 We have successfully implemented **Agentic Abstractions** (Agents/Subagents/Skills) and the **Protocol Sync** architecture (Registry/Shim/Harvest).
