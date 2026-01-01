@@ -9,7 +9,7 @@
 1. Scaffolded projects must include a `.pre-commit-config.yaml` with:
    - Ruff hooks (`ruff-check`, `ruff-format`).
    - Prettier hook (mirrors-prettier).
-   - Local AI sentinel hook (`ai-qa-sentinel`) that runs on every commit.
+   - Local QA guardrails hook (`qa-guardrails`) that runs on every commit.
 
 2. Scaffolded projects must include `scripts/qa-sentinel.py` implementing:
    - Source of truth: `docs/TESTING-GUARDRAILS.md`.

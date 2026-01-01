@@ -10,7 +10,7 @@
 ### Hook Layer
 - Pre-commit configuration is added to scaffolds.
 - Standard hooks: Ruff and Prettier.
-- Local hook: `ai-qa-sentinel` uses a Python script in `scripts/`.
+- Local hook: `qa-guardrails` uses a Python script in `scripts/`.
 
 ### Sentinel Script
 - Read `docs/TESTING-GUARDRAILS.md` as the authoritative policy.
