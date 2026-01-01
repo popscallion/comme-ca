@@ -50,6 +50,10 @@ Use OpenVSCode when you need a browser IDE:
  devpod up <repo-url> --provider <provider-name> --id <repo>-<host> --ide openvscode
  devpod ssh <repo>-<host> -- -L 18080:127.0.0.1:18080
 ```
+If 18080 is not listening on the client, OpenVSCode may be bound to 10800 inside the workspace. In that case, run a tunnel from the DevPod SSH host:
+```bash
+ssh <repo>-<host>.devpod -L 18080:127.0.0.1:10800 -N
+```
 
 ## 6) Tailnet access (phone-friendly)
 Forward OpenVSCode to localhost, then expose it via Tailscale Serve:
