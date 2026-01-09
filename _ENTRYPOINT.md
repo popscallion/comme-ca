@@ -6,6 +6,8 @@
 We are in **Phase 3** (Protocol Synchronization & Rollout).
 We have successfully implemented **Agentic Abstractions** (Agents/Subagents/Skills) and the **Protocol Sync** architecture (Registry/Shim/Harvest).
 
+## 0. new prompt feature (to evolve into eg claude code skill)
+/Users/l/Dev/comme-ca/SPECS/feature-skill-agents-md-cleanup-by-subagents.md
 ## 1. The Situation
 The `comme-ca` system has evolved from a static template generator to a synchronized protocol.
 - **Protocol Registry:** Located at `~/.comme-ca/protocol/dev`.
